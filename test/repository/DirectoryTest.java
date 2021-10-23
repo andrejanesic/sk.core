@@ -3,6 +3,7 @@ package repository;
 import exceptions.DirectoryMakeNodeInvalidNodeType;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
+import exceptions.INodeUnsupportedOperationException;
 import implementation.IOHandler;
 import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
@@ -117,7 +118,7 @@ class DirectoryTest {
         if (Directory.getRoot() == null) Directory.makeRoot();
         File f0 = Directory.getRoot().makeFile("2021-10-23-19-53-0");
         File f1 = Directory.getRoot().makeFile("2021-10-23-19-53-1");
-        assertThrows(RuntimeException.class, () -> f0.move(f1));
+        assertThrows(INodeUnsupportedOperationException.class, () -> f0.move(f1));
     }
 
     @Test
@@ -128,7 +129,7 @@ class DirectoryTest {
         if (Directory.getRoot() == null) Directory.makeRoot();
         File f = Directory.getRoot().makeFile("2021-10-23-19-54-0");
         Directory d = Directory.getRoot().makeDirectory("2021-10-23-19-54-1");
-        assertThrows(RuntimeException.class, () -> d.move(f));
+        assertThrows(INodeUnsupportedOperationException.class, () -> d.move(f));
     }
 
     @Test

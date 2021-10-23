@@ -3,6 +3,7 @@ package repository;
 import exceptions.DirectoryMakeNodeInvalidNodeType;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
+import exceptions.INodeUnsupportedOperationException;
 import io.IOManager;
 
 import java.util.Collection;
@@ -183,7 +184,7 @@ public class Directory extends INode {
 
         // ako je destinacija fajl, nema pomeranja
         if (!iNode.getType().equals(INodeType.DIRECTORY)) {
-            throw new RuntimeException("Cannot move file into file.");
+            throw new INodeUnsupportedOperationException("Cannot move file into file.");
         }
 
         // zapamti staru putanju

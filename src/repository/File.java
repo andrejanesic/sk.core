@@ -1,5 +1,6 @@
 package repository;
 
+import exceptions.INodeUnsupportedOperationException;
 import io.IOManager;
 
 /**
@@ -29,7 +30,7 @@ public class File extends INode {
     public void move(INode iNode) {
         // ako je destinacija fajl, nema pomeranja
         if (!iNode.getType().equals(INodeType.DIRECTORY)) {
-            throw new RuntimeException("Cannot move file into file.");
+            throw new INodeUnsupportedOperationException("Cannot move file into file.");
         }
 
         // zapamti staru putanju

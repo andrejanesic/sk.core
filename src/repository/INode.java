@@ -5,6 +5,8 @@ package repository;
  */
 abstract class INode {
 
+    public static final String INODE_ROOT = "/";
+
     /**
      * Roditeljski čvor.
      */
@@ -66,8 +68,8 @@ abstract class INode {
      */
     public String getPath() {
         // ako je korenski čvor, vratiće samo ime
-        if (parent == null) return name;
-        return parent.getPath() + "/" + name;
+        if (parent == null) return INODE_ROOT;
+        return parent.getPath() + (parent.getParent() == null ? "" : "/") + name;
     }
 
     /**
@@ -90,4 +92,5 @@ abstract class INode {
      * @param dest Destinacioni čvor.
      */
     public abstract void move(INode dest);
+
 }

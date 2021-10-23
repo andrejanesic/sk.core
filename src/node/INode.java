@@ -16,14 +16,20 @@ abstract class INode {
     private String name;
 
     /**
+     * Tip čvora.
+     */
+    private INodeType type;
+
+    /**
      * Podrazumevani konstruktor.
      *
      * @param parent Roditeljski čvor.
      * @param name   Naziv čvora.
      */
-    public INode(INode parent, String name) {
+    public INode(INode parent, String name, INodeType type) {
         this.parent = parent;
         this.name = name;
+        this.type = type;
     }
 
     /**
@@ -42,5 +48,23 @@ abstract class INode {
      */
     public String getPath() {
         return (parent == null ? "" : parent.getPath()) + name;
+    }
+
+    /**
+     * Vraća naziv čvora, bez putanje.
+     *
+     * @return Naziv čvora.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Vraća tip čvora.
+     *
+     * @return Tip čvora.
+     */
+    public INodeType getType() {
+        return type;
     }
 }

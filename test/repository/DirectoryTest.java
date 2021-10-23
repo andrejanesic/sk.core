@@ -1,9 +1,6 @@
 package repository;
 
-import exceptions.DirectoryMakeNodeInvalidNodeType;
-import exceptions.DirectoryMakeNodeNameInvalidException;
-import exceptions.DirectoryMakeNodeNameNotUniqueException;
-import exceptions.INodeUnsupportedOperationException;
+import exceptions.*;
 import implementation.IOHandler;
 import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
@@ -170,5 +167,122 @@ class DirectoryTest {
         assertTrue(d2.getPath().contains("2021-10-23-19-58-0"));
         assertTrue(f1.getPath().contains("2021-10-23-19-58-0"));
         assertTrue(d3.getPath().contains("2021-10-23-19-58-0"));
+    }
+
+    @Test
+    void testDirectoryPathResolution() throws
+            DirectoryMakeNodeNameInvalidException,
+            DirectoryMakeNodeNameNotUniqueException,
+            DirectoryMakeNodeInvalidNodeType,
+            DirectoryInvalidPathException {
+        if (Directory.getRoot() == null) Directory.makeRoot();
+        Directory d0 = Directory.getRoot().makeDirectory("2021-10-23-20-46-0");
+        Directory d1 = Directory.getRoot().makeDirectory("2021-10-23-20-46-1");
+        Directory d2 = d1.makeDirectory("2021-10-23-20-46-2");
+        Directory d3 = d2.makeDirectory("2021-10-23-20-46-3");
+        File f1 = d2.makeFile("2021-10-23-20-46-4");
+
+        // assert no errors
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-0"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-1"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-0"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-1"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-0"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-1"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        assertDoesNotThrow(() -> d1.resolvePath("2021-10-23-20-46-2"));
+        assertDoesNotThrow(() -> d2.resolvePath("2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> d1.resolvePath("2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        assertDoesNotThrow(() -> d1.resolvePath("/2021-10-23-20-46-0"));
+        assertDoesNotThrow(() -> d2.resolvePath("/2021-10-23-20-46-1"));
+        assertDoesNotThrow(() -> d3.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertDoesNotThrow(() -> d2.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        assertDoesNotThrow(() -> d1.resolvePath("./2021-10-23-20-46-2"));
+        assertDoesNotThrow(() -> d2.resolvePath("./2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> d1.resolvePath("./2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        // assert errors
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-21-01-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-21-05-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-21-06-0/2021-10-23-20-46-3"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/2021-10-23-21-07-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-21-01-0/"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-21-01-0//"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(" 2021-10-23-21-01-0 "));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/ /2021-10-23-20-46-2"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1////2021-10-23-20-46-2"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("/./2021-10-23-21-01-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("./2021-10-23-21-01-0"));
+
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-21-01-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-20-46-2/2021-10-23-21-05-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-20-46-1/2021-10-23-21-06-0/2021-10-23-20-46-3"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/2021-10-23-21-07-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath("2021-10-23-21-01-0/"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-21-01-0//"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(" 2021-10-23-21-01-0 "));
+        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-20-46-1/ /2021-10-23-20-46-2"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-20-46-1////2021-10-23-20-46-2"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("/./2021-10-23-21-01-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("./2021-10-23-21-05-0"));
+
+        // assert well resolved
+        assertEquals(d0, Directory.getRoot().resolvePath("2021-10-23-20-46-0"));
+        assertEquals(d1, Directory.getRoot().resolvePath("2021-10-23-20-46-1"));
+        assertEquals(d2, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertEquals(d3, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertEquals(f1, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4"));
+        assertEquals(f1, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/"));
+
+        assertEquals(d0, Directory.getRoot().resolvePath("/2021-10-23-20-46-0"));
+        assertEquals(d1, Directory.getRoot().resolvePath("/2021-10-23-20-46-1"));
+        assertEquals(d2, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertEquals(d3, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertEquals(f1, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4"));
+        assertEquals(f1, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/"));
+
+        assertEquals(d0, Directory.getRoot().resolvePath("./2021-10-23-20-46-0"));
+        assertEquals(d1, Directory.getRoot().resolvePath("./2021-10-23-20-46-1"));
+        assertEquals(d2, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertEquals(d3, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertEquals(f1, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4"));
+        assertEquals(f1, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/"));
+
+        assertEquals(d2, d1.resolvePath("2021-10-23-20-46-2"));
+        assertEquals(d3, d1.resolvePath("2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertEquals(d3, d1.resolvePath("2021-10-23-20-46-2/2021-10-23-20-46-3/"));
+        assertEquals(d3, d2.resolvePath("2021-10-23-20-46-3"));
+        assertEquals(d3, d2.resolvePath("2021-10-23-20-46-3/"));
+        assertEquals(f1, d2.resolvePath("2021-10-23-20-46-4"));
+        assertEquals(f1, d2.resolvePath("2021-10-23-20-46-4/"));
+
+        assertEquals(d0, d1.resolvePath("/2021-10-23-20-46-0"));
+        assertEquals(d1, d1.resolvePath("/2021-10-23-20-46-1"));
+        assertEquals(d2, d1.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
+        assertEquals(d3, d1.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+
+        assertEquals(d2, d1.resolvePath("./2021-10-23-20-46-2"));
+        assertEquals(d3, d1.resolvePath("./2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertEquals(d3, d1.resolvePath("./2021-10-23-20-46-2/2021-10-23-20-46-3/"));
+        assertEquals(d3, d2.resolvePath("./2021-10-23-20-46-3"));
+        assertEquals(d3, d2.resolvePath("./2021-10-23-20-46-3/"));
+        assertEquals(f1, d2.resolvePath("./2021-10-23-20-46-4"));
+        assertEquals(f1, d2.resolvePath("./2021-10-23-20-46-4/"));
     }
 }

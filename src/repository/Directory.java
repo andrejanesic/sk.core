@@ -1,9 +1,6 @@
 package repository;
 
-import exceptions.DirectoryMakeNodeInvalidNodeType;
-import exceptions.DirectoryMakeNodeNameInvalidException;
-import exceptions.DirectoryMakeNodeNameNotUniqueException;
-import exceptions.INodeUnsupportedOperationException;
+import exceptions.*;
 import io.IOManager;
 
 import java.util.Collection;
@@ -15,7 +12,7 @@ import java.util.Iterator;
  */
 public class Directory extends INode {
 
-    public static final String ROOT_DIRECTORY = "root";
+    public static final String ROOT_DIRECTORY = INODE_ROOT;
 
     /**
      * Za sinhronizaciju.
@@ -221,5 +218,68 @@ public class Directory extends INode {
     protected void unlinkNode(INode iNode) {
         if (!children.contains(iNode)) return;
         children.remove(iNode);
+    }
+
+    /**
+     * Vraća čvor na datoj putanji.
+     *
+     * @param path Putanja.
+     * @return Čvor ukoliko je nađen.
+     * @throws DirectoryInvalidPathException Greška ukoliko putanja nije dobra.
+     */
+    public INode resolvePath(String path) throws DirectoryInvalidPathException {
+        if (root == null)
+            throw new DirectoryInvalidPathException(path);
+
+        if (path == null)
+            throw new DirectoryInvalidPathException("null");
+
+        // "očisti" path
+        path = path.trim();
+        if (path.endsWith("/"))
+            path = path.substring(0, path.length() - 1);
+
+        // odredi početni direktorijum
+        String pathOld = path;
+        Directory curr = null;
+        if (path.substring(0, 1).equals(ROOT_DIRECTORY)) {
+            curr = root;
+            path = path.substring(1);
+        } else if (path.substring(0, 2).equals("./")) {
+            path = path.substring(2);
+            curr = this;
+        } else {
+            curr = this;
+        }
+
+        // ukoliko je "očišćeni" string prazan, prekini
+        if (path.length() == 0)
+            throw new DirectoryInvalidPathException(pathOld);
+
+        // traži se sledeći prelaz u direktorijum
+        int i = 0, j = 0;
+        String name;
+        INode next = curr;
+        path = path + "/"; // dodajemo "/" na kraj radi jednostavnosti algoritma
+
+        while ((j = path.indexOf('/', i)) != -1) {
+            // proveri da li je prethodni korak bio fajl, ako jeste, loša putanja
+            if (next != null && next.getType().equals(INodeType.FILE))
+                throw new DirectoryInvalidPathException(pathOld);
+
+            boolean found = false;
+            name = path.substring(i, j);
+            for (INode child : ((Directory) next).children) {
+                if (child.getName().equals(name)) {
+                    next = child;
+                    found = true;
+                }
+            }
+
+            if (!found) throw new DirectoryInvalidPathException(pathOld);
+            i = j + 1;
+        }
+
+        return next;
     }
 }

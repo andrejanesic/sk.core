@@ -1,4 +1,4 @@
-package node;
+package repository;
 
 /**
  * INode predstavlja jedan čvor u skladištu, koji može biti fajl ili direktorijum.

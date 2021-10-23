@@ -1,8 +1,9 @@
-package node;
+package repository;
 
 import exceptions.DirectoryMakeNodeInvalidNodeType;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
+import io.IOManager;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +39,8 @@ public class Directory extends INode {
         super(parent, name, INodeType.DIRECTORY);
 
         children = new HashSet<>();
+        IOManager.getInstance().makeDirectory(
+                parent == null ? "" : parent.getPath(), name);
     }
 
     /**

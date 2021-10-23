@@ -1,13 +1,21 @@
-package node;
+package repository;
 
 import exceptions.DirectoryMakeNodeInvalidNodeType;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
+import implementation.IOHandler;
+import io.IOManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DirectoryTest {
+
+    @BeforeAll
+    public static void setHandler() {
+        IOManager.setInstance(new IOHandler());
+    }
 
     @Test
     void testMakeRoot() {

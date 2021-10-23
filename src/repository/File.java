@@ -1,4 +1,4 @@
-package node;
+package repository;
 
 /**
  * Klasa fajlova.

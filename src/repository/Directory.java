@@ -7,6 +7,7 @@ import io.IOManager;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Klasa direktorijuma. Čuva korenski direktorijum.
@@ -39,8 +40,8 @@ public class Directory extends INode {
         super(parent, name, INodeType.DIRECTORY);
 
         children = new HashSet<>();
-        IOManager.getInstance().makeDirectory(
-                parent == null ? "" : parent.getPath(), name);
+        if (parent != null)
+            IOManager.getInstance().makeDirectory(getPath());
     }
 
     /**
@@ -150,5 +151,74 @@ public class Directory extends INode {
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
         return (File) makeNode(name, INodeType.FILE);
+    }
+
+    @Override
+    public void delete() {
+        // ako je korenski čvor, nema brisanja
+        if (getParent() == null) return;
+
+        // obriši sve podčvorove
+        Iterator<INode> it = children.iterator();
+        while (it.hasNext()) {
+            INode i = it.next();
+            if (i.getType().equals(INodeType.DIRECTORY))
+                i.delete();
+            else
+                i.delete();
+            it.remove();
+        }
+
+        // obriši sebe
+        IOManager.getInstance().deleteDirectory(getPath());
+
+        // obriši iz roditelja
+        ((Directory) getParent()).unlinkNode(this);
+    }
+
+    @Override
+    public void move(INode iNode) {
+        // ako je korenski čvor, nema pomeranja
+        if (getParent() == null) return;
+
+        // ako je destinacija fajl, nema pomeranja
+        if (!iNode.getType().equals(INodeType.DIRECTORY)) {
+            throw new RuntimeException("Cannot move file into file.");
+        }
+
+        // zapamti staru putanju
+        String oldPath = getPath();
+
+        // izbriši iz trenutnog čvora
+        Directory dest = (Directory) iNode;
+        ((Directory) getParent()).unlinkNode(this);
+
+        // dodaj u novi čvor
+        dest.linkNode(this);
+        this.setParent(dest);
+
+        // pomeri
+        IOManager.getInstance().moveFile(oldPath, getPath());
+    }
+
+    /**
+     * Registruje novi čvor.
+     *
+     * @param iNode Novi čvor.
+     */
+    protected void linkNode(INode iNode) {
+        if (children.contains(iNode)) return;
+        children.add(iNode);
+        iNode.setParent(this);
+    }
+
+    /**
+     * Deregistruje čvor, ukoliko postoji u direktorijumu.
+     *
+     * @param iNode Čvor za deregistraciju.
+     */
+    protected void unlinkNode(INode iNode) {
+        if (!children.contains(iNode)) return;
+        children.remove(iNode);
     }
 }

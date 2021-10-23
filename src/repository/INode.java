@@ -33,12 +33,30 @@ abstract class INode {
     }
 
     /**
+     * Vraća tip čvora.
+     *
+     * @return Tip čvora.
+     */
+    public INodeType getType() {
+        return type;
+    }
+
+    /**
      * Vraća roditeljski čvor.
      *
      * @return Roditeljski čvor.
      */
     public INode getParent() {
         return parent;
+    }
+
+    /**
+     * Omogućava promenu roditeljskog čvora. Dozvoljeno samo na nivou paketa radi premeštanja čvorova.
+     *
+     * @param iNode Novi roditeljski čvor.
+     */
+    protected void setParent(INode iNode) {
+        parent = iNode;
     }
 
     /**
@@ -62,11 +80,14 @@ abstract class INode {
     }
 
     /**
-     * Vraća tip čvora.
-     *
-     * @return Tip čvora.
+     * Briše sebe iz IO i svoje podčvorove, ukoliko postoje.
      */
-    public INodeType getType() {
-        return type;
-    }
+    public abstract void delete();
+
+    /**
+     * Pomeranje čvora u novi čvor.
+     *
+     * @param dest Destinacioni čvor.
+     */
+    public abstract void move(INode dest);
 }

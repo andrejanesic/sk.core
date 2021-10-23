@@ -3,13 +3,13 @@ package exceptions;
 /**
  * Dešava se ukoliko se na direktorijumu kreira novi čvor sa nazivom čvora koji već postoji.
  */
-public class DirectoryCreateNameNotUniqueException extends Exception {
+public class DirectoryMakeNodeNameNotUniqueException extends Exception {
 
-    public DirectoryCreateNameNotUniqueException(String s) {
+    public DirectoryMakeNodeNameNotUniqueException(String s) {
         super("Node with name \"" + s + "\" already exists.");
     }
 
-    public DirectoryCreateNameNotUniqueException() {
+    public DirectoryMakeNodeNameNotUniqueException() {
         super("New nodes must have unique names.");
     }
 }

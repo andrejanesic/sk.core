@@ -47,7 +47,9 @@ abstract class INode {
      * @return Putanja čvora.
      */
     public String getPath() {
-        return (parent == null ? "" : parent.getPath()) + name;
+        // ako je korenski čvor, vratiće samo ime
+        if (parent == null) return name;
+        return parent.getPath() + "/" + name;
     }
 
     /**

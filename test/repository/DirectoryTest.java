@@ -1,19 +1,13 @@
 package repository;
 
 import exceptions.*;
-import implementation.IOHandler;
-import io.IOManager;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import repository.dummynode.DummyNode;
+import repository.dummynode.DummyNodeType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirectoryTest {
-
-    @BeforeAll
-    public static void setHandler() {
-        IOManager.setInstance(new IOHandler());
-    }
+class DirectoryTest extends TestPrepare {
 
     @Test
     void testMakeRoot() {
@@ -23,7 +17,6 @@ class DirectoryTest {
 
     @Test
     void testGetRootPath() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         try {
             assertEquals(Directory.ROOT_DIRECTORY, Directory.getRoot().getPath());
         } catch (Exception e) {
@@ -42,39 +35,33 @@ class DirectoryTest {
 
     @Test
     void testMakeDirectory() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         assertDoesNotThrow(() -> Directory.getRoot().makeDirectory("test"));
     }
 
     @Test
     void testMakeDirectoryInvalidName() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Directory.getRoot().makeDirectory("abc/"));
     }
 
     @Test
     void testMakeFileInvalidName() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Directory.getRoot().makeFile("def/"));
     }
 
     @Test
     void testMakeDirectoryDuplicateName() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         assertDoesNotThrow(() -> Directory.getRoot().makeFile("foo123"));
         assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Directory.getRoot().makeFile("foo123"));
     }
 
     @Test
     void testMakeFileDuplicateName() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         assertDoesNotThrow(() -> Directory.getRoot().makeFile("bar"));
         assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Directory.getRoot().makeFile("bar"));
     }
 
     @Test
     void testNestedDirectoryMakeNode() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         assertDoesNotThrow(() -> Directory.getRoot()
                 .makeDirectory("abcdefghi0")
                 .makeDirectory("abcdefghi1")
@@ -88,7 +75,6 @@ class DirectoryTest {
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         Directory d0_0 = Directory.getRoot().makeDirectory("d0_0");
         Directory d0_1 = Directory.getRoot().makeDirectory("d0_1");
         Directory d0_0_0 = d0_0.makeDirectory("d0_0_0");
@@ -108,36 +94,23 @@ class DirectoryTest {
     }
 
     @Test
-    void testMoveFileIntoFile() throws
-            DirectoryMakeNodeNameInvalidException,
-            DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
-        if (Directory.getRoot() == null) Directory.makeRoot();
-        File f0 = Directory.getRoot().makeFile("2021-10-23-19-53-0");
-        File f1 = Directory.getRoot().makeFile("2021-10-23-19-53-1");
-        assertThrows(INodeUnsupportedOperationException.class, () -> f0.move(f1));
-    }
-
-    @Test
     void testMoveDirectoryIntoFile() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
-        if (Directory.getRoot() == null) Directory.makeRoot();
-        File f = Directory.getRoot().makeFile("2021-10-23-19-54-0");
-        Directory d = Directory.getRoot().makeDirectory("2021-10-23-19-54-1");
-        assertThrows(INodeUnsupportedOperationException.class, () -> d.move(f));
-    }
+        DummyNode rootDummy = DummyNode.generateDummyNodes();
+        Directory root = Directory.getRoot();
+        while (DummyNode.poolDirs.size() < 1 || DummyNode.poolFiles.size() < 1) {
+            clearDummies();
+            rootDummy = DummyNode.generateDummyNodes();
+        }
+        DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
-    @Test
-    void testMoveFileIntoDirectory() throws
-            DirectoryMakeNodeNameInvalidException,
-            DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
-        if (Directory.getRoot() == null) Directory.makeRoot();
-        File f = Directory.getRoot().makeFile("2021-10-23-19-57-0");
-        Directory d = Directory.getRoot().makeDirectory("2021-10-23-19-57-1");
-        assertDoesNotThrow(() -> f.move(d));
+        int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+        int indexFile = (int) Math.floor(Math.random() * DummyNode.poolFiles.size());
+        Directory target = (Directory) root.resolvePath(DummyNode.poolDirs.get(indexDir).path());
+        File dest = (File) root.resolvePath(DummyNode.poolFiles.get(indexFile).path());
+        assertThrows(INodeUnsupportedOperationException.class, () -> target.move(dest));
     }
 
     @Test
@@ -145,144 +118,242 @@ class DirectoryTest {
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
-        if (Directory.getRoot() == null) Directory.makeRoot();
-        Directory d0 = Directory.getRoot().makeDirectory("2021-10-23-20-00-0");
-        Directory d1 = Directory.getRoot().makeDirectory("2021-10-23-20-00-1");
-        assertDoesNotThrow(() -> d0.move(d1));
+        DummyNode rootDummy, targetDummy, destDummy;
+        do {
+            clearDummies();
+            rootDummy = DummyNode.generateDummyNodes();
+
+            int indexDir1 = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+            int indexDir2 = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+
+            targetDummy = DummyNode.poolDirs.get(indexDir1);
+            destDummy = DummyNode.poolDirs.get(indexDir2);
+
+        } while (destDummy.isGrandchild(targetDummy) || targetDummy == rootDummy);
+
+        Directory root = Directory.getRoot();
+        DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
+
+        Directory target = (Directory) root.resolvePath(targetDummy.path());
+        Directory dest = (Directory) root.resolvePath(destDummy.path());
+
+        assertDoesNotThrow(() -> target.move(dest));
+
+        if (targetDummy != destDummy) {
+            if (targetDummy.parent != null)
+                targetDummy.parent.children.remove(targetDummy);
+            destDummy.children.add(targetDummy);
+            targetDummy.parent = destDummy;
+        }
+
+        DummyNode finalRootDummy = rootDummy;
+        assertDoesNotThrow(() -> finalRootDummy.traverse(dummyNode -> {
+            Directory.getRoot().resolvePath(dummyNode.path());
+        }));
     }
 
     @Test
-    void testMoveDirectoryWithContentsIntoDirectory() throws
+    void testMoveRootDirectory() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
-        if (Directory.getRoot() == null) Directory.makeRoot();
-        Directory d0 = Directory.getRoot().makeDirectory("2021-10-23-19-58-0");
-        Directory d1 = Directory.getRoot().makeDirectory("2021-10-23-19-58-1");
-        Directory d2 = d1.makeDirectory("2021-10-23-19-58-2");
-        Directory d3 = d2.makeDirectory("2021-10-23-19-58-3");
-        File f1 = d2.makeFile("2021-10-23-19-59-0");
+        DummyNode rootDummy = DummyNode.generateDummyNodes();
+        rootDummy.children.removeIf((d) -> d.type == DummyNodeType.FILE);
+        if (rootDummy.children.size() == 0) return;
 
-        assertDoesNotThrow(() -> d1.move(d0));
-        assertTrue(d2.getPath().contains("2021-10-23-19-58-0"));
-        assertTrue(f1.getPath().contains("2021-10-23-19-58-0"));
-        assertTrue(d3.getPath().contains("2021-10-23-19-58-0"));
+        Directory root = Directory.getRoot();
+        DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
+
+        DummyNode destDummy = rootDummy.children.get((int) Math.floor(Math.random() * rootDummy.children.size()));
+        Directory target = (Directory) root.resolvePath(rootDummy.path());
+        Directory dest = (Directory) root.resolvePath(destDummy.path());
+
+        assertThrows(INodeUnsupportedOperationException.class, () -> target.move(dest));
+
+        destDummy.children.add(rootDummy);
+        destDummy.parent = null;
+        rootDummy.parent = destDummy;
+        rootDummy.children.remove(destDummy);
+
+        assertThrows(DirectoryInvalidPathException.class, () -> {
+            destDummy.traverse(dummyNode -> {
+                Directory.getRoot().resolvePath(dummyNode.path());
+            });
+        });
     }
 
     @Test
-    void testDirectoryPathResolution() throws
+    void testMoveParentDirectorIntoDirectory() throws
+            DirectoryMakeNodeNameInvalidException,
+            DirectoryMakeNodeNameNotUniqueException,
+            DirectoryMakeNodeInvalidNodeType {
+        DummyNode rootDummy, targetDummy, destDummy;
+        do {
+            clearDummies();
+            rootDummy = DummyNode.generateDummyNodes();
+
+            int indexDir1 = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+            int indexDir2 = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+
+            targetDummy = DummyNode.poolDirs.get(indexDir1);
+            destDummy = DummyNode.poolDirs.get(indexDir2);
+
+        } while (!destDummy.isGrandchild(targetDummy) || targetDummy == rootDummy);
+
+        assertTrue(destDummy.isGrandchild(targetDummy));
+
+        Directory root = Directory.getRoot();
+        DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
+
+        Directory target = (Directory) root.resolvePath(targetDummy.path());
+        Directory dest = (Directory) root.resolvePath(destDummy.path());
+
+        assertThrows(INodeUnsupportedOperationException.class, () -> target.move(dest));
+    }
+
+    @Test
+    void testDeleteDirectory() throws
+            DirectoryMakeNodeNameInvalidException,
+            DirectoryMakeNodeNameNotUniqueException,
+            DirectoryMakeNodeInvalidNodeType {
+        DummyNode rootDummy = DummyNode.generateDummyNodes();
+        Directory root = Directory.getRoot();
+        DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
+
+        int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+        DummyNode targetDummy = DummyNode.poolDirs.get(indexDir);
+        if (targetDummy == rootDummy) {
+            assertThrows(INodeUnsupportedOperationException.class, () -> root.delete(targetDummy.path()));
+        } else {
+            assertDoesNotThrow(() -> root.delete(targetDummy.path()));
+            targetDummy.traverse((dummyNode) -> {
+                assertThrows(DirectoryInvalidPathException.class, () -> root.resolvePath(dummyNode.path()));
+            });
+        }
+    }
+
+    @Test
+    void testPathResolution() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType,
             DirectoryInvalidPathException {
-        if (Directory.getRoot() == null) Directory.makeRoot();
-        Directory d0 = Directory.getRoot().makeDirectory("2021-10-23-20-46-0");
-        Directory d1 = Directory.getRoot().makeDirectory("2021-10-23-20-46-1");
-        Directory d2 = d1.makeDirectory("2021-10-23-20-46-2");
-        Directory d3 = d2.makeDirectory("2021-10-23-20-46-3");
-        File f1 = d2.makeFile("2021-10-23-20-46-4");
+        String d0Name = "2021-10-23-20-46-0";
+        String d1Name = "2021-10-23-20-46-1";
+        String d2Name = "2021-10-23-20-46-2";
+        String d3Name = "2021-10-23-20-46-3";
+        String f1Name = "2021-10-23-20-46-4";
+        String i1Name = "2021-10-23-21-01-0";
+        String i2Name = "2021-10-23-21-05-0";
+        String i3Name = "2021-10-23-21-06-0";
+        String i4Name = "2021-10-23-21-07-0";
+        Directory d0 = Directory.getRoot().makeDirectory(d0Name);
+        Directory d1 = Directory.getRoot().makeDirectory(d1Name);
+        Directory d2 = d1.makeDirectory(d2Name);
+        Directory d3 = d2.makeDirectory(d3Name);
+        File f1 = d2.makeFile(f1Name);
 
         // assert no errors
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-0"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-1"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d0Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d1Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-0"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-1"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d0Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d1Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-0"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-1"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d0Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d1Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> d1.resolvePath("2021-10-23-20-46-2"));
-        assertDoesNotThrow(() -> d2.resolvePath("2021-10-23-20-46-3"));
-        assertDoesNotThrow(() -> d1.resolvePath("2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> d1.resolvePath(d2Name));
+        assertDoesNotThrow(() -> d2.resolvePath(d3Name));
+        assertDoesNotThrow(() -> d1.resolvePath(d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> d1.resolvePath("/2021-10-23-20-46-0"));
-        assertDoesNotThrow(() -> d2.resolvePath("/2021-10-23-20-46-1"));
-        assertDoesNotThrow(() -> d3.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertDoesNotThrow(() -> d2.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> d1.resolvePath("/" + d0Name));
+        assertDoesNotThrow(() -> d2.resolvePath("/" + d1Name));
+        assertDoesNotThrow(() -> d3.resolvePath("/" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> d2.resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> d1.resolvePath("./2021-10-23-20-46-2"));
-        assertDoesNotThrow(() -> d2.resolvePath("./2021-10-23-20-46-3"));
-        assertDoesNotThrow(() -> d1.resolvePath("./2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertDoesNotThrow(() -> d1.resolvePath("./" + d2Name));
+        assertDoesNotThrow(() -> d2.resolvePath("./" + d3Name));
+        assertDoesNotThrow(() -> d1.resolvePath("./" + d2Name + "/" + d3Name));
 
         // assert errors
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-21-01-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-21-05-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-21-06-0/2021-10-23-20-46-3"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/2021-10-23-21-07-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-21-01-0/"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-21-01-0//"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(" 2021-10-23-21-01-0 "));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/ /2021-10-23-20-46-2"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("2021-10-23-20-46-1////2021-10-23-20-46-2"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("/./2021-10-23-21-01-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("./2021-10-23-21-01-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + i2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + i3Name + "/" + d3Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/" + i4Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(i1Name + "/"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(i1Name + "//"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(" " + i1Name + " "));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "//" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/ /" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "//" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "////" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("/./" + i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("./" + i1Name));
 
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-21-01-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-20-46-2/2021-10-23-21-05-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-20-46-1/2021-10-23-21-06-0/2021-10-23-20-46-3"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/2021-10-23-21-07-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath("2021-10-23-21-01-0/"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-21-01-0//"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(" 2021-10-23-21-01-0 "));
-        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-20-46-1/ /2021-10-23-20-46-2"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath("2021-10-23-20-46-1//2021-10-23-20-46-2///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath("2021-10-23-20-46-1////2021-10-23-20-46-2"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("/./2021-10-23-21-01-0"));
-        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("./2021-10-23-21-05-0"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(d2Name + "/" + i2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath(d1Name + "/" + i3Name + "/" + d3Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/" + i4Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath(i1Name + "/"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath(i1Name + "//"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(" " + i1Name + " "));
+        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath(d1Name + "//" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath(d1Name + "/ /" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(d1Name + "/" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d2.resolvePath(d1Name + "//" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> d3.resolvePath(d1Name + "////" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("/./" + i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("./" + i2Name));
 
         // assert well resolved
-        assertEquals(d0, Directory.getRoot().resolvePath("2021-10-23-20-46-0"));
-        assertEquals(d1, Directory.getRoot().resolvePath("2021-10-23-20-46-1"));
-        assertEquals(d2, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertEquals(d3, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
-        assertEquals(f1, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4"));
-        assertEquals(f1, Directory.getRoot().resolvePath("2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/"));
+        assertEquals(d0, Directory.getRoot().resolvePath(d0Name));
+        assertEquals(d1, Directory.getRoot().resolvePath(d1Name));
+        assertEquals(d2, Directory.getRoot().resolvePath(d1Name + "/" + d2Name));
+        assertEquals(d3, Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d0, Directory.getRoot().resolvePath("/2021-10-23-20-46-0"));
-        assertEquals(d1, Directory.getRoot().resolvePath("/2021-10-23-20-46-1"));
-        assertEquals(d2, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertEquals(d3, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
-        assertEquals(f1, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4"));
-        assertEquals(f1, Directory.getRoot().resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/"));
+        assertEquals(d0, Directory.getRoot().resolvePath("/" + d0Name));
+        assertEquals(d1, Directory.getRoot().resolvePath("/" + d1Name));
+        assertEquals(d2, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name));
+        assertEquals(d3, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d0, Directory.getRoot().resolvePath("./2021-10-23-20-46-0"));
-        assertEquals(d1, Directory.getRoot().resolvePath("./2021-10-23-20-46-1"));
-        assertEquals(d2, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertEquals(d3, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
-        assertEquals(f1, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4"));
-        assertEquals(f1, Directory.getRoot().resolvePath("./2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-4/"));
+        assertEquals(d0, Directory.getRoot().resolvePath("./" + d0Name));
+        assertEquals(d1, Directory.getRoot().resolvePath("./" + d1Name));
+        assertEquals(d2, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name));
+        assertEquals(d3, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d2, d1.resolvePath("2021-10-23-20-46-2"));
-        assertEquals(d3, d1.resolvePath("2021-10-23-20-46-2/2021-10-23-20-46-3"));
-        assertEquals(d3, d1.resolvePath("2021-10-23-20-46-2/2021-10-23-20-46-3/"));
-        assertEquals(d3, d2.resolvePath("2021-10-23-20-46-3"));
-        assertEquals(d3, d2.resolvePath("2021-10-23-20-46-3/"));
-        assertEquals(f1, d2.resolvePath("2021-10-23-20-46-4"));
-        assertEquals(f1, d2.resolvePath("2021-10-23-20-46-4/"));
+        assertEquals(d2, d1.resolvePath(d2Name));
+        assertEquals(d3, d1.resolvePath(d2Name + "/" + d3Name));
+        assertEquals(d3, d1.resolvePath(d2Name + "/" + d3Name + "/"));
+        assertEquals(d3, d2.resolvePath(d3Name));
+        assertEquals(d3, d2.resolvePath(d3Name + "/"));
+        assertEquals(f1, d2.resolvePath(f1Name));
+        assertEquals(f1, d2.resolvePath(f1Name + "/"));
 
-        assertEquals(d0, d1.resolvePath("/2021-10-23-20-46-0"));
-        assertEquals(d1, d1.resolvePath("/2021-10-23-20-46-1"));
-        assertEquals(d2, d1.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2"));
-        assertEquals(d3, d1.resolvePath("/2021-10-23-20-46-1/2021-10-23-20-46-2/2021-10-23-20-46-3"));
+        assertEquals(d0, d1.resolvePath("/" + d0Name));
+        assertEquals(d1, d1.resolvePath("/" + d1Name));
+        assertEquals(d2, d1.resolvePath("/" + d1Name + "/" + d2Name));
+        assertEquals(d3, d1.resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertEquals(d2, d1.resolvePath("./2021-10-23-20-46-2"));
-        assertEquals(d3, d1.resolvePath("./2021-10-23-20-46-2/2021-10-23-20-46-3"));
-        assertEquals(d3, d1.resolvePath("./2021-10-23-20-46-2/2021-10-23-20-46-3/"));
-        assertEquals(d3, d2.resolvePath("./2021-10-23-20-46-3"));
-        assertEquals(d3, d2.resolvePath("./2021-10-23-20-46-3/"));
-        assertEquals(f1, d2.resolvePath("./2021-10-23-20-46-4"));
-        assertEquals(f1, d2.resolvePath("./2021-10-23-20-46-4/"));
+        assertEquals(d2, d1.resolvePath("./" + d2Name));
+        assertEquals(d3, d1.resolvePath("./" + d2Name + "/" + d3Name));
+        assertEquals(d3, d1.resolvePath("./" + d2Name + "/" + d3Name + "/"));
+        assertEquals(d3, d2.resolvePath("./" + d3Name));
+        assertEquals(d3, d2.resolvePath("./" + d3Name + "/"));
+        assertEquals(f1, d2.resolvePath("./" + f1Name));
+        assertEquals(f1, d2.resolvePath("./" + f1Name + "/"));
     }
 }

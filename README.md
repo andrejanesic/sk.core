@@ -34,9 +34,9 @@ Sledi opis funkcionanosti komponente za upravljanje skladištem fajlova.
 
 - [ ] kreiranje direktorijuma i praznih fajlova na određenoj putanji u skladištu (osmisliti razne načine zadavanja paterna kreiranja direktorijuma, kao u bash-u na primer mkdir s{1..20} kreira 20 direktorijuma pod imenom s1 do s20),
 - [ ] smeštanje fajlova (jednog ili više) na određenu putanju u skladištu, putanja koja se prosleđuje treba da bude nezavisna od operativnog sistema, obraditi neke specifične situacije, na primer ako direktorijumi zadati putanjom ne postoje u skladištu,
-- [ ] brisanje fajlova i direktorijuma iz skladišta,
+- [x] brisanje fajlova i direktorijuma iz skladišta,
 - [ ] pregled sadržaja skladišta - podržati razne pretrage skladišta, na primer vrati sve nazive fajlove u direktorijumu, vrati nazive svih direktorijuma u nekom direktorijumu, vrati fajlove po imenu u direktorijumu i svim poddirektorijumima, vrati fajlove sa određenom ekstenzijom, vrati nazive fajlova sortirano po nazivu, datumu kreiranje ili modifikacije, vrati nazive fajlova koji su kreirani/modifikovani u nekom periodu, u nekom direktorijumu i sl.,
-- [ ] premeštanje fajlova iz jednog direktorijuma u drugi,
+- [x] premeštanje fajlova iz jednog direktorijuma u drugi,
 - [ ] preuzimanje fajlova iz skladišta - zadaje se putanja koja može biti putanja do direktorijuma ili do fajla i odgovarajući element se preuzima iz skladišta,
 - [ ] ukoliko se neke od ovih operacija ne mogu implementiratu nad Google Drive-om obezbediti odgovarajuću obradu ove situacije, na primer da operacija izbaci izuzetak tipa UnsupportedOperation
 

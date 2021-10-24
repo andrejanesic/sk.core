@@ -5,7 +5,6 @@ import io.IOManager;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Klasa direktorijuma. Čuva korenski direktorijum.
@@ -154,18 +153,8 @@ public class Directory extends INode {
     @Override
     public void delete() {
         // ako je korenski čvor, nema brisanja
-        if (getParent() == null) return;
-
-        // obriši sve podčvorove
-        Iterator<INode> it = children.iterator();
-        while (it.hasNext()) {
-            INode i = it.next();
-            if (i.getType().equals(INodeType.DIRECTORY))
-                i.delete();
-            else
-                i.delete();
-            it.remove();
-        }
+        if (getParent() == null)
+            throw new INodeUnsupportedOperationException("Cannot delete root directory.");
 
         // obriši sebe
         IOManager.getInstance().deleteDirectory(getPath());
@@ -175,20 +164,45 @@ public class Directory extends INode {
     }
 
     @Override
-    public void move(INode iNode) {
+    public void delete(String path) {
+        INode target = resolvePath(path);
+
+        // ako nije pozvan na meti za brisanje, prebaci na tu instancu
+        if (target != this) {
+            target.delete();
+            return;
+        }
+
+        delete();
+    }
+
+    @Override
+    public void move(String path) {
+        INode destNode = resolvePath(path);
+
         // ako je korenski čvor, nema pomeranja
-        if (getParent() == null) return;
+        if (getParent() == null)
+            throw new INodeUnsupportedOperationException("Cannot move root directory.");
+
+        // ako se pomera u isti čvor, samo vrati
+        if (destNode == this) return;
 
         // ako je destinacija fajl, nema pomeranja
-        if (!iNode.getType().equals(INodeType.DIRECTORY)) {
+        if (!destNode.getType().equals(INodeType.DIRECTORY)) {
             throw new INodeUnsupportedOperationException("Cannot move file into file.");
+        }
+
+        // #OGRANIČENJE
+        // roditeljski čvor ne može da se pomera u podčvor
+        if (destNode.isGrandchild(this)) {
+            throw new INodeUnsupportedOperationException("Cannot move parent directory into child directory.");
         }
 
         // zapamti staru putanju
         String oldPath = getPath();
 
         // izbriši iz trenutnog čvora
-        Directory dest = (Directory) iNode;
+        Directory dest = (Directory) destNode;
         ((Directory) getParent()).unlinkNode(this);
 
         // dodaj u novi čvor
@@ -225,9 +239,8 @@ public class Directory extends INode {
      *
      * @param path Putanja.
      * @return Čvor ukoliko je nađen.
-     * @throws DirectoryInvalidPathException Greška ukoliko putanja nije dobra.
      */
-    public INode resolvePath(String path) throws DirectoryInvalidPathException {
+    public INode resolvePath(String path) {
         if (root == null)
             throw new DirectoryInvalidPathException(path);
 
@@ -242,13 +255,18 @@ public class Directory extends INode {
         // odredi početni direktorijum
         String pathOld = path;
         Directory curr = null;
+
+        if (path.equals(""))
+            return Directory.getRoot();
+        if (path.equals(".") || path.equals("./"))
+            return this;
+
         if (path.substring(0, 1).equals(ROOT_DIRECTORY)) {
             curr = root;
             path = path.substring(1);
-        } else if (path.substring(0, 2).equals("./")) {
-            path = path.substring(2);
-            curr = this;
         } else {
+            if (path.length() > 1 && path.substring(0, 2).equals("./"))
+                path = path.substring(2);
             curr = this;
         }
 
@@ -273,6 +291,7 @@ public class Directory extends INode {
                 if (child.getName().equals(name)) {
                     next = child;
                     found = true;
+                    break;
                 }
             }
 

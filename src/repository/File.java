@@ -22,12 +22,33 @@ public class File extends INode {
 
     @Override
     public void delete() {
+        // obriši sebe
         IOManager.getInstance().deleteFile(getPath());
+
+        // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
     }
 
     @Override
-    public void move(INode iNode) {
+    public void delete(String path) {
+        INode target = ((Directory) getParent()).resolvePath(path);
+
+        // ako nije pozvan na meti za brisanje, prebaci na tu instancu
+        if (target != this) {
+            target.delete();
+            return;
+        }
+
+        delete();
+    }
+
+    @Override
+    public void move(String path) {
+        INode iNode = ((Directory) getParent()).resolvePath(path);
+
+        // ako se pomera u isti čvor, samo vrati
+        if (iNode == this) return;
+
         // ako je destinacija fajl, nema pomeranja
         if (!iNode.getType().equals(INodeType.DIRECTORY)) {
             throw new INodeUnsupportedOperationException("Cannot move file into file.");

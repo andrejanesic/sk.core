@@ -28,16 +28,17 @@ public class ActionInitStorage implements Action {
     }
 
     @Override
-    public void run() {
+    public Boolean run() {
         if (count != 0)
-            return;
+            return false;
 
         count++;
         Loader.getInstance().initStorage(path);
+        return true;
     }
 
     @Override
-    public void undo() {
+    public Boolean undo() {
         throw new ActionUndoImpossibleException("storage initialization");
     }
 }

@@ -8,10 +8,10 @@ interface Action {
     /**
      * Izvršava radnju. Pomera red u ActionManager-u za +1.
      */
-    void run();
+    Object run();
 
     /**
      * Opoziva radnju. Vraća aplikaciju u prethodno stanje, tj. stanje pre nego što je izvršena radnja.
      */
-    void undo();
+    Object undo();
 }

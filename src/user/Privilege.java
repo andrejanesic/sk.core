@@ -1,5 +1,7 @@
 package user;
 
+import user.builder.PrivilegeBuilder;
+
 /**
  * JavaBean klasa korisničke privilegije. Predstavlja "jednu dozvolu" korisniku da radi nešto na nekom objektu, ili
  * dozvolu da radi nešto generalno.
@@ -34,6 +36,18 @@ public class Privilege {
     public Privilege(Object referencedObject, PrivilegeType type) {
         this.referencedObject = referencedObject;
         this.type = type;
+    }
+
+    /**
+     * Konstruktor na osnovu bilder klase PrivilegeBuilder.
+     *
+     * @param privilegeBuilder PrivilegeBuilder instanca.
+     * @throws EnumConstantNotPresentException Ukoliko PrivilegeBuilder sadrži PrivilegeBuilderType koji nije definisan
+     *                                         u PrivilegeType.
+     */
+    public Privilege(PrivilegeBuilder privilegeBuilder) throws EnumConstantNotPresentException {
+        referencedObject = privilegeBuilder.getReferencedObject();
+        type = PrivilegeType.valueOf(privilegeBuilder.getPrivilegeType().toString());
     }
 
     public Object getReferencedObject() {

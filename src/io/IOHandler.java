@@ -1,6 +1,7 @@
 package io;
 
 import repository.builder.DirectoryBuilder;
+import user.builder.UserBuilder;
 
 /**
  * Vrši interakciju sa okruženjem.
@@ -55,9 +56,16 @@ public interface IOHandler {
      * Inicijalizuje strukturu skladišta na datoj putanji u korenski direktorijum, to jest Directory.getRoot().
      *
      * @param path Putanja skladišta.
-     * @return Vraća DirectoryBuilder instancu koja sadrži podstablo čvorova.
+     * @return Vraća DirectoryBuilder instancu koja sadrži podstablo čvorova ili null ukoliko je neuspešno.
      */
     DirectoryBuilder initStorage(String path);
 
-
+    /**
+     * Autorizuje korisnika iz konfiguracije korisnika i vraća novi bilder ukoliko korisnik postoji.
+     *
+     * @param username Korisničko ime.
+     * @param password Lozinka.
+     * @return Bilder za korisnika ili null ukoliko je neuspešno.
+     */
+    UserBuilder initUser(String username, String password);
 }

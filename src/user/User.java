@@ -1,6 +1,7 @@
 package user;
 
 
+import user.builder.PrivilegeBuilder;
 import user.builder.UserBuilder;
 
 import java.util.Collection;
@@ -57,7 +58,13 @@ public class User {
      * @param userBuilder UserBuilder instanca.
      */
     public User(UserBuilder userBuilder) {
+        username = userBuilder.getUsername();
+        password = userBuilder.getPassword();
 
+        privileges = new HashSet<>();
+        if (userBuilder.getPrivileges() != null)
+            for (PrivilegeBuilder pb : userBuilder.getPrivileges())
+                privileges.add(new Privilege(pb));
     }
 
     public String getUsername() {

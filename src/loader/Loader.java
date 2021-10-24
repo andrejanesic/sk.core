@@ -7,6 +7,8 @@ import repository.builder.DirectoryBuilder;
 import repository.builder.FileBuilder;
 import repository.builder.INodeBuilder;
 import repository.builder.INodeBuilderType;
+import user.User;
+import user.builder.UserBuilder;
 
 /**
  * Učitava skladište i njegove fajlove, konfiguraciju i korisnike.
@@ -27,6 +29,11 @@ public class Loader {
      * Korenski direktorijum.
      */
     private Directory root;
+
+    /**
+     * Trenutni korisnik.
+     */
+    private User user;
 
     /**
      * Putanja do skladišta u okruženju OS-a.
@@ -75,7 +82,7 @@ public class Loader {
      * @return Korenski direktorijum skladišta ili null ukoliko još nije izgrađen.
      */
     public Directory getRoot() {
-        return this.root;
+        return root;
     }
 
     /**
@@ -84,11 +91,11 @@ public class Loader {
      * @return Korenski Directory.
      */
     public synchronized Directory initRoot() {
-        if (this.root != null)
+        if (root != null)
             return root;
 
         DirectoryBuilder rootBuilder = IOManager.getIOHandler().initStorage(storagePath);
-        this.root = traverseDirectoryBuilder(null, rootBuilder);
+        root = traverseDirectoryBuilder(null, rootBuilder);
         return root;
     }
 
@@ -112,5 +119,28 @@ public class Loader {
 
         if (parent != null) return parent;
         return dir;
+    }
+
+    /**
+     * Vraća trenutno povezanog korisnika ili null ukoliko niko nije povezan.
+     *
+     * @return Korisnik ili null.
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Inicijalizuje korisnika na osnovu datih kredencijala. Trenutno ulogovan korisnik se diskonektuje.
+     *
+     * @param username Korisničko ime.
+     * @param password Lozinka.
+     * @return Korisnik ili null.
+     */
+    public synchronized User initUser(String username, String password) {
+        user = null;
+        UserBuilder userBuilder = IOManager.getIOHandler().initUser(username, password);
+        user = new User(userBuilder);
+        return user;
     }
 }

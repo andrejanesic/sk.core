@@ -1,18 +1,22 @@
 package io;
 
 import dummynode.DummyNode;
-import loader.Loader;
-import org.junit.jupiter.api.Test;
-import repository.Directory;
 import repository.builder.DirectoryBuilder;
+import user.builder.PrivilegeBuilder;
+import user.builder.UserBuilder;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Collection;
+import java.util.HashSet;
+
+import static user.builder.PrivilegeTypeBuilder.PRIVILEGE_ALL;
 
 /**
  * Testna implementacija IOHandlerTest-a.
  */
 public class IOHandlerTest implements IOHandler {
+
+    public static final String TEST_USERNAME = "testFoo";
+    public static final String TEST_PASSWORD = "testBar";
 
     @Override
     public void makeDirectory(String path) {
@@ -44,5 +48,19 @@ public class IOHandlerTest implements IOHandler {
         DirectoryBuilder rootBuilder = new DirectoryBuilder();
         DummyNode.dummyNodeTreeToBuilderNodeTree(rootBuilder, rootDummy);
         return rootBuilder;
+    }
+
+    @Override
+    public UserBuilder initUser(String username, String password) {
+        int r = (int) Math.floor(Math.random() * 10);
+
+        Collection<PrivilegeBuilder> privilegeBuilders;
+        if (r > 5) {
+            privilegeBuilders = null;
+        } else {
+            privilegeBuilders = new HashSet<>();
+            privilegeBuilders.add(new PrivilegeBuilder(PRIVILEGE_ALL));
+        }
+        return new UserBuilder(TEST_USERNAME, TEST_PASSWORD, privilegeBuilders);
     }
 }

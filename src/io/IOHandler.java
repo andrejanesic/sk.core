@@ -57,5 +57,7 @@ public interface IOHandler {
      * @param path Putanja skladišta.
      * @return Vraća DirectoryBuilder instancu koja sadrži podstablo čvorova.
      */
-    DirectoryBuilder buildStorage(String path);
+    DirectoryBuilder initStorage(String path);
+
+
 }

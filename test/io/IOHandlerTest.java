@@ -39,7 +39,7 @@ public class IOHandlerTest implements IOHandler {
     }
 
     @Override
-    public DirectoryBuilder buildStorage(String path) {
+    public DirectoryBuilder initStorage(String path) {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         DirectoryBuilder rootBuilder = new DirectoryBuilder();
         DummyNode.dummyNodeTreeToBuilderNodeTree(rootBuilder, rootDummy);

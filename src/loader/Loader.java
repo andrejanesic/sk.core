@@ -9,7 +9,7 @@ import repository.builder.INodeBuilder;
 import repository.builder.INodeBuilderType;
 
 /**
- * Učitava skladište i njegove fajlove.
+ * Učitava skladište i njegove fajlove, konfiguraciju i korisnike.
  */
 public class Loader {
 
@@ -45,7 +45,7 @@ public class Loader {
     /**
      * Vraća instancu Loader-a ili null ukoliko još nije inicijalizovan.
      *
-     * @return Instanca Loader-a.
+     * @return Instanca Loader-a ili null.
      */
     public static Loader getInstance() {
         return instance;
@@ -87,7 +87,7 @@ public class Loader {
         if (this.root != null)
             return root;
 
-        DirectoryBuilder rootBuilder = IOManager.getIOHandler().buildStorage(storagePath);
+        DirectoryBuilder rootBuilder = IOManager.getIOHandler().initStorage(storagePath);
         this.root = traverseDirectoryBuilder(null, rootBuilder);
         return root;
     }

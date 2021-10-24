@@ -67,7 +67,12 @@ public class ActionManager {
      */
     public void undo() {
         position -= 1;
-        queue.get(position).undo();
+        try {
+            queue.get(position).undo();
+        } catch (ActionUndoImpossibleException ignored) {
+        }
+        // #TODO ovde undo treba da bude od prethodne akcije, a run od sledeće
+        queue.remove(position);
     }
 
     /**

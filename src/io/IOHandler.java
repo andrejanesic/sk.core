@@ -68,4 +68,11 @@ public interface IOHandler {
      * @return Bilder za korisnika ili null ukoliko je neuspešno.
      */
     UserBuilder initUser(String username, String password);
+
+    /**
+     * Deautorizuje korisnika (trenutno koristi sistem).
+     *
+     * @param username Korisničko ime.
+     */
+    void deinitUser(String username);
 }

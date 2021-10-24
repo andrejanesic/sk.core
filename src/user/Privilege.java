@@ -2,6 +2,8 @@ package user;
 
 import user.builder.PrivilegeBuilder;
 
+import java.util.Objects;
+
 /**
  * JavaBean klasa korisničke privilegije. Predstavlja "jednu dozvolu" korisniku da radi nešto na nekom objektu, ili
  * dozvolu da radi nešto generalno.
@@ -56,5 +58,19 @@ public class Privilege {
 
     public PrivilegeType getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Privilege)) return false;
+        Privilege privilege = (Privilege) o;
+        return Objects.equals(getReferencedObject(), privilege.getReferencedObject()) &&
+                getType() == privilege.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getReferencedObject(), getType());
     }
 }

@@ -29,6 +29,7 @@ public class Loader {
      * Podrazumevani konstruktor.
      */
     private Loader() {
+        user = new User();
     }
 
     /**
@@ -62,6 +63,14 @@ public class Loader {
         DirectoryBuilder rootBuilder = IOManager.getIOHandler().initStorage(path);
         root = traverseDirectoryBuilder(null, rootBuilder);
         return root;
+    }
+
+    /**
+     * Deinicijalizuje skladište.
+     */
+    public synchronized void deinitStorage() {
+        // #TODO ovde treba izvršiti promene koje su u privremenoj memoriji i još nisu napisane, ako postoje
+        root = null;
     }
 
     /**
@@ -103,9 +112,20 @@ public class Loader {
      * @return Korisnik ili null.
      */
     public synchronized User initUser(String username, String password) {
-        user = null;
+        deinitUser();
         UserBuilder userBuilder = IOManager.getIOHandler().initUser(username, password);
         user = new User(userBuilder);
+        return user;
+    }
+
+    /**
+     * Deinicijalizuje korisnika.
+     *
+     * @return Novi anonimni korisnik.
+     */
+    public synchronized User deinitUser() {
+        user = new User();
+        IOManager.getIOHandler().deinitUser(getUser().getUsername());
         return user;
     }
 

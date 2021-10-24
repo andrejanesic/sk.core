@@ -28,6 +28,18 @@ public class User {
     private Collection<Privilege> privileges;
 
     /**
+     * Da li je korisnik autentifikovan, tj. ulogovan, ili ne.
+     */
+    private boolean authenticated = false;
+
+    /**
+     * Kreira novog anonimnog, neulogovanog korisnika.
+     */
+    public User() {
+        initAnonymousPrivileges();
+    }
+
+    /**
      * Podrazumevani konstruktor.
      *
      * @param username   Korisničko ime.
@@ -38,6 +50,9 @@ public class User {
         this.username = username;
         this.password = password;
         this.privileges = privileges;
+
+        initAnonymousPrivileges();
+        authenticated = true;
     }
 
     /**
@@ -50,6 +65,9 @@ public class User {
         this.username = username;
         this.password = password;
         this.privileges = new HashSet<>();
+
+        initAnonymousPrivileges();
+        authenticated = true;
     }
 
     /**
@@ -58,13 +76,30 @@ public class User {
      * @param userBuilder UserBuilder instanca.
      */
     public User(UserBuilder userBuilder) {
-        username = userBuilder.getUsername();
-        password = userBuilder.getPassword();
+        if (userBuilder.isAuthenticated()) {
+            username = userBuilder.getUsername();
+            password = userBuilder.getPassword();
 
-        privileges = new HashSet<>();
-        if (userBuilder.getPrivileges() != null)
-            for (PrivilegeBuilder pb : userBuilder.getPrivileges())
-                privileges.add(new Privilege(pb));
+            privileges = new HashSet<>();
+            if (userBuilder.getPrivileges() != null)
+                for (PrivilegeBuilder pb : userBuilder.getPrivileges())
+                    privileges.add(new Privilege(pb));
+
+            authenticated = true;
+        }
+
+        initAnonymousPrivileges();
+    }
+
+    /**
+     * Postavlja privilegije koje imaju svi korisnici, čak i anonimni.
+     */
+    private void initAnonymousPrivileges() {
+        if (privileges == null)
+            privileges = new HashSet<>();
+
+        privileges.add(new Privilege(PrivilegeType.LOGIN));
+        privileges.add(new Privilege(PrivilegeType.LOGOUT));
     }
 
     public String getUsername() {
@@ -79,6 +114,10 @@ public class User {
         return privileges;
     }
 
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
     /**
      * Dodaje novu privilegiju korisniku.
      *
@@ -89,11 +128,51 @@ public class User {
     }
 
     /**
+     * Dodaje novi tip privilegije (generalizovan) korisniku.
+     *
+     * @param type Tip privilegije.
+     */
+    public void grantPrivilege(PrivilegeType type) {
+        privileges.add(new Privilege(type));
+    }
+
+    /**
      * Oduzima privilegiju od korisnika.
      *
      * @param p Nova privilegija.
      */
     public void revokePrivilege(Privilege p) {
         privileges.remove(p);
+    }
+
+    /**
+     * Proverava da li korisnik ima datu privilegiju.
+     *
+     * @param p Privilegija.
+     * @return True ako ima, false ako nema.
+     */
+    public boolean hasPrivilege(Privilege p) {
+        return privileges.contains(p);
+    }
+
+    /**
+     * Proverava da li korisnik ima datu privilegiju.
+     *
+     * @param o    Objekat vezan za privilegiju.
+     * @param type Tip privilegije.
+     * @return True ako ima, false ako nema.
+     */
+    public boolean hasPrivilege(Object o, PrivilegeType type) {
+        return privileges.contains(new Privilege(o, type));
+    }
+
+    /**
+     * Proverava da li korisnik ima dati tip privilegije (generalizovano).
+     *
+     * @param type Tip privilegije.
+     * @return True ako ima, false ako nema.
+     */
+    public boolean hasPrivilege(PrivilegeType type) {
+        return hasPrivilege(null, type);
     }
 }

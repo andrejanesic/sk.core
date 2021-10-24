@@ -6,6 +6,12 @@ Autor: dr Bojana Dimić Surla, redovni profesor
 
 # Specifikacija prvog projekta iz predmeta Softverske komponente - školska 2021/2022. godina
 
+## Tok rada
+
+Sva komunikacija sa programom vrši se putem Action komponente.
+
+Svaku komandu koju korisnik zada potrebno je pretvoriti u Action instancu, koja vraća odgovor u vidu generalizovanog Object tipa, koji je dalje moguće kastovati u specifičnu klasu, u zavisnosti sa konkretnom akcijom.
+
 ## Implementacija komponente za upravljanje skladištem fajlova
 
 **Opis projekta:**

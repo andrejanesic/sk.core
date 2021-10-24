@@ -4,5 +4,8 @@ package user.builder;
  * Tipovi bildera korisničkih privilegija.
  */
 public enum PrivilegeTypeBuilder {
-    PRIVILEGE_ALL
+    ALL,
+    LOGIN,
+    LOGOUT,
+    INIT_STORAGE,
 }

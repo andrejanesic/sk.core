@@ -18,8 +18,8 @@ public class UserTest extends PrepareUserTest {
     @Test
     void testConstructorBuilder() {
         Collection<PrivilegeBuilder> privilegeBuilders = new HashSet<>();
-        privilegeBuilders.add(new PrivilegeBuilder(new Object(), PrivilegeTypeBuilder.PRIVILEGE_ALL));
-        privilegeBuilders.add(new PrivilegeBuilder(PrivilegeTypeBuilder.PRIVILEGE_ALL));
-        new User(new UserBuilder("foo", "bar", privilegeBuilders));
+        privilegeBuilders.add(new PrivilegeBuilder(new Object(), PrivilegeTypeBuilder.ALL));
+        privilegeBuilders.add(new PrivilegeBuilder(PrivilegeTypeBuilder.ALL));
+        new User(new UserBuilder("foo", "bar", privilegeBuilders, true));
     }
 }

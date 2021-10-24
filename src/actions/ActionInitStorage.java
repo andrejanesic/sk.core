@@ -1,17 +1,14 @@
 package actions;
 
-import exceptions.ActionUndoImpossibleException;
+import exceptions.ActionInsufficientPrivilegeException;
 import loader.Loader;
+
+import static user.PrivilegeType.INIT_STORAGE;
 
 /**
  * Radnja inicijalizacije skladišta.
  */
 public class ActionInitStorage implements Action {
-
-    /**
-     * Broj puta koji je akcija izvršena. #OGRANIČENJE dozvoljeno samo 1.
-     */
-    private static int count = 0;
 
     /**
      * Putanja do skladišta u OS okruženju.
@@ -29,16 +26,16 @@ public class ActionInitStorage implements Action {
 
     @Override
     public Boolean run() {
-        if (count != 0)
-            return false;
+        if (!Loader.getInstance().getUser().hasPrivilege(path, INIT_STORAGE))
+            throw new ActionInsufficientPrivilegeException();
 
-        count++;
         Loader.getInstance().initStorage(path);
         return true;
     }
 
     @Override
     public Boolean undo() {
-        throw new ActionUndoImpossibleException("storage initialization");
+        Loader.getInstance().deinitStorage();
+        return true;
     }
 }

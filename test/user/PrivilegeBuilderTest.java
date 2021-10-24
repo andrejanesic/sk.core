@@ -8,7 +8,7 @@ public class PrivilegeBuilderTest extends PrepareUserTest {
 
     @Test
     void testConstructor() {
-        new PrivilegeBuilder(PrivilegeTypeBuilder.PRIVILEGE_ALL);
-        new PrivilegeBuilder(new Object(), PrivilegeTypeBuilder.PRIVILEGE_ALL);
+        new PrivilegeBuilder(PrivilegeTypeBuilder.ALL);
+        new PrivilegeBuilder(new Object(), PrivilegeTypeBuilder.ALL);
     }
 }

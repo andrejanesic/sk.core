@@ -8,7 +8,7 @@ import user.builder.UserBuilder;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static user.builder.PrivilegeTypeBuilder.PRIVILEGE_ALL;
+import static user.builder.PrivilegeTypeBuilder.ALL;
 
 /**
  * Testna implementacija IOHandlerTest-a.
@@ -59,8 +59,12 @@ public class IOHandlerTest implements IOHandler {
             privilegeBuilders = null;
         } else {
             privilegeBuilders = new HashSet<>();
-            privilegeBuilders.add(new PrivilegeBuilder(PRIVILEGE_ALL));
+            privilegeBuilders.add(new PrivilegeBuilder(ALL));
         }
-        return new UserBuilder(TEST_USERNAME, TEST_PASSWORD, privilegeBuilders);
+        return new UserBuilder(TEST_USERNAME, TEST_PASSWORD, privilegeBuilders, true);
+    }
+
+    @Override
+    public void deinitUser(String username) {
     }
 }

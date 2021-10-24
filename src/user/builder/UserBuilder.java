@@ -13,10 +13,13 @@ public class UserBuilder {
 
     private Collection<PrivilegeBuilder> privileges;
 
-    public UserBuilder(String username, String password, Collection<PrivilegeBuilder> privileges) {
+    private boolean authenticated = false;
+
+    public UserBuilder(String username, String password, Collection<PrivilegeBuilder> privileges, boolean authenticated) {
         this.username = username;
         this.password = password;
         this.privileges = privileges;
+        this.authenticated = authenticated;
     }
 
     public String getUsername() {
@@ -41,5 +44,13 @@ public class UserBuilder {
 
     public void setPrivileges(Collection<PrivilegeBuilder> privileges) {
         this.privileges = privileges;
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 }

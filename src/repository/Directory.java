@@ -210,7 +210,7 @@ public class Directory extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getInstance().moveFile(oldPath, getPath());
+        IOManager.getInstance().moveDirectory(oldPath, getPath());
     }
 
     /**

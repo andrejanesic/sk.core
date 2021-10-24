@@ -1,11 +1,11 @@
-package user;
+package actions;
 
 import io.IOHandlerTest;
 import io.IOManager;
 import loader.Loader;
 import org.junit.jupiter.api.BeforeAll;
 
-public class PrepareUserTest {
+public class ActionsPrepareTest {
 
     @BeforeAll
     static void setHandler() {

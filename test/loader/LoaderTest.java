@@ -17,7 +17,7 @@ public class LoaderTest {
 
     @Test
     void testInitRoot() {
-        assertDoesNotThrow(() -> Loader.getInstance("test").initRoot());
+        assertDoesNotThrow(() -> Loader.getInstance().initStorage("test"));
         assertDoesNotThrow(() -> Loader.getInstance().getRoot().getPath());
         assertEquals(Directory.ROOT_DIRECTORY, Loader.getInstance().getRoot().getPath());
     }
@@ -26,8 +26,8 @@ public class LoaderTest {
     void testInitUser() {
         String username = "foo";
         String password = "bar";
-        assertDoesNotThrow(() -> Loader.getInstance("test").initUser(username, password));
-        assertNotEquals(null, Loader.getInstance("test").getUser());
+        assertDoesNotThrow(() -> Loader.getInstance().initUser(username, password));
+        assertNotEquals(null, Loader.getInstance().getUser());
         assertEquals(Loader.getInstance().getUser().getUsername(), IOHandlerTest.TEST_USERNAME);
         assertEquals(Loader.getInstance().getUser().getPassword(), IOHandlerTest.TEST_PASSWORD);
     }

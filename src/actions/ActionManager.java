@@ -1,5 +1,7 @@
 package actions;
 
+import exceptions.ActionUndoImpossibleException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +55,11 @@ public class ActionManager {
      * Izvršava sledeću radnju u redu.
      */
     public void run() {
-        queue.get(position).run();
-        position += 1;
+        try {
+            queue.get(position).run();
+        } finally {
+            position += 1;
+        }
     }
 
     /**

@@ -16,16 +16,6 @@ import user.builder.UserBuilder;
 public class Loader {
 
     /**
-     * Singleton lock za sinhronizaciju.
-     */
-    private static final Object lock = new Object();
-
-    /**
-     * Singleton instanca.
-     */
-    private static Loader instance;
-
-    /**
      * Korenski direktorijum.
      */
     private Directory root;
@@ -36,44 +26,18 @@ public class Loader {
     private User user;
 
     /**
-     * Putanja do skladišta u okruženju OS-a.
-     */
-    private String storagePath;
-
-    /**
      * Podrazumevani konstruktor.
-     *
-     * @param storagePath Putanja do skladišta u okruženju OS-a.
      */
-    private Loader(String storagePath) {
-        this.storagePath = storagePath;
+    private Loader() {
     }
 
     /**
-     * Vraća instancu Loader-a ili null ukoliko još nije inicijalizovan.
+     * Vraća instancu Loader-a.
      *
-     * @return Instanca Loader-a ili null.
+     * @return Loader instanca.
      */
     public static Loader getInstance() {
-        return instance;
-    }
-
-    /**
-     * Inicijalizuje Loader i vraća instancu.
-     *
-     * @param storagePath Putanja do skladišta u okruženju OS-a.
-     * @return Instanca Loader-a.
-     */
-    public static Loader getInstance(String storagePath) {
-        if (instance != null)
-            return instance;
-
-        synchronized (lock) {
-            if (instance == null)
-                instance = new Loader(storagePath);
-
-            return instance;
-        }
+        return Holder.INSTANCE;
     }
 
     /**
@@ -88,13 +52,14 @@ public class Loader {
     /**
      * Gradi korenski Directory na osnovu putanje do skladišta u okruženju.
      *
+     * @param path Putanja do skladišta u OS okruženju.
      * @return Korenski Directory.
      */
-    public synchronized Directory initRoot() {
+    public synchronized Directory initStorage(String path) {
         if (root != null)
             return root;
 
-        DirectoryBuilder rootBuilder = IOManager.getIOHandler().initStorage(storagePath);
+        DirectoryBuilder rootBuilder = IOManager.getIOHandler().initStorage(path);
         root = traverseDirectoryBuilder(null, rootBuilder);
         return root;
     }
@@ -142,5 +107,12 @@ public class Loader {
         UserBuilder userBuilder = IOManager.getIOHandler().initUser(username, password);
         user = new User(userBuilder);
         return user;
+    }
+
+    /**
+     * Holder za thread-safe singleton instancu.
+     */
+    private static class Holder {
+        private static final Loader INSTANCE = new Loader();
     }
 }

@@ -37,12 +37,12 @@ public class Directory extends INode {
         children = new HashSet<>();
         if (!name.equals(ROOT_DIRECTORY)) {
             if (parent == null)
-                throw new INodeFatalError("Non-root node have null parent.");
+                throw new INodeFatalException("Non-root node have null parent.");
             if (name.contains("/"))
-                throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+                throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
         } else {
             if (parent != null)
-                throw new INodeFatalError("Root node cannot have a parent.");
+                throw new INodeFatalException("Root node cannot have a parent.");
         }
         if (parent != null)
             IOManager.getIOHandler().makeDirectory(getPath());
@@ -60,12 +60,12 @@ public class Directory extends INode {
         children = new HashSet<>();
         if (!directoryBuilder.getName().equals(ROOT_DIRECTORY)) {
             if (parent == null)
-                throw new INodeFatalError("Non-root node cannot have null parent.");
+                throw new INodeFatalException("Non-root node cannot have null parent.");
             if (directoryBuilder.getName().contains("/"))
-                throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+                throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
         } else {
             if (parent != null)
-                throw new INodeFatalError("Root node cannot have a parent.");
+                throw new INodeFatalException("Root node cannot have a parent.");
         }
     }
 
@@ -84,14 +84,14 @@ public class Directory extends INode {
      * @param name Naziv čvora.
      * @param type Tip čvora.
      * @return Novonapravljeni čvor.
-     * @throws DirectoryMakeNodeNameInvalidException   Greška ukoliko nije ispravan naziv čvora.
-     * @throws DirectoryMakeNodeNameNotUniqueException Greška ukoliko već postoji čvor sa datim nazivom istog tipa.
-     * @throws DirectoryMakeNodeInvalidNodeType        Greška ukoliko je dati tip čvora null.
+     * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv čvora.
+     * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji čvor sa datim nazivom istog tipa.
+     * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
      */
     private INode makeNode(String name, INodeType type) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException {
         // #OGRANIČENJE
         // proveri da li je naziv čvora ispravan, tj. ne završava se sa "/"
         if (name == null ||
@@ -109,7 +109,7 @@ public class Directory extends INode {
         // #OGRANIČENJE
         // proveri da li je validan INodeType
         if (type == null) {
-            throw new DirectoryMakeNodeInvalidNodeType();
+            throw new DirectoryMakeNodeInvalidNodeTypeException();
         }
 
         // inicijalizuj čvor
@@ -129,14 +129,14 @@ public class Directory extends INode {
      *
      * @param name Naziv direktorijuma.
      * @return Novonapravljeni direktorijum.
-     * @throws DirectoryMakeNodeNameInvalidException   Greška ukoliko nije ispravan naziv direktorijuma.
-     * @throws DirectoryMakeNodeNameNotUniqueException Greška ukoliko već postoji direktorijum sa datim nazivom.
-     * @throws DirectoryMakeNodeInvalidNodeType        Greška ukoliko je dati tip čvora null.
+     * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv direktorijuma.
+     * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji direktorijum sa datim nazivom.
+     * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
      */
     public Directory makeDirectory(String name) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException {
         return (Directory) makeNode(name, INodeType.DIRECTORY);
     }
 
@@ -145,14 +145,14 @@ public class Directory extends INode {
      *
      * @param name Naziv fajla.
      * @return Novonapravljeni fajl.
-     * @throws DirectoryMakeNodeNameInvalidException   Greška ukoliko nije ispravan naziv fajla.
-     * @throws DirectoryMakeNodeNameNotUniqueException Greška ukoliko već postoji fajl sa datim nazivom.
-     * @throws DirectoryMakeNodeInvalidNodeType        Greška ukoliko je dati tip čvora null.
+     * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv fajla.
+     * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji fajl sa datim nazivom.
+     * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
      */
     public File makeFile(String name) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException {
         return (File) makeNode(name, INodeType.FILE);
     }
 
@@ -170,7 +170,7 @@ public class Directory extends INode {
     }
 
     @Override
-    public void delete(String path) {
+    public void delete(String path) throws INodeRootNotInitializedException {
         INode target = resolvePath(path);
 
         // ako nije pozvan na meti za brisanje, prebaci na tu instancu
@@ -183,7 +183,7 @@ public class Directory extends INode {
     }
 
     @Override
-    public void move(String path) {
+    public void move(String path) throws INodeRootNotInitializedException {
         INode destNode = resolvePath(path);
 
         // ako je korenski čvor, nema pomeranja
@@ -245,10 +245,11 @@ public class Directory extends INode {
      *
      * @param path Putanja.
      * @return Čvor ukoliko je nađen.
+     * @throws INodeRootNotInitializedException Ukoliko korenski čvor nije inicijalizovan.
      */
-    public INode resolvePath(String path) {
+    public INode resolvePath(String path) throws INodeRootNotInitializedException {
         if (Loader.getInstance().getRoot() == null)
-            throw new DirectoryInvalidPathException(path);
+            throw new INodeRootNotInitializedException();
 
         if (path == null)
             throw new DirectoryInvalidPathException("null");
@@ -260,7 +261,7 @@ public class Directory extends INode {
 
         // odredi početni direktorijum
         String pathOld = path;
-        Directory curr = null;
+        Directory curr;
 
         if (path.equals(""))
             return Loader.getInstance().getRoot();
@@ -281,7 +282,7 @@ public class Directory extends INode {
             throw new DirectoryInvalidPathException(pathOld);
 
         // traži se sledeći prelaz u direktorijum
-        int i = 0, j = 0;
+        int i = 0, j;
         String name;
         INode next = curr;
         path = path + "/"; // dodajemo "/" na kraj radi jednostavnosti algoritma

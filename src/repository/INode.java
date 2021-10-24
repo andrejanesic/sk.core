@@ -1,6 +1,7 @@
 package repository;
 
-import exceptions.INodeFatalError;
+import exceptions.INodeFatalException;
+import exceptions.INodeRootNotInitializedException;
 
 /**
  * INode predstavlja jedan čvor u skladištu, koji može biti fajl ili direktorijum.
@@ -36,7 +37,7 @@ abstract class INode {
         this.type = type;
 
         if (this == parent)
-            throw new INodeFatalError("Fatal error: INode cannot be its own parent.");
+            throw new INodeFatalException("Fatal error: INode cannot be its own parent.");
     }
 
     /**
@@ -105,8 +106,9 @@ abstract class INode {
      * Briše metu iz IO i svoje podčvorove, ukoliko postoje.
      *
      * @param path Putanja do čvora za brisanje.
+     * @throws INodeRootNotInitializedException Ukoliko korenski čvor nije inicijalizovan.
      */
-    public abstract void delete(String path);
+    public abstract void delete(String path) throws INodeRootNotInitializedException;
 
     /**
      * Briše sebe iz IO i svoje podčvorove, ukoliko postoje.
@@ -117,8 +119,9 @@ abstract class INode {
      * Pomeranje čvora u novi čvor.
      *
      * @param dest Destinacioni čvor.
+     * @throws INodeRootNotInitializedException Ukoliko korenski čvor nije inicijalizovan.
      */
-    public void move(INode dest) {
+    public void move(INode dest) throws INodeRootNotInitializedException {
         move(dest.getPath());
     }
 
@@ -126,7 +129,8 @@ abstract class INode {
      * Pomeranje čvora u novi čvor.
      *
      * @param path Putanja destinacionog čvora.
+     * @throws INodeRootNotInitializedException Ukoliko korenski čvor nije inicijalizovan.
      */
-    public abstract void move(String path);
+    public abstract void move(String path) throws INodeRootNotInitializedException;
 
 }

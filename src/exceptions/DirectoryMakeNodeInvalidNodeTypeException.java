@@ -3,9 +3,9 @@ package exceptions;
 /**
  * Ukoliko prosleđeni tip čvora za kreiranje u direktorijumu nije validan.
  */
-public class DirectoryMakeNodeInvalidNodeType extends Exception {
+public class DirectoryMakeNodeInvalidNodeTypeException extends Exception {
 
-    public DirectoryMakeNodeInvalidNodeType() {
+    public DirectoryMakeNodeInvalidNodeTypeException() {
         super("Node type not valid.");
     }
 }

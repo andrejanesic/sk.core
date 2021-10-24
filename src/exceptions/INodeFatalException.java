@@ -3,9 +3,9 @@ package exceptions;
 /**
  * Dešava se kada za vreme izvršavanja dođe do postavke pogrešnog parametra koji onemogućava rad čvora.
  */
-public class INodeFatalError extends RuntimeException {
+public class INodeFatalException extends RuntimeException {
 
-    public INodeFatalError(String s) {
+    public INodeFatalException(String s) {
         super(s);
     }
 }

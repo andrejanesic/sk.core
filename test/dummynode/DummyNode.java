@@ -1,8 +1,9 @@
 package dummynode;
 
-import exceptions.DirectoryMakeNodeInvalidNodeType;
+import exceptions.DirectoryMakeNodeInvalidNodeTypeException;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
+import exceptions.INodeRootNotInitializedException;
 import repository.Directory;
 import repository.builder.DirectoryBuilder;
 import repository.builder.FileBuilder;
@@ -19,7 +20,7 @@ public class DummyNode {
     public static List<DummyNode> poolDirs = new ArrayList<>();
     public static List<DummyNode> poolFiles = new ArrayList<>();
     public List<DummyNode> children = new ArrayList<>();
-    public DummyNode parent = null;
+    public DummyNode parent;
     public DummyNodeType type;
 
     public DummyNode(DummyNode parent, DummyNodeType type) {
@@ -81,14 +82,14 @@ public class DummyNode {
      * @param ref      Referenca na trenutni pravi čvor.
      * @param dummyRef Referenca na treuntni testni čvor.
      * @return Referenca na pravi čvor sa kojim je funkcija pozvana.
-     * @throws DirectoryMakeNodeNameInvalidException
-     * @throws DirectoryMakeNodeNameNotUniqueException
-     * @throws DirectoryMakeNodeInvalidNodeType
+     * @throws DirectoryMakeNodeNameInvalidException     Ukoliko ime čvora nije validno.
+     * @throws DirectoryMakeNodeNameNotUniqueException   Ukoliko se ponovi ime čvora.
+     * @throws DirectoryMakeNodeInvalidNodeTypeException Ukoliko tip čvora nije validan.
      */
     public static Directory dummyNodeTreeToNodeTree(Directory ref, DummyNode dummyRef) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException {
         for (DummyNode c : dummyRef.children) {
             if (c.type.equals(DummyNodeType.FILE)) {
                 ref.makeFile(c.id());
@@ -179,8 +180,9 @@ public class DummyNode {
      * Prolazi kroz svu decu i poziva callback funkciju na njima.
      *
      * @param cb Callback funkcija.
+     * @throws INodeRootNotInitializedException Ukoliko korenski čvor nije inicijalizovan.
      */
-    public void traverse(DummyNodeCallback cb) {
+    public void traverse(DummyNodeCallback cb) throws INodeRootNotInitializedException {
         cb.execute(this);
         for (DummyNode c : children)
             c.traverse(cb);

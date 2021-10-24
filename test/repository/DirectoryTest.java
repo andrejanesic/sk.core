@@ -1,10 +1,10 @@
 package repository;
 
+import dummynode.DummyNode;
+import dummynode.DummyNodeType;
 import exceptions.*;
 import loader.Loader;
 import org.junit.jupiter.api.Test;
-import dummynode.DummyNode;
-import dummynode.DummyNodeType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,7 +60,7 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testNodePaths() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException {
         Directory d0_0 = Loader.getInstance().getRoot().makeDirectory("d0_0");
         Directory d0_1 = Loader.getInstance().getRoot().makeDirectory("d0_1");
         Directory d0_0_0 = d0_0.makeDirectory("d0_0_0");
@@ -83,7 +83,8 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testMoveDirectoryIntoFile() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         Directory root = Loader.getInstance().getRoot();
         while (DummyNode.poolDirs.size() < 1 || DummyNode.poolFiles.size() < 1) {
@@ -103,7 +104,8 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testMoveDirectorIntoDirectory() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy, targetDummy, destDummy;
         do {
             clearDummies();
@@ -134,7 +136,12 @@ class DirectoryTest extends RepositoryTestPrepare {
 
         DummyNode finalRootDummy = rootDummy;
         assertDoesNotThrow(() -> finalRootDummy.traverse(dummyNode -> {
-            Loader.getInstance().getRoot().resolvePath(dummyNode.path());
+            try {
+                Loader.getInstance()
+                        .getRoot().resolvePath(dummyNode.path());
+            } catch (INodeRootNotInitializedException e) {
+                e.printStackTrace();
+            }
         }));
     }
 
@@ -142,7 +149,7 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testMoveRootDirectory() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException, INodeRootNotInitializedException {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         rootDummy.children.removeIf((d) -> d.type == DummyNodeType.FILE);
         if (rootDummy.children.size() == 0) return;
@@ -161,18 +168,17 @@ class DirectoryTest extends RepositoryTestPrepare {
         rootDummy.parent = destDummy;
         rootDummy.children.remove(destDummy);
 
-        assertThrows(DirectoryInvalidPathException.class, () -> {
-            destDummy.traverse(dummyNode -> {
-                Loader.getInstance().getRoot().resolvePath(dummyNode.path());
-            });
-        });
+        assertThrows(DirectoryInvalidPathException.class, () -> destDummy.traverse(
+                dummyNode -> Loader.getInstance().getRoot().resolvePath(dummyNode.path()))
+        );
     }
 
     @Test
     void testMoveParentDirectorIntoDirectory() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy, targetDummy, destDummy;
         do {
             clearDummies();
@@ -201,7 +207,8 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testDeleteDirectory() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
@@ -212,9 +219,9 @@ class DirectoryTest extends RepositoryTestPrepare {
             assertThrows(INodeUnsupportedOperationException.class, () -> root.delete(targetDummy.path()));
         } else {
             assertDoesNotThrow(() -> root.delete(targetDummy.path()));
-            targetDummy.traverse((dummyNode) -> {
-                assertThrows(DirectoryInvalidPathException.class, () -> root.resolvePath(dummyNode.path()));
-            });
+            targetDummy.traverse((dummyNode) -> assertThrows(DirectoryInvalidPathException.class,
+                    () -> root.resolvePath(dummyNode.path()))
+            );
         }
     }
 
@@ -222,8 +229,9 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testPathResolution() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType,
-            DirectoryInvalidPathException {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            DirectoryInvalidPathException,
+            INodeRootNotInitializedException {
         String d0Name = "2021-10-23-20-46-0";
         String d1Name = "2021-10-23-20-46-1";
         String d2Name = "2021-10-23-20-46-2";

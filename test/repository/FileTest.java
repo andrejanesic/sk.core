@@ -1,12 +1,12 @@
 package repository;
 
-import io.IOHandlerTest;
+import dummynode.DummyNode;
 import exceptions.*;
+import io.IOHandlerTest;
 import io.IOManager;
 import loader.Loader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import dummynode.DummyNode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +21,8 @@ class FileTest extends RepositoryTestPrepare {
     void testMoveFileIntoFile() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy, targetDummy = null, destDummy = null;
         do {
             clearDummies();
@@ -42,7 +43,8 @@ class FileTest extends RepositoryTestPrepare {
     void testMoveFileIntoDirectory() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy, targetDummy = null, destDummy = null;
         do {
             clearDummies();
@@ -69,7 +71,8 @@ class FileTest extends RepositoryTestPrepare {
     void testDeleteFile() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeType {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeRootNotInitializedException {
         DummyNode rootDummy, targetDummy = null;
         do {
             clearDummies();
@@ -83,8 +86,7 @@ class FileTest extends RepositoryTestPrepare {
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
         DummyNode finalTargetDummy = targetDummy;
         assertDoesNotThrow(() -> root.delete(finalTargetDummy.path()));
-        targetDummy.traverse((dummyNode) -> {
-            assertThrows(DirectoryInvalidPathException.class, () -> root.resolvePath(dummyNode.path()));
-        });
+        targetDummy.traverse((dummyNode) -> assertThrows(DirectoryInvalidPathException.class,
+                () -> root.resolvePath(dummyNode.path())));
     }
 }

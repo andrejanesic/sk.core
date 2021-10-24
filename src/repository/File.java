@@ -1,6 +1,7 @@
 package repository;
 
-import exceptions.INodeFatalError;
+import exceptions.INodeFatalException;
+import exceptions.INodeRootNotInitializedException;
 import exceptions.INodeUnsupportedOperationException;
 import io.IOManager;
 import repository.builder.FileBuilder;
@@ -20,9 +21,9 @@ public class File extends INode {
         super(parent, name, INodeType.FILE);
 
         if (parent == null)
-            throw new INodeFatalError("File cannot have null parent.");
+            throw new INodeFatalException("File cannot have null parent.");
         if (name.contains("/"))
-            throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+            throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
         IOManager.getIOHandler().makeFile(getPath());
     }
 
@@ -36,9 +37,9 @@ public class File extends INode {
         super(parent, fileBuilder.getName(), INodeType.FILE);
 
         if (parent == null)
-            throw new INodeFatalError("File cannot have null parent.");
+            throw new INodeFatalException("File cannot have null parent.");
         if (fileBuilder.getName().contains("/"))
-            throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+            throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
     }
 
     @Override
@@ -51,7 +52,7 @@ public class File extends INode {
     }
 
     @Override
-    public void delete(String path) {
+    public void delete(String path) throws INodeRootNotInitializedException {
         INode target = ((Directory) getParent()).resolvePath(path);
 
         // ako nije pozvan na meti za brisanje, prebaci na tu instancu
@@ -64,7 +65,7 @@ public class File extends INode {
     }
 
     @Override
-    public void move(String path) {
+    public void move(String path) throws INodeRootNotInitializedException {
         INode iNode = ((Directory) getParent()).resolvePath(path);
 
         // ako se pomera u isti čvor, samo vrati

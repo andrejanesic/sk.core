@@ -83,7 +83,7 @@ public class Loader {
      *
      * @return Korenski Directory.
      */
-    public synchronized Directory buildRoot() {
+    public synchronized Directory initRoot() {
         if (this.root != null)
             return root;
 

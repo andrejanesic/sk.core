@@ -18,7 +18,7 @@ public class LoaderTest {
 
     @Test
     void testBuildRoot() {
-        Loader.getInstance("test").buildRoot();
+        Loader.getInstance("test").initRoot();
         assertDoesNotThrow(() -> Loader.getInstance().getRoot().getPath());
         assertEquals(Directory.ROOT_DIRECTORY, Loader.getInstance().getRoot().getPath());
     }

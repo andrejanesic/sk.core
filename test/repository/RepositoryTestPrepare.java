@@ -12,7 +12,7 @@ public class RepositoryTestPrepare {
     @BeforeAll
     static void setHandler() {
         IOManager.setIOHandler(new IOHandlerTest());
-        Loader.getInstance("test").buildRoot();
+        Loader.getInstance("test").initRoot();
     }
 
     @BeforeEach

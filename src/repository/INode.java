@@ -1,5 +1,7 @@
 package repository;
 
+import exceptions.INodeFatalError;
+
 /**
  * INode predstavlja jedan čvor u skladištu, koji može biti fajl ili direktorijum.
  */
@@ -34,7 +36,7 @@ abstract class INode {
         this.type = type;
 
         if (this == parent)
-            throw new RuntimeException("Fatal error: INode cannot be its own parent.");
+            throw new INodeFatalError("Fatal error: INode cannot be its own parent.");
     }
 
     /**

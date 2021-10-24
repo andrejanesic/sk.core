@@ -15,7 +15,7 @@ public class IOManager {
      *
      * @return IOHandler instanca.
      */
-    public static IOHandler getInstance() {
+    public static IOHandler getIOHandler() {
         return instance;
     }
 
@@ -24,7 +24,7 @@ public class IOManager {
      *
      * @param instance Potklasa IOHandler-a.
      */
-    public static void setInstance(IOHandler instance) {
+    public static void setIOHandler(IOHandler instance) {
         IOManager.instance = instance;
     }
 }

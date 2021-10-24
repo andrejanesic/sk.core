@@ -4,14 +4,15 @@ import exceptions.DirectoryInvalidPathException;
 import exceptions.DirectoryMakeNodeInvalidNodeType;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
+import loader.Loader;
 import org.junit.jupiter.api.Test;
-import repository.dummynode.DummyNode;
-import repository.dummynode.DummyNodeType;
+import dummynode.DummyNode;
+import dummynode.DummyNodeType;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DummyNodeTest extends TestPrepare {
+public class DummyNodeTest extends RepositoryTestPrepare {
 
     @Test
     void testDummyNodeTreeToNodeTree() throws
@@ -21,7 +22,7 @@ public class DummyNodeTest extends TestPrepare {
             DirectoryInvalidPathException {
 
         DummyNode rootDummy = DummyNode.generateDummyNodes();
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         for (DummyNode d : DummyNode.pool) {

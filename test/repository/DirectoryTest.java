@@ -1,68 +1,54 @@
 package repository;
 
 import exceptions.*;
+import loader.Loader;
 import org.junit.jupiter.api.Test;
-import repository.dummynode.DummyNode;
-import repository.dummynode.DummyNodeType;
+import dummynode.DummyNode;
+import dummynode.DummyNodeType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirectoryTest extends TestPrepare {
-
-    @Test
-    void testMakeRoot() {
-        Directory.makeRoot();
-        assertDoesNotThrow(() -> Directory.getRoot().getPath());
-    }
+class DirectoryTest extends RepositoryTestPrepare {
 
     @Test
     void testGetRootPath() {
         try {
-            assertEquals(Directory.ROOT_DIRECTORY, Directory.getRoot().getPath());
+            assertEquals(Directory.ROOT_DIRECTORY, Loader.getInstance().getRoot().getPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    void testMakeRootAgain() {
-        Directory root1 = Directory.makeRoot();
-        Directory root2 = Directory.makeRoot();
-        assertDoesNotThrow(() -> Directory.getRoot().getPath());
-        assertEquals(root2, Directory.getRoot());
-        assertNotEquals(root1, root2);
-    }
-
-    @Test
     void testMakeDirectory() {
-        assertDoesNotThrow(() -> Directory.getRoot().makeDirectory("test"));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().makeDirectory("test"));
     }
 
     @Test
     void testMakeDirectoryInvalidName() {
-        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Directory.getRoot().makeDirectory("abc/"));
+        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Loader.getInstance().getRoot().makeDirectory("abc/"));
     }
 
     @Test
     void testMakeFileInvalidName() {
-        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Directory.getRoot().makeFile("def/"));
+        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Loader.getInstance().getRoot().makeFile("def/"));
     }
 
     @Test
     void testMakeDirectoryDuplicateName() {
-        assertDoesNotThrow(() -> Directory.getRoot().makeFile("foo123"));
-        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Directory.getRoot().makeFile("foo123"));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().makeFile("foo123"));
+        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Loader.getInstance().getRoot().makeFile("foo123"));
     }
 
     @Test
     void testMakeFileDuplicateName() {
-        assertDoesNotThrow(() -> Directory.getRoot().makeFile("bar"));
-        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Directory.getRoot().makeFile("bar"));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().makeFile("bar"));
+        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Loader.getInstance().getRoot().makeFile("bar"));
     }
 
     @Test
     void testNestedDirectoryMakeNode() {
-        assertDoesNotThrow(() -> Directory.getRoot()
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot()
                 .makeDirectory("abcdefghi0")
                 .makeDirectory("abcdefghi1")
                 .makeDirectory("abcdefghi2")
@@ -75,8 +61,8 @@ class DirectoryTest extends TestPrepare {
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
-        Directory d0_0 = Directory.getRoot().makeDirectory("d0_0");
-        Directory d0_1 = Directory.getRoot().makeDirectory("d0_1");
+        Directory d0_0 = Loader.getInstance().getRoot().makeDirectory("d0_0");
+        Directory d0_1 = Loader.getInstance().getRoot().makeDirectory("d0_1");
         Directory d0_0_0 = d0_0.makeDirectory("d0_0_0");
         Directory d0_0_1 = d0_0.makeDirectory("d0_0_1");
         Directory d0_1_0 = d0_1.makeDirectory("d0_1_0");
@@ -99,7 +85,7 @@ class DirectoryTest extends TestPrepare {
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         while (DummyNode.poolDirs.size() < 1 || DummyNode.poolFiles.size() < 1) {
             clearDummies();
             rootDummy = DummyNode.generateDummyNodes();
@@ -131,7 +117,7 @@ class DirectoryTest extends TestPrepare {
 
         } while (destDummy.isGrandchild(targetDummy) || targetDummy == rootDummy);
 
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         Directory target = (Directory) root.resolvePath(targetDummy.path());
@@ -148,7 +134,7 @@ class DirectoryTest extends TestPrepare {
 
         DummyNode finalRootDummy = rootDummy;
         assertDoesNotThrow(() -> finalRootDummy.traverse(dummyNode -> {
-            Directory.getRoot().resolvePath(dummyNode.path());
+            Loader.getInstance().getRoot().resolvePath(dummyNode.path());
         }));
     }
 
@@ -161,7 +147,7 @@ class DirectoryTest extends TestPrepare {
         rootDummy.children.removeIf((d) -> d.type == DummyNodeType.FILE);
         if (rootDummy.children.size() == 0) return;
 
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         DummyNode destDummy = rootDummy.children.get((int) Math.floor(Math.random() * rootDummy.children.size()));
@@ -177,7 +163,7 @@ class DirectoryTest extends TestPrepare {
 
         assertThrows(DirectoryInvalidPathException.class, () -> {
             destDummy.traverse(dummyNode -> {
-                Directory.getRoot().resolvePath(dummyNode.path());
+                Loader.getInstance().getRoot().resolvePath(dummyNode.path());
             });
         });
     }
@@ -202,7 +188,7 @@ class DirectoryTest extends TestPrepare {
 
         assertTrue(destDummy.isGrandchild(targetDummy));
 
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         Directory target = (Directory) root.resolvePath(targetDummy.path());
@@ -217,7 +203,7 @@ class DirectoryTest extends TestPrepare {
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeType {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
@@ -247,27 +233,27 @@ class DirectoryTest extends TestPrepare {
         String i2Name = "2021-10-23-21-05-0";
         String i3Name = "2021-10-23-21-06-0";
         String i4Name = "2021-10-23-21-07-0";
-        Directory d0 = Directory.getRoot().makeDirectory(d0Name);
-        Directory d1 = Directory.getRoot().makeDirectory(d1Name);
+        Directory d0 = Loader.getInstance().getRoot().makeDirectory(d0Name);
+        Directory d1 = Loader.getInstance().getRoot().makeDirectory(d1Name);
         Directory d2 = d1.makeDirectory(d2Name);
         Directory d3 = d2.makeDirectory(d3Name);
         File f1 = d2.makeFile(f1Name);
 
         // assert no errors
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d0Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d1Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath(d0Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath(d1Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d0Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d1Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("/" + d0Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("/" + d1Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d0Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d1Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name));
-        assertDoesNotThrow(() -> Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("./" + d0Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("./" + d1Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Loader.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
 
         assertDoesNotThrow(() -> d1.resolvePath(d2Name));
         assertDoesNotThrow(() -> d2.resolvePath(d3Name));
@@ -283,20 +269,20 @@ class DirectoryTest extends TestPrepare {
         assertDoesNotThrow(() -> d1.resolvePath("./" + d2Name + "/" + d3Name));
 
         // assert errors
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(i1Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + i2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + i3Name + "/" + d3Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/" + i4Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(i1Name + "/"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(i1Name + "//"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(" " + i1Name + " "));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "//" + d2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/ /" + d2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "//" + d2Name + "///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath(d1Name + "////" + d2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("/./" + i1Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> Directory.getRoot().resolvePath("./" + i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "/" + i2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "/" + i3Name + "/" + d3Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/" + i4Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(i1Name + "/"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(i1Name + "//"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(" " + i1Name + " "));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "//" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "/ /" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "//" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath(d1Name + "////" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath("/./" + i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Loader.getInstance().getRoot().resolvePath("./" + i1Name));
 
         assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(i1Name));
         assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(d2Name + "/" + i2Name));
@@ -314,26 +300,26 @@ class DirectoryTest extends TestPrepare {
         assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("./" + i2Name));
 
         // assert well resolved
-        assertEquals(d0, Directory.getRoot().resolvePath(d0Name));
-        assertEquals(d1, Directory.getRoot().resolvePath(d1Name));
-        assertEquals(d2, Directory.getRoot().resolvePath(d1Name + "/" + d2Name));
-        assertEquals(d3, Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
-        assertEquals(f1, Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name));
-        assertEquals(f1, Directory.getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/"));
+        assertEquals(d0, Loader.getInstance().getRoot().resolvePath(d0Name));
+        assertEquals(d1, Loader.getInstance().getRoot().resolvePath(d1Name));
+        assertEquals(d2, Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name));
+        assertEquals(d3, Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Loader.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d0, Directory.getRoot().resolvePath("/" + d0Name));
-        assertEquals(d1, Directory.getRoot().resolvePath("/" + d1Name));
-        assertEquals(d2, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name));
-        assertEquals(d3, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
-        assertEquals(f1, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name));
-        assertEquals(f1, Directory.getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
+        assertEquals(d0, Loader.getInstance().getRoot().resolvePath("/" + d0Name));
+        assertEquals(d1, Loader.getInstance().getRoot().resolvePath("/" + d1Name));
+        assertEquals(d2, Loader.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name));
+        assertEquals(d3, Loader.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Loader.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Loader.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d0, Directory.getRoot().resolvePath("./" + d0Name));
-        assertEquals(d1, Directory.getRoot().resolvePath("./" + d1Name));
-        assertEquals(d2, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name));
-        assertEquals(d3, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
-        assertEquals(f1, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name));
-        assertEquals(f1, Directory.getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
+        assertEquals(d0, Loader.getInstance().getRoot().resolvePath("./" + d0Name));
+        assertEquals(d1, Loader.getInstance().getRoot().resolvePath("./" + d1Name));
+        assertEquals(d2, Loader.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name));
+        assertEquals(d3, Loader.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Loader.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Loader.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
         assertEquals(d2, d1.resolvePath(d2Name));
         assertEquals(d3, d1.resolvePath(d2Name + "/" + d3Name));

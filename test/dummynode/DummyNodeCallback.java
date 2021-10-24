@@ -1,4 +1,4 @@
-package repository.dummynode;
+package dummynode;
 
 /**
  * Koristi se kao callback za DummyNode funkcije.

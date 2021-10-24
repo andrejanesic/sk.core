@@ -1,21 +1,22 @@
 package repository;
 
-import implementation.IOHandler;
+import dummynode.DummyNode;
+import io.IOHandlerTest;
 import io.IOManager;
+import loader.Loader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import repository.dummynode.DummyNode;
 
-public class TestPrepare {
+public class RepositoryTestPrepare {
 
     @BeforeAll
     static void setHandler() {
-        IOManager.setInstance(new IOHandler());
+        IOManager.setIOHandler(new IOHandlerTest());
+        Loader.getInstance("test").buildRoot();
     }
 
     @BeforeEach
     void clearDummies() {
-        if (Directory.getRoot() == null) Directory.makeRoot();
         DummyNode.pool.clear();
         DummyNode.poolDirs.clear();
         DummyNode.poolFiles.clear();

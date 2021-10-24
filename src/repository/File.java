@@ -1,7 +1,9 @@
 package repository;
 
+import exceptions.INodeFatalError;
 import exceptions.INodeUnsupportedOperationException;
 import io.IOManager;
+import repository.builder.FileBuilder;
 
 /**
  * Klasa fajlova.
@@ -14,16 +16,35 @@ public class File extends INode {
      * @param parent Roditeljski direktorijum.
      * @param name   Naziv fajla.
      */
-    File(INode parent, String name) {
+    public File(INode parent, String name) {
         super(parent, name, INodeType.FILE);
 
-        IOManager.getInstance().makeFile(getPath());
+        if (parent == null)
+            throw new INodeFatalError("File cannot have null parent.");
+        if (name.contains("/"))
+            throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+        IOManager.getIOHandler().makeFile(getPath());
+    }
+
+    /**
+     * Kreira novi File na osnovu FileBuilder bildera.
+     *
+     * @param parent      Roditeljski direktorijum.
+     * @param fileBuilder FileBuilder bilder.
+     */
+    public File(Directory parent, FileBuilder fileBuilder) {
+        super(parent, fileBuilder.getName(), INodeType.FILE);
+
+        if (parent == null)
+            throw new INodeFatalError("File cannot have null parent.");
+        if (fileBuilder.getName().contains("/"))
+            throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
     }
 
     @Override
     public void delete() {
         // obriši sebe
-        IOManager.getInstance().deleteFile(getPath());
+        IOManager.getIOHandler().deleteFile(getPath());
 
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
@@ -66,6 +87,6 @@ public class File extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getInstance().moveFile(oldPath, getPath());
+        IOManager.getIOHandler().moveFile(oldPath, getPath());
     }
 }

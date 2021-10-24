@@ -1,9 +1,11 @@
-package repository.dummynode;
+package dummynode;
 
 import exceptions.DirectoryMakeNodeInvalidNodeType;
 import exceptions.DirectoryMakeNodeNameInvalidException;
 import exceptions.DirectoryMakeNodeNameNotUniqueException;
 import repository.Directory;
+import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,26 @@ public class DummyNode {
             } else {
                 Directory t = ref.makeDirectory(c.id());
                 dummyNodeTreeToNodeTree(t, c);
+            }
+        }
+        return ref;
+    }
+
+    /**
+     * Pretvara dummy stablo u bilder stablo za testiranje.
+     *
+     * @param ref      Referenca na trenutni pravi čvor.
+     * @param dummyRef Referenca na treuntni bilder čvor.
+     * @return Referenca na bilder čvor sa kojim je funkcija pozvana.
+     */
+    public static DirectoryBuilder dummyNodeTreeToBuilderNodeTree(DirectoryBuilder ref, DummyNode dummyRef) {
+        for (DummyNode c : dummyRef.children) {
+            if (c.type.equals(DummyNodeType.FILE)) {
+                ref.addChild(new FileBuilder(ref, c.id()));
+            } else {
+                DirectoryBuilder t = new DirectoryBuilder(ref, c.id());
+                ref.addChild(t);
+                dummyNodeTreeToBuilderNodeTree(t, c);
             }
         }
         return ref;

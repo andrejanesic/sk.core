@@ -1,19 +1,20 @@
 package repository;
 
+import io.IOHandlerTest;
 import exceptions.*;
-import implementation.IOHandler;
 import io.IOManager;
+import loader.Loader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import repository.dummynode.DummyNode;
+import dummynode.DummyNode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileTest extends TestPrepare {
+class FileTest extends RepositoryTestPrepare {
 
     @BeforeAll
     public static void setHandler() {
-        IOManager.setInstance(new IOHandler());
+        IOManager.setIOHandler(new IOHandlerTest());
     }
 
     @Test
@@ -30,7 +31,7 @@ class FileTest extends TestPrepare {
             destDummy = DummyNode.poolFiles.get((int) Math.floor(Math.random() * DummyNode.poolFiles.size()));
         } while (targetDummy == destDummy);
 
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
         File target = (File) root.resolvePath(targetDummy.path());
         File dest = (File) root.resolvePath(destDummy.path());
@@ -50,7 +51,7 @@ class FileTest extends TestPrepare {
             targetDummy = DummyNode.poolFiles.get((int) Math.floor(Math.random() * DummyNode.poolFiles.size()));
             destDummy = DummyNode.poolDirs.get((int) Math.floor(Math.random() * DummyNode.poolDirs.size()));
         } while (targetDummy == null || destDummy == null);
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         File target = (File) root.resolvePath(targetDummy.path());
@@ -78,7 +79,7 @@ class FileTest extends TestPrepare {
             targetDummy = DummyNode.poolFiles.get(index);
         } while (targetDummy == null);
 
-        Directory root = Directory.getRoot();
+        Directory root = Loader.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
         DummyNode finalTargetDummy = targetDummy;
         assertDoesNotThrow(() -> root.delete(finalTargetDummy.path()));

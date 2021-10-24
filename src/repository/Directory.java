@@ -2,12 +2,14 @@ package repository;
 
 import exceptions.*;
 import io.IOManager;
+import loader.Loader;
+import repository.builder.DirectoryBuilder;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Klasa direktorijuma. Čuva korenski direktorijum.
+ * Klasa direktorijuma. Čuva korenski direktorijum. Predstavlja podstablo čitavog skladišta.
  */
 public class Directory extends INode {
 
@@ -17,10 +19,6 @@ public class Directory extends INode {
      * Za sinhronizaciju.
      */
     private static final Object lock = new Object();
-    /**
-     * Korenski direktorijum.
-     */
-    private static Directory root = null;
 
     /**
      * Podčvorovi.
@@ -28,39 +26,47 @@ public class Directory extends INode {
     private Collection<INode> children;
 
     /**
-     * Podrazumevani konstruktor.
+     * Konstruktor na osnovu postojećeg direktorijuma.
      *
      * @param parent Roditeljski direktorijum.
      * @param name   Naziv direktorijuma.
      */
-    private Directory(Directory parent, String name) {
+    public Directory(Directory parent, String name) {
         super(parent, name, INodeType.DIRECTORY);
 
         children = new HashSet<>();
-        if (parent != null)
-            IOManager.getInstance().makeDirectory(getPath());
-    }
-
-    /**
-     * Inicijalizuje novi korenski direktorijum.
-     *
-     * @return Korenski direktorijum.
-     */
-    public static Directory makeRoot() {
-        synchronized (lock) {
-            // korenski čvor nema ime, tj. ime je ""
-            root = new Directory(null, ROOT_DIRECTORY);
-            return root;
+        if (!name.equals(ROOT_DIRECTORY)) {
+            if (parent == null)
+                throw new INodeFatalError("Non-root node have null parent.");
+            if (name.contains("/"))
+                throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+        } else {
+            if (parent != null)
+                throw new INodeFatalError("Root node cannot have a parent.");
         }
+        if (parent != null)
+            IOManager.getIOHandler().makeDirectory(getPath());
     }
 
     /**
-     * Vraća korenski direktorijum.
+     * Konstruktor na osnovu bilder klase.
      *
-     * @return Korenski direktorijum.
+     * @param parent           Roditeljski direktorijum.
+     * @param directoryBuilder Bilder.
      */
-    public static Directory getRoot() {
-        return root;
+    public Directory(Directory parent, DirectoryBuilder directoryBuilder) {
+        super(parent, directoryBuilder.getName(), INodeType.DIRECTORY);
+
+        children = new HashSet<>();
+        if (!directoryBuilder.getName().equals(ROOT_DIRECTORY)) {
+            if (parent == null)
+                throw new INodeFatalError("Non-root node cannot have null parent.");
+            if (directoryBuilder.getName().contains("/"))
+                throw new INodeFatalError("Node cannot contain illegal character '/' in name.");
+        } else {
+            if (parent != null)
+                throw new INodeFatalError("Root node cannot have a parent.");
+        }
     }
 
     /**
@@ -157,7 +163,7 @@ public class Directory extends INode {
             throw new INodeUnsupportedOperationException("Cannot delete root directory.");
 
         // obriši sebe
-        IOManager.getInstance().deleteDirectory(getPath());
+        IOManager.getIOHandler().deleteDirectory(getPath());
 
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
@@ -210,7 +216,7 @@ public class Directory extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getInstance().moveDirectory(oldPath, getPath());
+        IOManager.getIOHandler().moveDirectory(oldPath, getPath());
     }
 
     /**
@@ -218,7 +224,7 @@ public class Directory extends INode {
      *
      * @param iNode Novi čvor.
      */
-    protected void linkNode(INode iNode) {
+    public void linkNode(INode iNode) {
         if (children.contains(iNode)) return;
         children.add(iNode);
         iNode.setParent(this);
@@ -229,7 +235,7 @@ public class Directory extends INode {
      *
      * @param iNode Čvor za deregistraciju.
      */
-    protected void unlinkNode(INode iNode) {
+    public void unlinkNode(INode iNode) {
         if (!children.contains(iNode)) return;
         children.remove(iNode);
     }
@@ -241,7 +247,7 @@ public class Directory extends INode {
      * @return Čvor ukoliko je nađen.
      */
     public INode resolvePath(String path) {
-        if (root == null)
+        if (Loader.getInstance().getRoot() == null)
             throw new DirectoryInvalidPathException(path);
 
         if (path == null)
@@ -257,12 +263,12 @@ public class Directory extends INode {
         Directory curr = null;
 
         if (path.equals(""))
-            return Directory.getRoot();
+            return Loader.getInstance().getRoot();
         if (path.equals(".") || path.equals("./"))
             return this;
 
         if (path.substring(0, 1).equals(ROOT_DIRECTORY)) {
-            curr = root;
+            curr = Loader.getInstance().getRoot();
             path = path.substring(1);
         } else {
             if (path.length() > 1 && path.substring(0, 2).equals("./"))

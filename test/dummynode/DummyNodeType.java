@@ -1,4 +1,4 @@
-package repository.dummynode;
+package dummynode;
 
 public enum DummyNodeType {
     DIR,

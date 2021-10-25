@@ -2,7 +2,6 @@ package actions;
 
 import core.Core;
 import exceptions.ActionUndoImpossibleException;
-import storage.StorageManager;
 
 /**
  * Akcija za izlogovanje korisnika.

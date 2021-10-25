@@ -2,7 +2,6 @@ package actions;
 
 import core.Core;
 import exceptions.ActionInsufficientPrivilegeException;
-import storage.StorageManager;
 
 import static user.PrivilegeType.INIT_STORAGE;
 

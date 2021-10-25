@@ -1,10 +1,10 @@
 package repository;
 
+import core.Core;
 import dummynode.DummyNode;
 import dummynode.DummyNodeType;
 import exceptions.*;
 import org.junit.jupiter.api.Test;
-import storage.StorageManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +13,7 @@ class DirectoryTest extends RepositoryTestPrepare {
     @Test
     void testGetRootPath() {
         try {
-            assertEquals(Directory.ROOT_DIRECTORY, StorageManager.getInstance().getRoot().getPath());
+            assertEquals(Directory.ROOT_DIRECTORY, Core.getInstance().StorageManager().getRoot().getPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -21,34 +21,34 @@ class DirectoryTest extends RepositoryTestPrepare {
 
     @Test
     void testMakeDirectory() {
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().makeDirectory("test"));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().makeDirectory("test"));
     }
 
     @Test
     void testMakeDirectoryInvalidName() {
-        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> StorageManager.getInstance().getRoot().makeDirectory("abc/"));
+        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Core.getInstance().StorageManager().getRoot().makeDirectory("abc/"));
     }
 
     @Test
     void testMakeFileInvalidName() {
-        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> StorageManager.getInstance().getRoot().makeFile("def/"));
+        assertThrows(DirectoryMakeNodeNameInvalidException.class, () -> Core.getInstance().StorageManager().getRoot().makeFile("def/"));
     }
 
     @Test
     void testMakeDirectoryDuplicateName() {
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().makeFile("foo123"));
-        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> StorageManager.getInstance().getRoot().makeFile("foo123"));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().makeFile("foo123"));
+        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Core.getInstance().StorageManager().getRoot().makeFile("foo123"));
     }
 
     @Test
     void testMakeFileDuplicateName() {
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().makeFile("bar"));
-        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> StorageManager.getInstance().getRoot().makeFile("bar"));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().makeFile("bar"));
+        assertThrows(DirectoryMakeNodeNameNotUniqueException.class, () -> Core.getInstance().StorageManager().getRoot().makeFile("bar"));
     }
 
     @Test
     void testNestedDirectoryMakeNode() {
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot()
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot()
                 .makeDirectory("abcdefghi0")
                 .makeDirectory("abcdefghi1")
                 .makeDirectory("abcdefghi2")
@@ -61,8 +61,8 @@ class DirectoryTest extends RepositoryTestPrepare {
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeTypeException {
-        Directory d0_0 = StorageManager.getInstance().getRoot().makeDirectory("d0_0");
-        Directory d0_1 = StorageManager.getInstance().getRoot().makeDirectory("d0_1");
+        Directory d0_0 = Core.getInstance().StorageManager().getRoot().makeDirectory("d0_0");
+        Directory d0_1 = Core.getInstance().StorageManager().getRoot().makeDirectory("d0_1");
         Directory d0_0_0 = d0_0.makeDirectory("d0_0_0");
         Directory d0_0_1 = d0_0.makeDirectory("d0_0_1");
         Directory d0_1_0 = d0_1.makeDirectory("d0_1_0");
@@ -86,7 +86,7 @@ class DirectoryTest extends RepositoryTestPrepare {
             DirectoryMakeNodeInvalidNodeTypeException,
             INodeRootNotInitializedException {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
-        Directory root = StorageManager.getInstance().getRoot();
+        Directory root = Core.getInstance().StorageManager().getRoot();
         while (DummyNode.poolDirs.size() < 1 || DummyNode.poolFiles.size() < 1) {
             clearDummies();
             rootDummy = DummyNode.generateDummyNodes();
@@ -119,7 +119,7 @@ class DirectoryTest extends RepositoryTestPrepare {
 
         } while (destDummy.isGrandchild(targetDummy) || targetDummy == rootDummy);
 
-        Directory root = StorageManager.getInstance().getRoot();
+        Directory root = Core.getInstance().StorageManager().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         Directory target = (Directory) root.resolvePath(targetDummy.path());
@@ -137,7 +137,7 @@ class DirectoryTest extends RepositoryTestPrepare {
         DummyNode finalRootDummy = rootDummy;
         assertDoesNotThrow(() -> finalRootDummy.traverse(dummyNode -> {
             try {
-                StorageManager.getInstance().getRoot().resolvePath(dummyNode.path());
+                Core.getInstance().StorageManager().getRoot().resolvePath(dummyNode.path());
             } catch (INodeRootNotInitializedException e) {
                 e.printStackTrace();
             }
@@ -153,7 +153,7 @@ class DirectoryTest extends RepositoryTestPrepare {
         rootDummy.children.removeIf((d) -> d.type == DummyNodeType.FILE);
         if (rootDummy.children.size() == 0) return;
 
-        Directory root = StorageManager.getInstance().getRoot();
+        Directory root = Core.getInstance().StorageManager().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         DummyNode destDummy = rootDummy.children.get((int) Math.floor(Math.random() * rootDummy.children.size()));
@@ -168,7 +168,7 @@ class DirectoryTest extends RepositoryTestPrepare {
         rootDummy.children.remove(destDummy);
 
         assertThrows(DirectoryInvalidPathException.class, () -> destDummy.traverse(
-                dummyNode -> StorageManager.getInstance().getRoot().resolvePath(dummyNode.path()))
+                dummyNode -> Core.getInstance().StorageManager().getRoot().resolvePath(dummyNode.path()))
         );
     }
 
@@ -193,7 +193,7 @@ class DirectoryTest extends RepositoryTestPrepare {
 
         assertTrue(destDummy.isGrandchild(targetDummy));
 
-        Directory root = StorageManager.getInstance().getRoot();
+        Directory root = Core.getInstance().StorageManager().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         Directory target = (Directory) root.resolvePath(targetDummy.path());
@@ -209,7 +209,7 @@ class DirectoryTest extends RepositoryTestPrepare {
             DirectoryMakeNodeInvalidNodeTypeException,
             INodeRootNotInitializedException {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
-        Directory root = StorageManager.getInstance().getRoot();
+        Directory root = Core.getInstance().StorageManager().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
@@ -240,27 +240,27 @@ class DirectoryTest extends RepositoryTestPrepare {
         String i2Name = "2021-10-23-21-05-0";
         String i3Name = "2021-10-23-21-06-0";
         String i4Name = "2021-10-23-21-07-0";
-        Directory d0 = StorageManager.getInstance().getRoot().makeDirectory(d0Name);
-        Directory d1 = StorageManager.getInstance().getRoot().makeDirectory(d1Name);
+        Directory d0 = Core.getInstance().StorageManager().getRoot().makeDirectory(d0Name);
+        Directory d1 = Core.getInstance().StorageManager().getRoot().makeDirectory(d1Name);
         Directory d2 = d1.makeDirectory(d2Name);
         Directory d3 = d2.makeDirectory(d3Name);
         File f1 = d2.makeFile(f1Name);
 
         // assert no errors
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath(d0Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath(d1Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath(d0Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("/" + d0Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("/" + d1Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("/" + d0Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
 
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("./" + d0Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("./" + d1Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("./" + d0Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name + "/" + d2Name));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
 
         assertDoesNotThrow(() -> d1.resolvePath(d2Name));
         assertDoesNotThrow(() -> d2.resolvePath(d3Name));
@@ -276,20 +276,20 @@ class DirectoryTest extends RepositoryTestPrepare {
         assertDoesNotThrow(() -> d1.resolvePath("./" + d2Name + "/" + d3Name));
 
         // assert errors
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(i1Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + i2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + i3Name + "/" + d3Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/" + i4Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(i1Name + "/"));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(i1Name + "//"));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(" " + i1Name + " "));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "//" + d2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/ /" + d2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "//" + d2Name + "///"));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath(d1Name + "////" + d2Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath("/./" + i1Name));
-        assertThrows(DirectoryInvalidPathException.class, () -> StorageManager.getInstance().getRoot().resolvePath("./" + i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + i2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + i3Name + "/" + d3Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/" + i4Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(i1Name + "/"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(i1Name + "//"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(" " + i1Name + " "));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "//" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/ /" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "//" + d2Name + "///"));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "////" + d2Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath("/./" + i1Name));
+        assertThrows(DirectoryInvalidPathException.class, () -> Core.getInstance().StorageManager().getRoot().resolvePath("./" + i1Name));
 
         assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(i1Name));
         assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath(d2Name + "/" + i2Name));
@@ -307,26 +307,26 @@ class DirectoryTest extends RepositoryTestPrepare {
         assertThrows(DirectoryInvalidPathException.class, () -> d1.resolvePath("./" + i2Name));
 
         // assert well resolved
-        assertEquals(d0, StorageManager.getInstance().getRoot().resolvePath(d0Name));
-        assertEquals(d1, StorageManager.getInstance().getRoot().resolvePath(d1Name));
-        assertEquals(d2, StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name));
-        assertEquals(d3, StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
-        assertEquals(f1, StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name));
-        assertEquals(f1, StorageManager.getInstance().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/"));
+        assertEquals(d0, Core.getInstance().StorageManager().getRoot().resolvePath(d0Name));
+        assertEquals(d1, Core.getInstance().StorageManager().getRoot().resolvePath(d1Name));
+        assertEquals(d2, Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name));
+        assertEquals(d3, Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Core.getInstance().StorageManager().getRoot().resolvePath(d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d0, StorageManager.getInstance().getRoot().resolvePath("/" + d0Name));
-        assertEquals(d1, StorageManager.getInstance().getRoot().resolvePath("/" + d1Name));
-        assertEquals(d2, StorageManager.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name));
-        assertEquals(d3, StorageManager.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
-        assertEquals(f1, StorageManager.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name));
-        assertEquals(f1, StorageManager.getInstance().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
+        assertEquals(d0, Core.getInstance().StorageManager().getRoot().resolvePath("/" + d0Name));
+        assertEquals(d1, Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name));
+        assertEquals(d2, Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name + "/" + d2Name));
+        assertEquals(d3, Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Core.getInstance().StorageManager().getRoot().resolvePath("/" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
-        assertEquals(d0, StorageManager.getInstance().getRoot().resolvePath("./" + d0Name));
-        assertEquals(d1, StorageManager.getInstance().getRoot().resolvePath("./" + d1Name));
-        assertEquals(d2, StorageManager.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name));
-        assertEquals(d3, StorageManager.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
-        assertEquals(f1, StorageManager.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name));
-        assertEquals(f1, StorageManager.getInstance().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
+        assertEquals(d0, Core.getInstance().StorageManager().getRoot().resolvePath("./" + d0Name));
+        assertEquals(d1, Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name));
+        assertEquals(d2, Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name + "/" + d2Name));
+        assertEquals(d3, Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + d3Name));
+        assertEquals(f1, Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name));
+        assertEquals(f1, Core.getInstance().StorageManager().getRoot().resolvePath("./" + d1Name + "/" + d2Name + "/" + f1Name + "/"));
 
         assertEquals(d2, d1.resolvePath(d2Name));
         assertEquals(d3, d1.resolvePath(d2Name + "/" + d3Name));

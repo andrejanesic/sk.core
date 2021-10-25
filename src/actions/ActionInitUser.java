@@ -1,8 +1,8 @@
 package actions;
 
+import core.Core;
 import exceptions.ActionInsufficientPrivilegeException;
 import user.User;
-import user.UserManager;
 
 import static user.PrivilegeType.LOGIN;
 
@@ -42,18 +42,18 @@ public class ActionInitUser implements Action {
         if (tried)
             return false;
 
-        if (!UserManager.getInstance().getUser().hasPrivilege(LOGIN))
+        if (!Core.getInstance().UserManager().getUser().hasPrivilege(LOGIN))
             throw new ActionInsufficientPrivilegeException();
 
         tried = true;
-        User u = UserManager.getInstance().initUser(username, password);
+        User u = Core.getInstance().UserManager().initUser(username, password);
         return u.isAuthenticated();
     }
 
     @Override
     public Boolean undo() {
-        if (UserManager.getInstance().getUser().isAuthenticated())
-            UserManager.getInstance().deinitUser();
+        if (Core.getInstance().UserManager().getUser().isAuthenticated())
+            Core.getInstance().UserManager().deinitUser();
         return true;
     }
 }

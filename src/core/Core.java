@@ -1,3 +1,5 @@
+package core;
+
 import io.IODriver;
 import io.IOManager;
 import storage.IStorageManager;
@@ -17,9 +19,9 @@ public class Core {
     }
 
     /**
-     * Vraća instancu Core-a.
+     * Vraća instancu core.Core-a.
      *
-     * @return Core instanca.
+     * @return core.Core instanca.
      */
     public static Core getInstance() {
         return Holder.INSTANCE;

@@ -1,9 +1,9 @@
 package repository;
 
+import core.Core;
 import exceptions.*;
 import io.IOManager;
 import repository.builder.DirectoryBuilder;
-import storage.StorageManager;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -248,7 +248,7 @@ public class Directory extends INode {
      * @throws INodeRootNotInitializedException Ukoliko korenski čvor nije inicijalizovan.
      */
     public INode resolvePath(String path) throws INodeRootNotInitializedException {
-        if (StorageManager.getInstance().getRoot() == null)
+        if (Core.getInstance().StorageManager().getRoot() == null)
             throw new INodeRootNotInitializedException();
 
         if (path == null)
@@ -264,12 +264,12 @@ public class Directory extends INode {
         Directory curr;
 
         if (path.equals(""))
-            return StorageManager.getInstance().getRoot();
+            return Core.getInstance().StorageManager().getRoot();
         if (path.equals(".") || path.equals("./"))
             return this;
 
         if (path.substring(0, 1).equals(ROOT_DIRECTORY)) {
-            curr = StorageManager.getInstance().getRoot();
+            curr = Core.getInstance().StorageManager().getRoot();
             path = path.substring(1);
         } else {
             if (path.length() > 1 && path.substring(0, 2).equals("./"))

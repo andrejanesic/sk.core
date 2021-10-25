@@ -1,8 +1,8 @@
 package actions;
 
+import core.Core;
 import exceptions.ActionUndoImpossibleException;
 import storage.StorageManager;
-import user.UserManager;
 
 /**
  * Akcija za izlogovanje korisnika.
@@ -17,10 +17,10 @@ public class ActionDeinitUser implements Action {
 
     @Override
     public Object run() {
-        if (!UserManager.getInstance().getUser().isAuthenticated())
+        if (!Core.getInstance().UserManager().getUser().isAuthenticated())
             return true;
-        StorageManager.getInstance().deinitStorage();
-        UserManager.getInstance().deinitUser();
+        Core.getInstance().StorageManager().deinitStorage();
+        Core.getInstance().UserManager().deinitUser();
         return true;
     }
 

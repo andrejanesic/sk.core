@@ -1,18 +1,18 @@
 package repository;
 
+import core.Core;
 import dummynode.DummyNode;
 import io.IODriverTest;
 import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import storage.StorageManager;
 
 public class RepositoryTestPrepare {
 
     @BeforeAll
     static void setHandler() {
         IOManager.setIODriver(new IODriverTest());
-        StorageManager.getInstance().initStorage("test");
+        Core.getInstance().StorageManager().initStorage("test");
     }
 
     @BeforeEach

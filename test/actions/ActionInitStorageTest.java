@@ -1,12 +1,11 @@
 package actions;
 
+import core.Core;
 import exceptions.ActionUndoImpossibleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import storage.StorageManager;
 import user.PrivilegeType;
-import user.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,20 +15,20 @@ public class ActionInitStorageTest extends ActionsPrepareTest {
 
     @BeforeEach
     void testSetup() {
-        UserManager.getInstance().getUser().grantPrivilege("test", PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().getUser().grantPrivilege("test", PrivilegeType.INIT_STORAGE);
         action = new ActionInitStorage("test");
     }
 
     @AfterEach
     void testCleanup() {
-        UserManager.getInstance().getUser().revokePrivilege(PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().getUser().revokePrivilege(PrivilegeType.INIT_STORAGE);
     }
 
     @Test
     void testActionInitStorageRun() {
-        assertNull(StorageManager.getInstance().getRoot());
+        assertNull(Core.getInstance().StorageManager().getRoot());
         assertDoesNotThrow(() -> action.run());
-        assertNotNull(StorageManager.getInstance().getRoot());
+        assertNotNull(Core.getInstance().StorageManager().getRoot());
     }
 
     @Test
@@ -45,8 +44,8 @@ public class ActionInitStorageTest extends ActionsPrepareTest {
             action.run();
         } catch (ActionUndoImpossibleException ignored) {
         }
-        Object o = StorageManager.getInstance().getRoot();
+        Object o = Core.getInstance().StorageManager().getRoot();
         assertDoesNotThrow(() -> action.undo());
-        assertNull(StorageManager.getInstance().getRoot());
+        assertNull(Core.getInstance().StorageManager().getRoot());
     }
 }

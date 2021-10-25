@@ -1,10 +1,10 @@
+import core.Core;
 import io.IODriverTest;
 import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import repository.Directory;
 import storage.StorageManager;
-import user.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,18 +17,18 @@ public class CoreTest {
 
     @Test
     void testInitRoot() {
-        assertDoesNotThrow(() -> StorageManager.getInstance().initStorage("test"));
-        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().getPath());
-        assertEquals(Directory.ROOT_DIRECTORY, StorageManager.getInstance().getRoot().getPath());
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().initStorage("test"));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().getPath());
+        assertEquals(Directory.ROOT_DIRECTORY, Core.getInstance().StorageManager().getRoot().getPath());
     }
 
     @Test
     void testInitUser() {
         String username = "foo";
         String password = "bar";
-        assertDoesNotThrow(() -> UserManager.getInstance().initUser(username, password));
-        assertNotEquals(null, UserManager.getInstance().getUser());
-        assertEquals(UserManager.getInstance().getUser().getUsername(), IODriverTest.TEST_USERNAME);
-        assertEquals(UserManager.getInstance().getUser().getPassword(), IODriverTest.TEST_PASSWORD);
+        assertDoesNotThrow(() -> Core.getInstance().UserManager().initUser(username, password));
+        assertNotEquals(null, Core.getInstance().UserManager().getUser());
+        assertEquals(Core.getInstance().UserManager().getUser().getUsername(), IODriverTest.TEST_USERNAME);
+        assertEquals(Core.getInstance().UserManager().getUser().getPassword(), IODriverTest.TEST_PASSWORD);
     }
 }

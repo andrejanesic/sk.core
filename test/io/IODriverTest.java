@@ -11,9 +11,9 @@ import java.util.HashSet;
 import static user.builder.PrivilegeTypeBuilder.ALL;
 
 /**
- * Testna implementacija IOHandlerTest-a.
+ * Testna implementacija IODriverTest-a.
  */
-public class IOHandlerTest implements IOHandler {
+public class IODriverTest implements IODriver {
 
     public static final String TEST_USERNAME = "testFoo";
     public static final String TEST_PASSWORD = "testBar";

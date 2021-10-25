@@ -2,7 +2,6 @@ package repository;
 
 import exceptions.*;
 import io.IOManager;
-import loader.Loader;
 import repository.builder.DirectoryBuilder;
 import storage.StorageManager;
 
@@ -46,7 +45,7 @@ public class Directory extends INode {
                 throw new INodeFatalException("Root node cannot have a parent.");
         }
         if (parent != null)
-            IOManager.getIOHandler().makeDirectory(getPath());
+            IOManager.getIOAdapter().makeDirectory(getPath());
     }
 
     /**
@@ -164,7 +163,7 @@ public class Directory extends INode {
             throw new INodeUnsupportedOperationException("Cannot delete root directory.");
 
         // obriši sebe
-        IOManager.getIOHandler().deleteDirectory(getPath());
+        IOManager.getIOAdapter().deleteDirectory(getPath());
 
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
@@ -217,7 +216,7 @@ public class Directory extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getIOHandler().moveDirectory(oldPath, getPath());
+        IOManager.getIOAdapter().moveDirectory(oldPath, getPath());
     }
 
     /**

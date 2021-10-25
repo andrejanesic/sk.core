@@ -49,7 +49,7 @@ public class StorageManager implements IStorageManager {
         if (root != null)
             return root;
 
-        DirectoryBuilder rootBuilder = IOManager.getIOHandler().initStorage(path);
+        DirectoryBuilder rootBuilder = IOManager.getIOAdapter().initStorage(path);
         root = traverseDirectoryBuilder(null, rootBuilder);
         return root;
     }

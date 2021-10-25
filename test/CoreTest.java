@@ -1,6 +1,4 @@
-package loader;
-
-import io.IOHandlerTest;
+import io.IODriverTest;
 import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,11 +8,11 @@ import user.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LoaderTest {
+public class CoreTest {
 
     @BeforeAll
     static void setHandler() {
-        IOManager.setIOHandler(new IOHandlerTest());
+        IOManager.setIODriver(new IODriverTest());
     }
 
     @Test
@@ -30,7 +28,7 @@ public class LoaderTest {
         String password = "bar";
         assertDoesNotThrow(() -> UserManager.getInstance().initUser(username, password));
         assertNotEquals(null, UserManager.getInstance().getUser());
-        assertEquals(UserManager.getInstance().getUser().getUsername(), IOHandlerTest.TEST_USERNAME);
-        assertEquals(UserManager.getInstance().getUser().getPassword(), IOHandlerTest.TEST_PASSWORD);
+        assertEquals(UserManager.getInstance().getUser().getUsername(), IODriverTest.TEST_USERNAME);
+        assertEquals(UserManager.getInstance().getUser().getPassword(), IODriverTest.TEST_PASSWORD);
     }
 }

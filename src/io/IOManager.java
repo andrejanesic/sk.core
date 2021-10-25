@@ -1,30 +1,30 @@
 package io;
 
 /**
- * Upravlja trenutnom IOHandler implementacijom.
+ * Upravlja trenutnom IODriver implementacijom.
  */
 public class IOManager {
 
     /**
-     * Trenutna IOHandler implementacija.
+     * Trenutna IODriver implementacija.
      */
-    private static IOHandler instance;
+    private static IODriver instance;
 
     /**
-     * Vraća IOHandler klasu.
+     * Vraća IODriver klasu.
      *
-     * @return IOHandler instanca.
+     * @return IODriver instanca.
      */
-    public static IOHandler getIOHandler() {
+    public static IODriver getIOAdapter() {
         return instance;
     }
 
     /**
-     * Postavlja instancu IOHandler-a.
+     * Postavlja instancu IODriver-a.
      *
-     * @param instance Potklasa IOHandler-a.
+     * @param instance Potklasa IODriver-a.
      */
-    public static void setIOHandler(IOHandler instance) {
+    public static void setIODriver(IODriver instance) {
         IOManager.instance = instance;
     }
 }

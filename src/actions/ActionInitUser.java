@@ -1,7 +1,6 @@
 package actions;
 
 import exceptions.ActionInsufficientPrivilegeException;
-import loader.Loader;
 import user.User;
 import user.UserManager;
 

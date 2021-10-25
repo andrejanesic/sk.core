@@ -32,14 +32,14 @@ public class UserManager implements IUserManager {
 
     public synchronized User initUser(String username, String password) {
         deinitUser();
-        UserBuilder userBuilder = IOManager.getIOHandler().initUser(username, password);
+        UserBuilder userBuilder = IOManager.getIOAdapter().initUser(username, password);
         user = new User(userBuilder);
         return user;
     }
 
     public synchronized User deinitUser() {
         user = new User();
-        IOManager.getIOHandler().deinitUser(getUser().getUsername());
+        IOManager.getIOAdapter().deinitUser(getUser().getUsername());
         return user;
     }
 

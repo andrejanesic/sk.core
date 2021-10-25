@@ -24,7 +24,7 @@ public class File extends INode {
             throw new INodeFatalException("File cannot have null parent.");
         if (name.contains("/"))
             throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
-        IOManager.getIOHandler().makeFile(getPath());
+        IOManager.getIOAdapter().makeFile(getPath());
     }
 
     /**
@@ -45,7 +45,7 @@ public class File extends INode {
     @Override
     public void delete() {
         // obriši sebe
-        IOManager.getIOHandler().deleteFile(getPath());
+        IOManager.getIOAdapter().deleteFile(getPath());
 
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
@@ -88,6 +88,6 @@ public class File extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getIOHandler().moveFile(oldPath, getPath());
+        IOManager.getIOAdapter().moveFile(oldPath, getPath());
     }
 }

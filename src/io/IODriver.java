@@ -6,7 +6,7 @@ import user.builder.UserBuilder;
 /**
  * Vrši interakciju sa okruženjem.
  */
-public interface IOHandler {
+public interface IODriver {
 
     /**
      * Kreira novi direktorijum.

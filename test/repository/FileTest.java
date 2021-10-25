@@ -2,7 +2,7 @@ package repository;
 
 import dummynode.DummyNode;
 import exceptions.*;
-import io.IOHandlerTest;
+import io.IODriverTest;
 import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class FileTest extends RepositoryTestPrepare {
 
     @BeforeAll
     public static void setHandler() {
-        IOManager.setIOHandler(new IOHandlerTest());
+        IOManager.setIODriver(new IODriverTest());
     }
 
     @Test

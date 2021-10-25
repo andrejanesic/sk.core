@@ -4,9 +4,9 @@ import dummynode.DummyNode;
 import exceptions.*;
 import io.IOHandlerTest;
 import io.IOManager;
-import loader.Loader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import storage.StorageManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +32,7 @@ class FileTest extends RepositoryTestPrepare {
             destDummy = DummyNode.poolFiles.get((int) Math.floor(Math.random() * DummyNode.poolFiles.size()));
         } while (targetDummy == destDummy);
 
-        Directory root = Loader.getInstance().getRoot();
+        Directory root = StorageManager.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
         File target = (File) root.resolvePath(targetDummy.path());
         File dest = (File) root.resolvePath(destDummy.path());
@@ -53,7 +53,7 @@ class FileTest extends RepositoryTestPrepare {
             targetDummy = DummyNode.poolFiles.get((int) Math.floor(Math.random() * DummyNode.poolFiles.size()));
             destDummy = DummyNode.poolDirs.get((int) Math.floor(Math.random() * DummyNode.poolDirs.size()));
         } while (targetDummy == null || destDummy == null);
-        Directory root = Loader.getInstance().getRoot();
+        Directory root = StorageManager.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         File target = (File) root.resolvePath(targetDummy.path());
@@ -82,7 +82,7 @@ class FileTest extends RepositoryTestPrepare {
             targetDummy = DummyNode.poolFiles.get(index);
         } while (targetDummy == null);
 
-        Directory root = Loader.getInstance().getRoot();
+        Directory root = StorageManager.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
         DummyNode finalTargetDummy = targetDummy;
         assertDoesNotThrow(() -> root.delete(finalTargetDummy.path()));

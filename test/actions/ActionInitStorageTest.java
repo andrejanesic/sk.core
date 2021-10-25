@@ -1,10 +1,10 @@
 package actions;
 
 import exceptions.ActionUndoImpossibleException;
-import loader.Loader;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import storage.StorageManager;
 import user.PrivilegeType;
 import user.UserManager;
 
@@ -27,9 +27,9 @@ public class ActionInitStorageTest extends ActionsPrepareTest {
 
     @Test
     void testActionInitStorageRun() {
-        assertNull(Loader.getInstance().getRoot());
+        assertNull(StorageManager.getInstance().getRoot());
         assertDoesNotThrow(() -> action.run());
-        assertNotNull(Loader.getInstance().getRoot());
+        assertNotNull(StorageManager.getInstance().getRoot());
     }
 
     @Test
@@ -45,8 +45,8 @@ public class ActionInitStorageTest extends ActionsPrepareTest {
             action.run();
         } catch (ActionUndoImpossibleException ignored) {
         }
-        Object o = Loader.getInstance().getRoot();
+        Object o = StorageManager.getInstance().getRoot();
         assertDoesNotThrow(() -> action.undo());
-        assertNull(Loader.getInstance().getRoot());
+        assertNull(StorageManager.getInstance().getRoot());
     }
 }

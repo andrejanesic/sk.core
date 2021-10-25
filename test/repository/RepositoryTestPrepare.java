@@ -3,16 +3,16 @@ package repository;
 import dummynode.DummyNode;
 import io.IOHandlerTest;
 import io.IOManager;
-import loader.Loader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import storage.StorageManager;
 
 public class RepositoryTestPrepare {
 
     @BeforeAll
     static void setHandler() {
         IOManager.setIOHandler(new IOHandlerTest());
-        Loader.getInstance().initStorage("test");
+        StorageManager.getInstance().initStorage("test");
     }
 
     @BeforeEach

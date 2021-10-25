@@ -1,7 +1,7 @@
 package actions;
 
 import exceptions.ActionInsufficientPrivilegeException;
-import loader.Loader;
+import storage.StorageManager;
 import user.UserManager;
 
 import static user.PrivilegeType.INIT_STORAGE;
@@ -30,14 +30,14 @@ public class ActionInitStorage implements Action {
         if (!UserManager.getInstance().getUser().hasPrivilege(path, INIT_STORAGE))
             throw new ActionInsufficientPrivilegeException();
 
-        if (Loader.getInstance().getRoot() == null)
-            Loader.getInstance().initStorage(path);
+        if (StorageManager.getInstance().getRoot() == null)
+            StorageManager.getInstance().initStorage(path);
         return true;
     }
 
     @Override
     public Boolean undo() {
-        Loader.getInstance().deinitStorage();
+        StorageManager.getInstance().deinitStorage();
         return true;
     }
 }

@@ -3,8 +3,8 @@ package repository;
 import dummynode.DummyNode;
 import dummynode.DummyNodeType;
 import exceptions.*;
-import loader.Loader;
 import org.junit.jupiter.api.Test;
+import storage.StorageManager;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +20,7 @@ public class DummyNodeTest extends RepositoryTestPrepare {
             INodeRootNotInitializedException {
 
         DummyNode rootDummy = DummyNode.generateDummyNodes();
-        Directory root = Loader.getInstance().getRoot();
+        Directory root = StorageManager.getInstance().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
         for (DummyNode d : DummyNode.pool) {

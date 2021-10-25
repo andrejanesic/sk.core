@@ -1,7 +1,7 @@
 package actions;
 
 import exceptions.ActionUndoImpossibleException;
-import loader.Loader;
+import storage.StorageManager;
 import user.UserManager;
 
 /**
@@ -19,7 +19,7 @@ public class ActionDeinitUser implements Action {
     public Object run() {
         if (!UserManager.getInstance().getUser().isAuthenticated())
             return true;
-        Loader.getInstance().deinitStorage();
+        StorageManager.getInstance().deinitStorage();
         UserManager.getInstance().deinitUser();
         return true;
     }

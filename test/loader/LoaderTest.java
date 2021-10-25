@@ -5,6 +5,7 @@ import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import repository.Directory;
+import storage.StorageManager;
 import user.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,9 +19,9 @@ public class LoaderTest {
 
     @Test
     void testInitRoot() {
-        assertDoesNotThrow(() -> Loader.getInstance().initStorage("test"));
-        assertDoesNotThrow(() -> Loader.getInstance().getRoot().getPath());
-        assertEquals(Directory.ROOT_DIRECTORY, Loader.getInstance().getRoot().getPath());
+        assertDoesNotThrow(() -> StorageManager.getInstance().initStorage("test"));
+        assertDoesNotThrow(() -> StorageManager.getInstance().getRoot().getPath());
+        assertEquals(Directory.ROOT_DIRECTORY, StorageManager.getInstance().getRoot().getPath());
     }
 
     @Test

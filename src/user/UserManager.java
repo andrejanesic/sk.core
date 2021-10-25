@@ -43,7 +43,6 @@ public class UserManager implements IUserManager {
         return user;
     }
 
-
     /**
      * Holder za thread-safe singleton instancu.
      */

@@ -5,6 +5,7 @@ import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import repository.Directory;
+import user.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,9 +27,9 @@ public class LoaderTest {
     void testInitUser() {
         String username = "foo";
         String password = "bar";
-        assertDoesNotThrow(() -> Loader.getInstance().initUser(username, password));
-        assertNotEquals(null, Loader.getInstance().getUser());
-        assertEquals(Loader.getInstance().getUser().getUsername(), IOHandlerTest.TEST_USERNAME);
-        assertEquals(Loader.getInstance().getUser().getPassword(), IOHandlerTest.TEST_PASSWORD);
+        assertDoesNotThrow(() -> UserManager.getInstance().initUser(username, password));
+        assertNotEquals(null, UserManager.getInstance().getUser());
+        assertEquals(UserManager.getInstance().getUser().getUsername(), IOHandlerTest.TEST_USERNAME);
+        assertEquals(UserManager.getInstance().getUser().getPassword(), IOHandlerTest.TEST_PASSWORD);
     }
 }

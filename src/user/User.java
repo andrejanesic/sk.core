@@ -128,12 +128,22 @@ public class User {
     }
 
     /**
+     * Dodaje novu privilegiju korisniku.
+     *
+     * @param o    Objekat vezan za privilegiju.
+     * @param type Tip privilegije.
+     */
+    public void grantPrivilege(Object o, PrivilegeType type) {
+        privileges.add(new Privilege(o, type));
+    }
+
+    /**
      * Dodaje novi tip privilegije (generalizovan) korisniku.
      *
      * @param type Tip privilegije.
      */
     public void grantPrivilege(PrivilegeType type) {
-        privileges.add(new Privilege(type));
+        grantPrivilege(null, type);
     }
 
     /**
@@ -143,6 +153,25 @@ public class User {
      */
     public void revokePrivilege(Privilege p) {
         privileges.remove(p);
+    }
+
+    /**
+     * Oduzima privilegiju od korisnika.
+     *
+     * @param o    Objekat vezan za privilegiju.
+     * @param type Tip privilegije.
+     */
+    public void revokePrivilege(Object o, PrivilegeType type) {
+        privileges.remove(new Privilege(o, type));
+    }
+
+    /**
+     * Oduzima privilegiju od korisnika.
+     *
+     * @param type Tip privilegije.
+     */
+    public void revokePrivilege(PrivilegeType type) {
+        revokePrivilege(null, type);
     }
 
     /**

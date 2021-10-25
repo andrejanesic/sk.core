@@ -21,15 +21,9 @@ public class Loader {
     private Directory root;
 
     /**
-     * Trenutni korisnik.
-     */
-    private User user;
-
-    /**
      * Podrazumevani konstruktor.
      */
     private Loader() {
-        user = new User();
     }
 
     /**
@@ -95,39 +89,6 @@ public class Loader {
         return dir;
     }
 
-    /**
-     * Vraća trenutno povezanog korisnika ili null ukoliko niko nije povezan.
-     *
-     * @return Korisnik ili null.
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * Inicijalizuje korisnika na osnovu datih kredencijala. Trenutno ulogovan korisnik se diskonektuje.
-     *
-     * @param username Korisničko ime.
-     * @param password Lozinka.
-     * @return Korisnik ili null.
-     */
-    public synchronized User initUser(String username, String password) {
-        deinitUser();
-        UserBuilder userBuilder = IOManager.getIOHandler().initUser(username, password);
-        user = new User(userBuilder);
-        return user;
-    }
-
-    /**
-     * Deinicijalizuje korisnika.
-     *
-     * @return Novi anonimni korisnik.
-     */
-    public synchronized User deinitUser() {
-        user = new User();
-        IOManager.getIOHandler().deinitUser(getUser().getUsername());
-        return user;
-    }
 
     /**
      * Holder za thread-safe singleton instancu.

@@ -2,8 +2,11 @@ package actions;
 
 import exceptions.ActionUndoImpossibleException;
 import loader.Loader;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import user.PrivilegeType;
+import user.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,12 +16,20 @@ public class ActionInitStorageTest extends ActionsPrepareTest {
 
     @BeforeEach
     void testSetup() {
+        UserManager.getInstance().getUser().grantPrivilege("test", PrivilegeType.INIT_STORAGE);
         action = new ActionInitStorage("test");
+    }
+
+    @AfterEach
+    void testCleanup() {
+        UserManager.getInstance().getUser().revokePrivilege(PrivilegeType.INIT_STORAGE);
     }
 
     @Test
     void testActionInitStorageRun() {
+        assertNull(Loader.getInstance().getRoot());
         assertDoesNotThrow(() -> action.run());
+        assertNotNull(Loader.getInstance().getRoot());
     }
 
     @Test
@@ -35,7 +46,7 @@ public class ActionInitStorageTest extends ActionsPrepareTest {
         } catch (ActionUndoImpossibleException ignored) {
         }
         Object o = Loader.getInstance().getRoot();
-        assertThrows(ActionUndoImpossibleException.class, () -> action.undo());
-        assertEquals(o, Loader.getInstance().getRoot());
+        assertDoesNotThrow(() -> action.undo());
+        assertNull(Loader.getInstance().getRoot());
     }
 }

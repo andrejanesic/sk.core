@@ -2,6 +2,7 @@ package actions;
 
 import exceptions.ActionInsufficientPrivilegeException;
 import loader.Loader;
+import user.UserManager;
 
 import static user.PrivilegeType.INIT_STORAGE;
 
@@ -26,10 +27,11 @@ public class ActionInitStorage implements Action {
 
     @Override
     public Boolean run() {
-        if (!Loader.getInstance().getUser().hasPrivilege(path, INIT_STORAGE))
+        if (!UserManager.getInstance().getUser().hasPrivilege(path, INIT_STORAGE))
             throw new ActionInsufficientPrivilegeException();
 
-        Loader.getInstance().initStorage(path);
+        if (Loader.getInstance().getRoot() == null)
+            Loader.getInstance().initStorage(path);
         return true;
     }
 

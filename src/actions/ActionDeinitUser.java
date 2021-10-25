@@ -2,6 +2,7 @@ package actions;
 
 import exceptions.ActionUndoImpossibleException;
 import loader.Loader;
+import user.UserManager;
 
 /**
  * Akcija za izlogovanje korisnika.
@@ -16,10 +17,10 @@ public class ActionDeinitUser implements Action {
 
     @Override
     public Object run() {
-        if (!Loader.getInstance().getUser().isAuthenticated())
+        if (!UserManager.getInstance().getUser().isAuthenticated())
             return true;
         Loader.getInstance().deinitStorage();
-        Loader.getInstance().deinitUser();
+        UserManager.getInstance().deinitUser();
         return true;
     }
 

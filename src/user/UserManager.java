@@ -53,6 +53,7 @@ public class UserManager implements IUserManager {
             throw new IComponentNotInitializedException(IConfig.class);
 
         deinitUser();
+        //noinspection ConstantConditions
         Collection<UserBuilder> userBuilders = Core.getInstance().ConfigManager().getConfig().getUsers();
 
         for (UserBuilder builder : userBuilders) {

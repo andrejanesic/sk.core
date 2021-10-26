@@ -17,6 +17,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("ALL")
 public class ConfigManagerTest {
 
     private static final String BASE_CONFIG = "{\"users\":[]}";

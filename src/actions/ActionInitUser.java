@@ -42,6 +42,9 @@ public class ActionInitUser implements Action {
         if (tried)
             return false;
 
+        if (Core.getInstance().UserManager().getUser() == null)
+            throw new ActionInsufficientPrivilegeException();
+        //noinspection ConstantConditions
         if (!Core.getInstance().UserManager().getUser().hasPrivilege(USER_LOGIN))
             throw new ActionInsufficientPrivilegeException();
 
@@ -52,6 +55,9 @@ public class ActionInitUser implements Action {
 
     @Override
     public Boolean undo() {
+        if (Core.getInstance().UserManager().getUser() == null)
+            throw new ActionInsufficientPrivilegeException();
+        //noinspection ConstantConditions
         if (Core.getInstance().UserManager().getUser().isAuthenticated())
             Core.getInstance().UserManager().deinitUser();
         return true;

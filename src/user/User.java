@@ -111,6 +111,9 @@ public class User implements IUser {
 
     @Override
     public boolean isAuthenticated() {
+        if (Core.getInstance().UserManager().getUser() == null)
+            return false;
+        //noinspection ConstantConditions
         return Core.getInstance().UserManager().getUser().equals(this);
     }
 
@@ -160,6 +163,7 @@ public class User implements IUser {
     public void update() {
         if (ConfigManager.getInstance().getConfig() == null)
             throw new IComponentNotInitializedException(IConfig.class);
+        //noinspection ConstantConditions
         Core.getInstance().ConfigManager().getConfig().updateUser(toBuilder());
     }
 

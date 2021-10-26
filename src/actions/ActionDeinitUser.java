@@ -1,12 +1,14 @@
 package actions;
 
 import core.Core;
-import exceptions.ActionUndoImpossibleException;
+import exceptions.IActionInsufficientPrivilegeException;
+import exceptions.IActionUndoImpossibleException;
+import user.PrivilegeType;
 
 /**
- * Akcija za izlogovanje korisnika.
+ * Akcija za izlogovanje korisnika. Deinicijalizuje skladište.
  */
-public class ActionDeinitUser implements Action {
+public class ActionDeinitUser implements IAction {
 
     /**
      * Podrazumevani konstruktor. Klasa koristi već ulogovanog korisnika.
@@ -16,6 +18,13 @@ public class ActionDeinitUser implements Action {
 
     @Override
     public Object run() {
+        //noinspection ConstantConditions
+        if (Core.getInstance().UserManager().getUser() == null ||
+                !(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_LOGOUT) ||
+                        Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+            throw new IActionInsufficientPrivilegeException();
+
+        //noinspection ConstantConditions
         if (!Core.getInstance().UserManager().getUser().isAuthenticated())
             return true;
         Core.getInstance().StorageManager().deinitStorage();
@@ -25,6 +34,6 @@ public class ActionDeinitUser implements Action {
 
     @Override
     public Object undo() {
-        throw new ActionUndoImpossibleException("logging out again");
+        throw new IActionUndoImpossibleException("logging out again");
     }
 }

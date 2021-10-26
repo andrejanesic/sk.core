@@ -86,6 +86,18 @@ public interface IUserManager {
      * Nije moguće obrisati trenutno instanciranog korisnika. To izbacuje
      * {@link exceptions.IUserCannotDeleteCurrentUserException}.
      *
+     * @param username Korisničko ime {@link IUser} koga treba obrisati.
+     * @throws exceptions.IUserCannotDeleteCurrentUserException Ukoliko korisnik pokuša da obriše {@link IUser} koji je
+     *                                                          trenutno instanciran.
+     */
+    void deleteUser(String username);
+
+    /**
+     * Briše {@link IUser} iz instance kao i iz konfiguracije putem {@link config.IConfigManager}.
+     * <p>
+     * Nije moguće obrisati trenutno instanciranog korisnika. To izbacuje
+     * {@link exceptions.IUserCannotDeleteCurrentUserException}.
+     *
      * @param u {@link IUser} koga treba obrisati.
      * @throws exceptions.IUserCannotDeleteCurrentUserException Ukoliko korisnik pokuša da obriše {@link IUser} koji je
      *                                                          trenutno instanciran.

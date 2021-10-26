@@ -1,6 +1,6 @@
 package actions;
 
-import exceptions.ActionUndoImpossibleException;
+import exceptions.IActionUndoImpossibleException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class ActionManager {
     /**
      * Red radnji.
      */
-    private List<Action> queue;
+    private List<IAction> queue;
 
     /**
      * "Seeker" liste. Pomera se +1 kada se radnja izvrši, -1 kada se radnja poništi (undo).
@@ -38,7 +38,7 @@ public class ActionManager {
      *
      * @return Radnje u redu.
      */
-    public List<Action> getQueue() {
+    public List<IAction> getQueue() {
         return queue;
     }
 
@@ -47,7 +47,7 @@ public class ActionManager {
      *
      * @param a Nova radnja.
      */
-    public void addAction(Action a) {
+    public void addAction(IAction a) {
         queue.add(a);
     }
 
@@ -69,7 +69,7 @@ public class ActionManager {
         position -= 1;
         try {
             queue.get(position).undo();
-        } catch (ActionUndoImpossibleException ignored) {
+        } catch (IActionUndoImpossibleException ignored) {
         }
         // #TODO ovde undo treba da bude od prethodne akcije, a run od sledeće
         queue.remove(position);
@@ -80,5 +80,21 @@ public class ActionManager {
      */
     private static class Holder {
         private static final ActionManager INSTANCE = new ActionManager();
+    }
+
+    /**
+     * Factory za {@link IAction} korisničke akcije.
+     */
+    public static class Factory {
+
+        /**
+         * Kreira novu akciju {@link IAction}. Akcija se <b>NE DODAJE</b> u red automatski, to program mora uraditi
+         * pozivom {@link ActionManager#addAction(IAction)}.
+         *
+         * @return Nova instanca {@link IAction}.
+         */
+        public static IAction makeAction() {
+            return null;
+        }
     }
 }

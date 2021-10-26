@@ -41,7 +41,7 @@ public class User implements IUser {
     }
 
     /**
-     * Podrazumevani konstruktor.
+     * Podrazumevani konstruktor za ne-anonimne korisnike.
      *
      * @param username   Korisničko ime.
      * @param password   Lozinka.
@@ -54,6 +54,7 @@ public class User implements IUser {
         this.privileges.addAll(privileges); // mora biti ovako zbog potencijalne imutabilnosti privileges kolekcije
 
         initAnonymousPrivileges();
+        initAuthenticatedPrivileges();
     }
 
     /**
@@ -67,7 +68,7 @@ public class User implements IUser {
     }
 
     /**
-     * Konstruktor na osnovu UserBuilder-a.
+     * Podrazumevani konstruktor za ne-anonimne korisnike na osnovu UserBuilder-a.
      *
      * @param userBuilder UserBuilder instanca.
      */
@@ -81,6 +82,7 @@ public class User implements IUser {
                 privileges.add(new Privilege(pb));
 
         initAnonymousPrivileges();
+        initAuthenticatedPrivileges();
     }
 
     /**
@@ -92,6 +94,16 @@ public class User implements IUser {
 
         privileges.add(new Privilege(PrivilegeType.USER_LOGIN));
         privileges.add(new Privilege(PrivilegeType.USER_LOGOUT));
+    }
+
+    /**
+     * Postavlja privilegije koje imaju svi autorizovani, ne-anonimni korisnici.
+     */
+    private void initAuthenticatedPrivileges() {
+        if (privileges == null)
+            privileges = new HashSet<>();
+
+        privileges.add(new Privilege(PrivilegeType.INIT_STORAGE));
     }
 
     @Override

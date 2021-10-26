@@ -1,6 +1,7 @@
 package user.builder;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,12 @@ public class UserBuilder {
     private String password;
 
     private Collection<PrivilegeBuilder> privileges;
+
+    public UserBuilder(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.privileges = new HashSet<>();
+    }
 
     public UserBuilder(String username, String password, Collection<PrivilegeBuilder> privileges) {
         this.username = username;

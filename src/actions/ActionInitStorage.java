@@ -1,7 +1,7 @@
 package actions;
 
 import core.Core;
-import exceptions.ActionInsufficientPrivilegeException;
+import exceptions.IActionInsufficientPrivilegeException;
 import exceptions.IStorageManagerINodeBuilderTreeInvalidException;
 
 import static user.PrivilegeType.INIT_STORAGE;
@@ -9,7 +9,7 @@ import static user.PrivilegeType.INIT_STORAGE;
 /**
  * Radnja inicijalizacije skladišta.
  */
-public class ActionInitStorage implements Action {
+public class ActionInitStorage implements IAction {
 
     /**
      * Putanja do skladišta u OS okruženju.
@@ -26,9 +26,14 @@ public class ActionInitStorage implements Action {
     }
 
     @Override
-    public Boolean run() {
-        if (!Core.getInstance().UserManager().getUser().hasPrivilege(path, INIT_STORAGE))
-            throw new ActionInsufficientPrivilegeException();
+    public Object run() {
+        // proveri da li korisnik uopšte postoji, makar anonimni
+        if (Core.getInstance().UserManager().getUser() == null)
+            throw new IActionInsufficientPrivilegeException();
+
+        //noinspection ConstantConditions
+        if (!Core.getInstance().UserManager().getUser().hasPrivilege(INIT_STORAGE))
+            throw new IActionInsufficientPrivilegeException();
 
         if (Core.getInstance().StorageManager().getRoot() == null) {
             try {
@@ -43,7 +48,7 @@ public class ActionInitStorage implements Action {
     }
 
     @Override
-    public Boolean undo() {
+    public Object undo() {
         Core.getInstance().StorageManager().deinitStorage();
         return true;
     }

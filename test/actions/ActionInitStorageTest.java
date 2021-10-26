@@ -1,7 +1,7 @@
 package actions;
 
 import core.Core;
-import exceptions.ActionUndoImpossibleException;
+import exceptions.IActionUndoImpossibleException;
 import io.IODriver;
 import io.IOManager;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionInitStorageTest {
 
-    private Action action;
+    private IAction action;
 
     @BeforeEach
     void testSetup() {
@@ -78,6 +78,8 @@ public class ActionInitStorageTest {
 
     @Test
     void testActionInitStorageRun() {
+        //noinspection ConstantConditions
+        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.INIT_STORAGE);
         assertNull(Core.getInstance().StorageManager().getRoot());
         assertDoesNotThrow(() -> action.run());
         assertNotNull(Core.getInstance().StorageManager().getRoot());
@@ -85,6 +87,8 @@ public class ActionInitStorageTest {
 
     @Test
     void testActionInitStorageRunMultiple() {
+        //noinspection ConstantConditions
+        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.INIT_STORAGE);
         int n = (int) Math.floor(Math.random() * 10);
         while (n-- > 0)
             assertDoesNotThrow(() -> action.run());
@@ -92,9 +96,11 @@ public class ActionInitStorageTest {
 
     @Test
     void testActionInitStorageUndo() {
+        //noinspection ConstantConditions
+        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.INIT_STORAGE);
         try {
             action.run();
-        } catch (ActionUndoImpossibleException ignored) {
+        } catch (IActionUndoImpossibleException ignored) {
         }
         Object o = Core.getInstance().StorageManager().getRoot();
         assertDoesNotThrow(() -> action.undo());

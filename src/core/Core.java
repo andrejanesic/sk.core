@@ -2,6 +2,7 @@ package core;
 
 import config.ConfigManager;
 import config.IConfigManager;
+import exceptions.IOManagerNoDriverException;
 import io.IODriver;
 import io.IOManager;
 import storage.IStorageManager;
@@ -21,9 +22,9 @@ public class Core {
     }
 
     /**
-     * Vraća instancu core.Core-a.
+     * Vraća instancu {@link Core}
      *
-     * @return core.Core instanca.
+     * @return {@link Core} instanca.
      */
     public static Core getInstance() {
         return Holder.INSTANCE;
@@ -48,7 +49,7 @@ public class Core {
     }
 
     /**
-     * Vraća instancu komponente IConfigManager.
+     * Vraća instancu komponente {@link IConfigManager}.
      *
      * @return Instanca komponente.
      */
@@ -57,11 +58,13 @@ public class Core {
     }
 
     /**
-     * Vraća instancu IODriver-a.
+     * Vraća registrovan {@link IODriver}.
      *
      * @return Instanca drajvera.
+     * @throws IOManagerNoDriverException Ukoliko nema registrovane {@link IODriver} instance na koju je moguće da se
+     *                                    komponenta priključi.
      */
-    public IODriver IODriver() {
+    public IODriver IODriver() throws IOManagerNoDriverException {
         return IOManager.getIOAdapter();
     }
 

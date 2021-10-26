@@ -15,4 +15,8 @@ public enum PrivilegeTypeBuilder {
     USER_DELETE,
     USER_LOGIN,
     USER_LOGOUT,
+
+    // PRIVILEGE MANAGEMENT
+    PRIVILEGE_GRANT,
+    PRIVILEGE_REVOKE,
 }

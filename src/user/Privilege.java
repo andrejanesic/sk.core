@@ -1,5 +1,6 @@
 package user;
 
+import org.jetbrains.annotations.NotNull;
 import user.builder.PrivilegeBuilder;
 import user.builder.PrivilegeTypeBuilder;
 
@@ -58,11 +59,13 @@ public class Privilege implements IPrivilege {
         return referencedObject;
     }
 
+    @NotNull
     @Override
     public PrivilegeType getType() {
         return type;
     }
 
+    @NotNull
     @Override
     public PrivilegeBuilder toBuilder() {
         return new PrivilegeBuilder(referencedObject, PrivilegeTypeBuilder.valueOf(type.toString()));
@@ -72,9 +75,9 @@ public class Privilege implements IPrivilege {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Privilege)) return false;
-        IPrivilege IPrivilege = (IPrivilege) o;
-        return Objects.equals(getReferencedObject(), IPrivilege.getReferencedObject()) &&
-                getType() == IPrivilege.getType();
+        IPrivilege that = (IPrivilege) o;
+        return Objects.equals(getReferencedObject(), that.getReferencedObject()) &&
+                getType() == that.getType();
     }
 
     @Override

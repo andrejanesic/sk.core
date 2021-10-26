@@ -8,8 +8,19 @@ package user;
  * toj kategoriji.
  */
 public enum PrivilegeType {
+    // MASTER
     ALL,
-    INIT_STORAGE,
+
+    // STORAGE MANAGEMENT
+    STORAGE_INIT,
+    STORAGE_CONFIGURE,
+
+    // REPOSITORY MANAGEMENT
+    INODE_UPLOAD,
+    INODE_DOWNLOAD,
+    INODE_DELETE,
+    INODE_MOVE,
+    INODE_READ,
 
     // USER MANAGEMENT
     USER_ALL,
@@ -19,4 +30,8 @@ public enum PrivilegeType {
     USER_DELETE,
     USER_LOGIN,
     USER_LOGOUT,
+
+    // PRIVILEGE MANAGEMENT
+    PRIVILEGE_GRANT,
+    PRIVILEGE_REVOKE,
 }

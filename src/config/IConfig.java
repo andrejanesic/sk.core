@@ -1,5 +1,6 @@
 package config;
 
+import org.jetbrains.annotations.Nullable;
 import user.builder.UserBuilder;
 
 import java.util.Collection;
@@ -26,6 +27,15 @@ public interface IConfig {
      * @return {@link Collection} učitanih {@link UserBuilder}-a.
      */
     Collection<UserBuilder> getUsers();
+
+    /**
+     * Vraća bildera korisnika {@link UserBuilder} po korisničkom imenu, ili null ukoliko ne postoji.
+     *
+     * @param username Korisničko ime.
+     * @return {@link UserBuilder} instanca.
+     */
+    @Nullable
+    UserBuilder getUser(String username);
 
     /**
      * Ažurira učitanog {@link UserBuilder}-a.

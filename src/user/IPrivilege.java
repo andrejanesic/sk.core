@@ -1,5 +1,7 @@
 package user;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import user.builder.PrivilegeBuilder;
 
 /**
@@ -27,6 +29,7 @@ public interface IPrivilege {
      *
      * @return Objekat za koji je privilegija vezana, ili null ukoliko nije vezana ni za jedan objekat.
      */
+    @Nullable
     Object getReferencedObject();
 
     /**
@@ -34,6 +37,7 @@ public interface IPrivilege {
      *
      * @return Tip privilegije {@link PrivilegeType} za koji je vezana privilegija.
      */
+    @NotNull
     PrivilegeType getType();
 
     /**
@@ -41,5 +45,6 @@ public interface IPrivilege {
      *
      * @return {@link PrivilegeBuilder} bilder klasa.
      */
+    @NotNull
     PrivilegeBuilder toBuilder();
 }

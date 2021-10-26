@@ -96,7 +96,7 @@ public class UserManager implements IUserManager {
     }
 
     @Override
-    public IUser addUser(String username, String password, Collection<IPrivilege> IPrivileges) {
+    public IUser addUser(String username, String password, Collection<IPrivilege> privileges) {
         if (Core.getInstance().ConfigManager().getConfig() == null)
             throw new IComponentNotInitializedException(IConfig.class);
 
@@ -113,7 +113,7 @@ public class UserManager implements IUserManager {
             throw new IUserInvalidDataException();
 
         // kreiraj novog korisnika
-        IUser u = new User(username, password, IPrivileges);
+        IUser u = new User(username, password, privileges);
 
         // dodaj u config
         //noinspection ConstantConditions
@@ -136,6 +136,17 @@ public class UserManager implements IUserManager {
     public IUser getUser() {
         loadUsers();
         return user;
+    }
+
+    @Override
+    public IUser getUser(String username) {
+        loadUsers();
+        for (IUser u : users) {
+            if (u.getUsername().equals(username)) {
+                return u;
+            }
+        }
+        return null;
     }
 
     @Override

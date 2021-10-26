@@ -31,11 +31,11 @@ Sledi opis funkcionanosti komponente za upravljanje skladištem fajlova.
 - [x] osmisliti da se komponentom podrži postojanje korisnika skladišta i napraviti konekciju na skladište sa odgovarajućim nalogom,
 - [x] svaki korisnik treba da ima korisničko ime i lozinku
 - [ ] svaki korisnik ima privilegije, to su privilegija za snimanje fajlova, za preuzimanje, brisanje fajlova i pregled fajlova u skladištu, privilegije mogu da važe za celo skladište ili samo za neke foldere, mora da postoji neka logična raspodela privilegija, na primer ne može korisnik da ima privilegiju za brisanje, a da nema za pregled, ovo je potrebno programski iskontrolisati prilikom zadavanja privilegija,
-- [ ] jedan korisnik kreira skladište i on ima sve privilegije i jedini on može da kreira ostale korisnike i da im dodeljuje privilegije,
+- [x] jedan korisnik kreira skladište i on ima sve privilegije i jedini on može da kreira ostale korisnike i da im dodeljuje privilegije,
 - [x] u implementaciji svake operacije nad skladištem vrši se kontrola privilegija,
 - [x] korisnik može da se diskonektuje sa skladišta,
 - [x] uvek samo jedan korisnik može da bude konektovan na skladište,
-- [ ] podaci o korisnicima, njihovo korisničko ime i lozinka, kao i podaci o privilegijama čuvaju se u json fajlu u korenskom direktorijumu skladišta, potrebno je osmisliti odgovarajući format,
+- [x] podaci o korisnicima, njihovo korisničko ime i lozinka, kao i podaci o privilegijama čuvaju se u json fajlu u korenskom direktorijumu skladišta, potrebno je osmisliti odgovarajući format,
 - [x] kod implementacije udaljenog skladišta, ovi korisnici skladišta nemaju veze sa formalnom autentifikacijom na Google Drive.
 
 ### Operacije nad skladištem

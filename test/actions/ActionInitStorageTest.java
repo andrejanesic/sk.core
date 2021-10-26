@@ -67,19 +67,19 @@ public class ActionInitStorageTest {
             }
         });
         Core.getInstance().ConfigManager().initConfig("");
-        Core.getInstance().UserManager().initUser().grantPrivilege("test", PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().initUser().grantPrivilege("test", PrivilegeType.STORAGE_INIT);
         action = new ActionInitStorage("test");
     }
 
     @AfterEach
     void testCleanup() {
-        Core.getInstance().UserManager().initUser().revokePrivilege(PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().initUser().revokePrivilege(PrivilegeType.STORAGE_INIT);
     }
 
     @Test
     void testActionInitStorageRun() {
         //noinspection ConstantConditions
-        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.STORAGE_INIT);
         assertNull(Core.getInstance().StorageManager().getRoot());
         assertDoesNotThrow(() -> action.run());
         assertNotNull(Core.getInstance().StorageManager().getRoot());
@@ -88,7 +88,7 @@ public class ActionInitStorageTest {
     @Test
     void testActionInitStorageRunMultiple() {
         //noinspection ConstantConditions
-        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.STORAGE_INIT);
         int n = (int) Math.floor(Math.random() * 10);
         while (n-- > 0)
             assertDoesNotThrow(() -> action.run());
@@ -97,7 +97,7 @@ public class ActionInitStorageTest {
     @Test
     void testActionInitStorageUndo() {
         //noinspection ConstantConditions
-        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.INIT_STORAGE);
+        Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.STORAGE_INIT);
         try {
             action.run();
         } catch (IActionUndoImpossibleException ignored) {

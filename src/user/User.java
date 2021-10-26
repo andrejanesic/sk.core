@@ -5,6 +5,7 @@ import config.ConfigManager;
 import config.IConfig;
 import core.Core;
 import exceptions.IComponentNotInitializedException;
+import org.jetbrains.annotations.Nullable;
 import user.builder.PrivilegeBuilder;
 import user.builder.UserBuilder;
 
@@ -47,11 +48,12 @@ public class User implements IUser {
      * @param password   Lozinka.
      * @param privileges Privilegije korisnika.
      */
-    User(String username, String password, Collection<IPrivilege> privileges) {
+    User(String username, String password, @Nullable Collection<IPrivilege> privileges) {
         this.username = username;
         this.password = password;
         this.privileges = new HashSet<>();
-        this.privileges.addAll(privileges); // mora biti ovako zbog potencijalne imutabilnosti privileges kolekcije
+        if (privileges != null)
+            this.privileges.addAll(privileges); // mora biti ovako zbog potencijalne imutabilnosti privileges kolekcije
 
         initAnonymousPrivileges();
         initAuthenticatedPrivileges();
@@ -103,7 +105,7 @@ public class User implements IUser {
         if (privileges == null)
             privileges = new HashSet<>();
 
-        privileges.add(new Privilege(PrivilegeType.INIT_STORAGE));
+        privileges.add(new Privilege(PrivilegeType.STORAGE_INIT));
     }
 
     @Override
@@ -131,6 +133,13 @@ public class User implements IUser {
 
     @Override
     public void grantPrivilege(IPrivilege p) {
+        // dodaj zavisne privilegije
+        if (p.getType().equals(PrivilegeType.INODE_UPLOAD) ||
+                p.getType().equals(PrivilegeType.INODE_DOWNLOAD) ||
+                p.getType().equals(PrivilegeType.USER_DELETE) ||
+                p.getType().equals(PrivilegeType.INODE_MOVE)) {
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
+        }
         privileges.add(p);
         update();
     }
@@ -147,6 +156,19 @@ public class User implements IUser {
 
     @Override
     public void revokePrivilege(IPrivilege p) {
+        // proveri da li je osnovna funkcija
+        if (p.getType().equals(PrivilegeType.USER_LOGIN) ||
+                p.getType().equals(PrivilegeType.USER_LOGOUT))
+            return;
+
+        // obriši zavisne privilegije
+        if (p.getType().equals(PrivilegeType.INODE_READ)) {
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_UPLOAD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DOWNLOAD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_MOVE));
+        }
+
         privileges.remove(p);
         update();
     }

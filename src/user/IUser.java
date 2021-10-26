@@ -44,14 +44,18 @@ public interface IUser {
     void grantPrivilege(PrivilegeType type);
 
     /**
-     * Oduzima {@link IPrivilege} od korisnika.
+     * Oduzima {@link IPrivilege} od korisnika. Postoje određene privilegije koje svaki korisnik mora da ima, i koje se
+     * ne mogu obrisati, a čak i ukoliko program pokuša, vratiće se vrednost kao da je obrisana; ali nije. Te
+     * privilegije su važne za osnovno funkcionisanje aplikacije.
      *
      * @param p {@link IPrivilege} koju treba oduzeti.
      */
     void revokePrivilege(IPrivilege p);
 
     /**
-     * Oduzima {@link IPrivilege} od korisnika.
+     * Oduzima {@link IPrivilege} od korisnika. Postoje određene privilegije koje svaki korisnik mora da ima, i koje se
+     * ne mogu obrisati, a čak i ukoliko program pokuša, vratiće se vrednost kao da je obrisana; ali nije. Te
+     * privilegije su važne za osnovno funkcionisanje aplikacije.
      *
      * @param o    Objekat vezan za {@link IPrivilege}.
      * @param type Tip privilegije {@link PrivilegeType}.
@@ -59,7 +63,9 @@ public interface IUser {
     void revokePrivilege(Object o, PrivilegeType type);
 
     /**
-     * Oduzima {@link IPrivilege} od korisnika.
+     * Oduzima {@link IPrivilege} od korisnika. Postoje određene privilegije koje svaki korisnik mora da ima, i koje se
+     * ne mogu obrisati, a čak i ukoliko program pokuša, vratiće se vrednost kao da je obrisana; ali nije. Te
+     * privilegije su važne za osnovno funkcionisanje aplikacije.
      *
      * @param type Tip privilegije {@link PrivilegeType}.
      */

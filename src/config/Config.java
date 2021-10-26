@@ -33,6 +33,16 @@ public class Config implements IConfig {
     }
 
     @Override
+    public UserBuilder getUser(String username) {
+        for (UserBuilder userBuilder : users) {
+            if (userBuilder.getUsername().equals(username)) {
+                return userBuilder;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void updateUser(UserBuilder userBuilder) {
         if (!users.contains(userBuilder)) return;
         users.remove(userBuilder);

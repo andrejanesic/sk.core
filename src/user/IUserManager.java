@@ -53,7 +53,21 @@ public interface IUserManager {
      * @throws exceptions.IUserDuplicateUsernameException Ukoliko je dato isto korisničko ime za novog korisnika kao ime
      *                                                    koje koristi neki već postojeći {@link IUser}.
      */
-    IUser addUser(String username, String password, Collection<IPrivilege> privileges);
+    IUser addUser(String username, String password, @Nullable Collection<IPrivilege> privileges);
+
+    /**
+     * Dodaje novog korisnika u {@link config.IConfigManager} i vraća instancu {@link IUser}. Ovaj korisnik NEĆE biti
+     * instanciran kao trenutni. To se mora naknadno uraditi putem {@link #initUser(String, String)} metode.
+     *
+     * @param username Korisničko ime.
+     * @param password Lozinka.
+     * @return Novi {@link IUser}.
+     * @throws exceptions.IUserDuplicateUsernameException Ukoliko je dato isto korisničko ime za novog korisnika kao ime
+     *                                                    koje koristi neki već postojeći {@link IUser}.
+     */
+    default IUser addUser(String username, String password) {
+        return addUser(username, password, null);
+    }
 
     /**
      * Dodaje novog {@link IUser} u {@link config.IConfigManager} i vraća instancu {@link IUser}.
@@ -72,6 +86,15 @@ public interface IUserManager {
      */
     @Nullable
     IUser getUser();
+
+    /**
+     * Vraća korisnika {@link IUser} sa datim korisničkim imenom, ili null ukoliko niko nije povezan.
+     *
+     * @param username Korisničko ime.
+     * @return {@link IUser} ili null.
+     */
+    @Nullable
+    IUser getUser(String username);
 
     /**
      * Vraća {@link Collection} svih učitanih {@link IUser} preko {@link config.IConfigManager}-a.

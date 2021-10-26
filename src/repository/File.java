@@ -11,6 +11,10 @@ import repository.builder.FileBuilder;
  */
 public class File extends INode {
 
+    //
+    // #TODO: ŠTA AKO JE OVAJ FAJL ZAPRAVO KONFIGURACIONI FAJL? ONEMOGUĆITI SVE!
+    //
+
     /**
      * Podrazumevani konstruktor.
      *

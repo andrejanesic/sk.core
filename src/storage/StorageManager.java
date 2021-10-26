@@ -20,6 +20,14 @@ public class StorageManager implements IStorageManager {
      */
     private Directory root;
 
+    /**
+     * Putanja do korenskog direktorijuma (onog u kome se nalazi inicijalizacijski/konfiguracioni fajl skladišta) u
+     * samom OS-u.
+     * <p>
+     * Na ovu putanju se dalje "lepe" putanje do čvorova u direktorijumu.
+     */
+    private String systemRoot;
+
     private StorageManager() {
     }
 
@@ -44,6 +52,7 @@ public class StorageManager implements IStorageManager {
 
         DirectoryBuilder rootBuilder = IOManager.getIOAdapter().initStorage(path);
         root = traverseDirectoryBuilder(null, rootBuilder);
+        systemRoot = path;
         return root;
     }
 

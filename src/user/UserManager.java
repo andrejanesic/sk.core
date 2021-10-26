@@ -43,6 +43,11 @@ public class UserManager implements IUserManager {
     }
 
     @Override
+    public IUser initUser() {
+        return deinitUser();
+    }
+
+    @Override
     public synchronized IUser initUser(String username, String password) {
         if (ConfigManager.getInstance().getConfig() == null)
             throw new IComponentNotInitializedException(IConfig.class);

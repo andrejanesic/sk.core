@@ -1,6 +1,8 @@
 package storage;
 
+import exceptions.IStorageManagerINodeBuilderTreeInvalidException;
 import io.IOManager;
+import org.jetbrains.annotations.Nullable;
 import repository.Directory;
 import repository.File;
 import repository.builder.DirectoryBuilder;
@@ -22,30 +24,21 @@ public class StorageManager implements IStorageManager {
     }
 
     /**
-     * Vraća instancu komponente.
+     * Vraća instancu komponente {@link StorageManager}.
      *
-     * @return Instanca komponente.
+     * @return Instanca komponente {@link StorageManager}.
      */
     public static StorageManager getInstance() {
         return StorageManager.Holder.INSTANCE;
     }
 
-    /**
-     * Vraća korenski direktorijum skladišta. Može biti null ukoliko još nije izgrađeno.
-     *
-     * @return Korenski direktorijum skladišta ili null ukoliko još nije izgrađen.
-     */
+    @Override
     public Directory getRoot() {
         return root;
     }
 
-    /**
-     * Gradi korenski Directory na osnovu putanje do skladišta u okruženju.
-     *
-     * @param path Putanja do skladišta u OS okruženju.
-     * @return Korenski Directory.
-     */
-    public synchronized Directory initStorage(String path) {
+    @Override
+    public synchronized Directory initStorage(String path) throws IStorageManagerINodeBuilderTreeInvalidException {
         if (root != null)
             return root;
 
@@ -54,34 +47,43 @@ public class StorageManager implements IStorageManager {
         return root;
     }
 
-    /**
-     * Deinicijalizuje skladište.
-     */
+    @Override
     public synchronized void deinitStorage() {
         // #TODO ovde treba izvršiti promene koje su u privremenoj memoriji i još nisu napisane, ako postoje
         root = null;
     }
 
     /**
-     * Prolazi kroz stablo DirectoryBuilder-a i pravi nove Directory-je i File-ove.
+     * Prolazi kroz stablo {@link DirectoryBuilder}-a i pravi nove {@link Directory} i {@link File}.
      *
-     * @param parent       Roditeljski Directory.
-     * @param iNodeBuilder Trenutno obrađivan INodeBuilder.
-     * @return Korenski direktorijum.
+     * @param parent       Roditeljski {@link Directory}.
+     * @param iNodeBuilder Trenutno obrađivan {@link INodeBuilder}.
+     * @return Korenski {@link Directory} za celo skladište..
      */
-    private Directory traverseDirectoryBuilder(Directory parent, INodeBuilder iNodeBuilder) {
+    private Directory traverseDirectoryBuilder(
+            @Nullable Directory parent,
+            INodeBuilder iNodeBuilder
+    ) throws IStorageManagerINodeBuilderTreeInvalidException {
         if (iNodeBuilder.getType().equals(INodeBuilderType.FILE)) {
-            new File(parent, (FileBuilder) iNodeBuilder);
+            if (parent == null) {
+                // roditelj fajla uvek mora biti direktorijum, nikada null
+                throw new IStorageManagerINodeBuilderTreeInvalidException(
+                        "FileBuilder must have a parent, it can never be null.");
+            }
+
+            parent.linkNode(new File(parent, (FileBuilder) iNodeBuilder));
             return null;
         }
 
         Directory dir = new Directory(parent, (DirectoryBuilder) iNodeBuilder);
+        if (parent == null)
+            parent = dir;
+        else
+            parent.linkNode(dir);
         for (INodeBuilder nb : ((DirectoryBuilder) iNodeBuilder).getChildren()) {
             traverseDirectoryBuilder(dir, nb);
         }
-
-        if (parent != null) return parent;
-        return dir;
+        return parent;
     }
 
     /**

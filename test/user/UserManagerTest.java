@@ -7,6 +7,7 @@ import exceptions.IUserCannotDeleteCurrentUserException;
 import exceptions.IUserDuplicateUsernameException;
 import io.IODriver;
 import io.IOManager;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
 import user.builder.PrivilegeBuilder;
@@ -84,6 +85,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -162,6 +164,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -236,6 +239,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -308,6 +312,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -381,6 +386,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -456,6 +462,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -528,6 +535,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -600,6 +608,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;
@@ -673,6 +682,7 @@ public class UserManagerTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;

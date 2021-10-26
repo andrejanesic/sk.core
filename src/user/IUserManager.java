@@ -16,6 +16,14 @@ import java.util.Collection;
 public interface IUserManager {
 
     /**
+     * Inicijalizuje anonimnog korisnika {@link IUser} sa osnovnim anonimnim kredencijalima. Diskonektuje trenutnog
+     * korisnika.
+     *
+     * @return Korisnik {@link IUser}.
+     */
+    IUser initUser();
+
+    /**
      * Inicijalizuje korisnika {@link IUser} na osnovu datih kredencijala. Trenutno ulogovan korisnik se diskonektuje.
      * Ukoliko kredencijali nisu tačni, korisnik će se svakako diskonektovati i ponovo konektovati kao anonimni
      * korisnik.

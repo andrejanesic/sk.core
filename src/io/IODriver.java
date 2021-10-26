@@ -1,5 +1,6 @@
 package io;
 
+import org.jetbrains.annotations.NotNull;
 import repository.builder.DirectoryBuilder;
 
 /**
@@ -69,10 +70,13 @@ public interface IODriver {
     void writeConfig(String json, String path);
 
     /**
-     * Inicijalizuje strukturu skladišta na datoj putanji u korenski direktorijum, to jest Directory.getRoot().
+     * Inicijalizuje strukturu skladišta na datoj putanji u korenski {@link DirectoryBuilder}. Ako je skladište prazno
+     * (ne sadrži ni jedan fajl/direktorijum), potrebno je vratiti "prazni" {@link DirectoryBuilder}. Povratna vrednost
+     * ne sme biti null.
      *
-     * @param path Putanja skladišta.
-     * @return Vraća DirectoryBuilder instancu koja sadrži podstablo čvorova ili null ukoliko je neuspešno.
+     * @param path Putanja skladišta u okruženju OS-a.
+     * @return {@link DirectoryBuilder} koji sadrži podstablo čvorova {@link repository.builder.INodeBuilder}.
      */
+    @NotNull
     DirectoryBuilder initStorage(String path);
 }

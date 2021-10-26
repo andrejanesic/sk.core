@@ -1,18 +1,26 @@
+package storage;
+
 import core.Core;
+import dummynode.DummyNode;
+import exceptions.INodeRootNotInitializedException;
 import io.IODriver;
 import io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import repository.Directory;
 import repository.builder.DirectoryBuilder;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CoreTest {
+public class StorageManagerTest {
 
     @Test
-    void testInitRoot() {
+    void testInitStorage() throws INodeRootNotInitializedException {
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().deinitStorage());
+        assertNull(Core.getInstance().StorageManager().getRoot());
+
+        DummyNode rootDummy = DummyNode.generateDummyNodes();
+        DirectoryBuilder rootBuilder = new DirectoryBuilder();
+        DummyNode.dummyNodeTreeToBuilderNodeTree(rootBuilder, rootDummy);
         IOManager.setIODriver(new IODriver() {
             @Override
             public void makeDirectory(String path) {
@@ -57,13 +65,15 @@ public class CoreTest {
             @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
-                return null;
+                return rootBuilder;
             }
         });
 
-        Core.getInstance().ConfigManager().initConfig("");
-        assertDoesNotThrow(() -> Core.getInstance().StorageManager().initStorage("test"));
-        assertDoesNotThrow(() -> Core.getInstance().StorageManager().getRoot().getPath());
-        assertEquals(Directory.ROOT_DIRECTORY, Core.getInstance().StorageManager().getRoot().getPath());
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().initStorage(null));
+        assertNotNull(Core.getInstance().StorageManager().getRoot());
+        rootDummy.traverse(dummyNode -> assertDoesNotThrow(() -> {
+            //noinspection ConstantConditions
+            Core.getInstance().StorageManager().getRoot().resolvePath(dummyNode.path());
+        }));
     }
 }

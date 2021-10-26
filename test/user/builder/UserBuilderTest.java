@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import core.Core;
 import io.IODriver;
 import io.IOManager;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
 
@@ -111,6 +112,7 @@ public class UserBuilderTest {
 
             }
 
+            @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
                 return null;

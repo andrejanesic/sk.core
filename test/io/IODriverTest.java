@@ -1,6 +1,7 @@
 package io;
 
 import dummynode.DummyNode;
+import org.jetbrains.annotations.NotNull;
 import repository.builder.DirectoryBuilder;
 
 /**
@@ -55,6 +56,7 @@ public class IODriverTest implements IODriver {
 
     }
 
+    @NotNull
     @Override
     public DirectoryBuilder initStorage(String path) {
         DummyNode rootDummy = DummyNode.generateDummyNodes();

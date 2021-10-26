@@ -1,6 +1,7 @@
 package user.builder;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Builder klasa za korisnika.
@@ -13,13 +14,10 @@ public class UserBuilder {
 
     private Collection<PrivilegeBuilder> privileges;
 
-    private boolean authenticated = false;
-
-    public UserBuilder(String username, String password, Collection<PrivilegeBuilder> privileges, boolean authenticated) {
+    public UserBuilder(String username, String password, Collection<PrivilegeBuilder> privileges) {
         this.username = username;
         this.password = password;
         this.privileges = privileges;
-        this.authenticated = authenticated;
     }
 
     public String getUsername() {
@@ -46,11 +44,16 @@ public class UserBuilder {
         this.privileges = privileges;
     }
 
-    public boolean isAuthenticated() {
-        return authenticated;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserBuilder)) return false;
+        UserBuilder that = (UserBuilder) o;
+        return getUsername().equals(that.getUsername());
     }
 
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername());
     }
 }

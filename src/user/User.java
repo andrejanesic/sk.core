@@ -1,16 +1,22 @@
 package user;
 
 
+import config.ConfigManager;
+import config.IConfig;
+import core.Core;
+import exceptions.IComponentNotInitializedException;
 import user.builder.PrivilegeBuilder;
 import user.builder.UserBuilder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
- * Čuva informacije o korisniku.
+ * Implementacija IUser interfejsa.
  */
-public class User {
+public class User implements IUser {
 
     /**
      * Korisničko ime.
@@ -25,17 +31,12 @@ public class User {
     /**
      * Privilegije korisnika.
      */
-    private Collection<Privilege> privileges;
-
-    /**
-     * Da li je korisnik autentifikovan, tj. ulogovan, ili ne.
-     */
-    private boolean authenticated = false;
+    private Collection<IPrivilege> privileges;
 
     /**
      * Kreira novog anonimnog, neulogovanog korisnika.
      */
-    public User() {
+    User() {
         initAnonymousPrivileges();
     }
 
@@ -46,13 +47,13 @@ public class User {
      * @param password   Lozinka.
      * @param privileges Privilegije korisnika.
      */
-    public User(String username, String password, Collection<Privilege> privileges) {
+    User(String username, String password, Collection<IPrivilege> privileges) {
         this.username = username;
         this.password = password;
-        this.privileges = privileges;
+        this.privileges = new HashSet<>();
+        this.privileges.addAll(privileges); // mora biti ovako zbog potencijalne imutabilnosti privileges kolekcije
 
         initAnonymousPrivileges();
-        authenticated = true;
     }
 
     /**
@@ -61,13 +62,8 @@ public class User {
      * @param username Korisničko ime.
      * @param password Lozinka.
      */
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.privileges = new HashSet<>();
-
-        initAnonymousPrivileges();
-        authenticated = true;
+    User(String username, String password) {
+        this(username, password, new HashSet<>());
     }
 
     /**
@@ -75,18 +71,14 @@ public class User {
      *
      * @param userBuilder UserBuilder instanca.
      */
-    public User(UserBuilder userBuilder) {
-        if (userBuilder.isAuthenticated()) {
-            username = userBuilder.getUsername();
-            password = userBuilder.getPassword();
+    User(UserBuilder userBuilder) {
+        username = userBuilder.getUsername();
+        password = userBuilder.getPassword();
 
-            privileges = new HashSet<>();
-            if (userBuilder.getPrivileges() != null)
-                for (PrivilegeBuilder pb : userBuilder.getPrivileges())
-                    privileges.add(new Privilege(pb));
-
-            authenticated = true;
-        }
+        privileges = new HashSet<>();
+        if (userBuilder.getPrivileges() != null)
+            for (PrivilegeBuilder pb : userBuilder.getPrivileges())
+                privileges.add(new Privilege(pb));
 
         initAnonymousPrivileges();
     }
@@ -98,110 +90,112 @@ public class User {
         if (privileges == null)
             privileges = new HashSet<>();
 
-        privileges.add(new Privilege(PrivilegeType.LOGIN));
-        privileges.add(new Privilege(PrivilegeType.LOGOUT));
+        privileges.add(new Privilege(PrivilegeType.USER_LOGIN));
+        privileges.add(new Privilege(PrivilegeType.USER_LOGOUT));
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public Collection<Privilege> getPrivileges() {
+    @Override
+    public Collection<IPrivilege> getPrivileges() {
         return privileges;
     }
 
+    @Override
     public boolean isAuthenticated() {
-        return authenticated;
+        return Core.getInstance().UserManager().getUser().equals(this);
     }
 
-    /**
-     * Dodaje novu privilegiju korisniku.
-     *
-     * @param p Nova privilegija.
-     */
-    public void grantPrivilege(Privilege p) {
+    @Override
+    public void grantPrivilege(IPrivilege p) {
         privileges.add(p);
+        update();
     }
 
-    /**
-     * Dodaje novu privilegiju korisniku.
-     *
-     * @param o    Objekat vezan za privilegiju.
-     * @param type Tip privilegije.
-     */
+    @Override
     public void grantPrivilege(Object o, PrivilegeType type) {
-        privileges.add(new Privilege(o, type));
+        grantPrivilege(new Privilege(o, type));
     }
 
-    /**
-     * Dodaje novi tip privilegije (generalizovan) korisniku.
-     *
-     * @param type Tip privilegije.
-     */
+    @Override
     public void grantPrivilege(PrivilegeType type) {
         grantPrivilege(null, type);
     }
 
-    /**
-     * Oduzima privilegiju od korisnika.
-     *
-     * @param p Nova privilegija.
-     */
-    public void revokePrivilege(Privilege p) {
+    @Override
+    public void revokePrivilege(IPrivilege p) {
         privileges.remove(p);
+        update();
     }
 
-    /**
-     * Oduzima privilegiju od korisnika.
-     *
-     * @param o    Objekat vezan za privilegiju.
-     * @param type Tip privilegije.
-     */
+    @Override
     public void revokePrivilege(Object o, PrivilegeType type) {
-        privileges.remove(new Privilege(o, type));
+        revokePrivilege(new Privilege(o, type));
     }
 
-    /**
-     * Oduzima privilegiju od korisnika.
-     *
-     * @param type Tip privilegije.
-     */
+    @Override
     public void revokePrivilege(PrivilegeType type) {
         revokePrivilege(null, type);
     }
 
-    /**
-     * Proverava da li korisnik ima datu privilegiju.
-     *
-     * @param p Privilegija.
-     * @return True ako ima, false ako nema.
-     */
-    public boolean hasPrivilege(Privilege p) {
+    @Override
+    public boolean hasPrivilege(IPrivilege p) {
         return privileges.contains(p);
     }
 
-    /**
-     * Proverava da li korisnik ima datu privilegiju.
-     *
-     * @param o    Objekat vezan za privilegiju.
-     * @param type Tip privilegije.
-     * @return True ako ima, false ako nema.
-     */
+    @Override
     public boolean hasPrivilege(Object o, PrivilegeType type) {
-        return privileges.contains(new Privilege(o, type));
+        return hasPrivilege(new Privilege(o, type));
+    }
+
+    @Override
+    public void update() {
+        if (ConfigManager.getInstance().getConfig() == null)
+            throw new IComponentNotInitializedException(IConfig.class);
+        Core.getInstance().ConfigManager().getConfig().updateUser(toBuilder());
+    }
+
+    @Override
+    public UserBuilder toBuilder() {
+        return new UserBuilder(username, password, privilegesToBuilder());
     }
 
     /**
-     * Proverava da li korisnik ima dati tip privilegije (generalizovano).
+     * Pretvara privilegije u {@link PrivilegeBuilder} tip.
      *
-     * @param type Tip privilegije.
-     * @return True ako ima, false ako nema.
+     * @return {@link PrivilegeBuilder} bilderi.
      */
+    private Collection<PrivilegeBuilder> privilegesToBuilder() {
+        Collection<PrivilegeBuilder> pbs = new ArrayList<>();
+        for (IPrivilege p : privileges) {
+            pbs.add(p.toBuilder());
+        }
+        return pbs;
+    }
+
+    @Override
     public boolean hasPrivilege(PrivilegeType type) {
         return hasPrivilege(null, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getUsername(), user.getUsername());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername());
     }
 }

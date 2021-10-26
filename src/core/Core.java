@@ -1,5 +1,7 @@
 package core;
 
+import config.ConfigManager;
+import config.IConfigManager;
 import io.IODriver;
 import io.IOManager;
 import storage.IStorageManager;
@@ -43,6 +45,15 @@ public class Core {
      */
     public IUserManager UserManager() {
         return UserManager.getInstance();
+    }
+
+    /**
+     * Vraća instancu komponente IConfigManager.
+     *
+     * @return Instanca komponente.
+     */
+    public IConfigManager ConfigManager() {
+        return ConfigManager.getInstance();
     }
 
     /**

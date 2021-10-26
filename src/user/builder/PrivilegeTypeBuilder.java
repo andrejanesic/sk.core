@@ -5,7 +5,14 @@ package user.builder;
  */
 public enum PrivilegeTypeBuilder {
     ALL,
-    LOGIN,
-    LOGOUT,
     INIT_STORAGE,
+
+    // USER MANAGEMENT
+    USER_ALL,
+    USER_ADD,
+    USER_GET,
+    USER_UPDATE,
+    USER_DELETE,
+    USER_LOGIN,
+    USER_LOGOUT,
 }

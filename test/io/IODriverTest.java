@@ -2,13 +2,6 @@ package io;
 
 import dummynode.DummyNode;
 import repository.builder.DirectoryBuilder;
-import user.builder.PrivilegeBuilder;
-import user.builder.UserBuilder;
-
-import java.util.Collection;
-import java.util.HashSet;
-
-import static user.builder.PrivilegeTypeBuilder.ALL;
 
 /**
  * Testna implementacija IODriverTest-a.
@@ -43,6 +36,26 @@ public class IODriverTest implements IODriver {
     }
 
     @Override
+    public String readConfig(String path) {
+        return "{\n" +
+                "\t\"users\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"username\": \"test\",\n" +
+                "\t\t\t\"password\": \"test\",\n" +
+                "\t\t\t\"privileges\": [\n" +
+                "\t\t\t\t\"type\": \"ALL\"\n" +
+                "\t\t\t]\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}";
+    }
+
+    @Override
+    public void writeConfig(String json, String path) {
+
+    }
+
+    @Override
     public DirectoryBuilder initStorage(String path) {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         DirectoryBuilder rootBuilder = new DirectoryBuilder();
@@ -50,21 +63,4 @@ public class IODriverTest implements IODriver {
         return rootBuilder;
     }
 
-    @Override
-    public UserBuilder initUser(String username, String password) {
-        int r = (int) Math.floor(Math.random() * 10);
-
-        Collection<PrivilegeBuilder> privilegeBuilders;
-        if (r > 5) {
-            privilegeBuilders = null;
-        } else {
-            privilegeBuilders = new HashSet<>();
-            privilegeBuilders.add(new PrivilegeBuilder(ALL));
-        }
-        return new UserBuilder(TEST_USERNAME, TEST_PASSWORD, privilegeBuilders, true);
-    }
-
-    @Override
-    public void deinitUser(String username) {
-    }
 }

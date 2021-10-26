@@ -2,9 +2,9 @@ package actions;
 
 import core.Core;
 import exceptions.ActionInsufficientPrivilegeException;
-import user.User;
+import user.IUser;
 
-import static user.PrivilegeType.LOGIN;
+import static user.PrivilegeType.USER_LOGIN;
 
 /**
  * Radnja inicijalizacije (logovanja i izlogovanja) korisnika.
@@ -42,11 +42,11 @@ public class ActionInitUser implements Action {
         if (tried)
             return false;
 
-        if (!Core.getInstance().UserManager().getUser().hasPrivilege(LOGIN))
+        if (!Core.getInstance().UserManager().getUser().hasPrivilege(USER_LOGIN))
             throw new ActionInsufficientPrivilegeException();
 
         tried = true;
-        User u = Core.getInstance().UserManager().initUser(username, password);
+        IUser u = Core.getInstance().UserManager().initUser(username, password);
         return u.isAuthenticated();
     }
 

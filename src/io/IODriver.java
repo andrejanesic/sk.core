@@ -1,10 +1,9 @@
 package io;
 
 import repository.builder.DirectoryBuilder;
-import user.builder.UserBuilder;
 
 /**
- * Vrši interakciju sa okruženjem.
+ * Vrši interakciju sa okruženjem. Ovaj interfejs se koristi za implementaciju aplikacije na konkretnoj platformi.
  */
 public interface IODriver {
 
@@ -53,26 +52,27 @@ public interface IODriver {
     void moveFile(String sourcePath, String destPath);
 
     /**
+     * Čita konfiguracioni fajl. Vraća null ukoliko ne postoji.
+     *
+     * @param path Putanja na kojoj treba pročitati ili inicijalizovati konfiguracioni fajl u OS okruženju.
+     * @return Potrebno je vratiti sadržinu konfiguracionog fajla (u JSON formatu) ili null ukoliko konfiguracioni fajl
+     * ne postoji.
+     */
+    String readConfig(String path);
+
+    /**
+     * Piše konfiguracioni fajl na zadatoj putanji.
+     *
+     * @param json Sadržina konfiguracionog fajla u JSON formatu.
+     * @param path Putanja na kojoj treba pročitati ili inicijalizovati konfiguracioni fajl u OS okruženju.
+     */
+    void writeConfig(String json, String path);
+
+    /**
      * Inicijalizuje strukturu skladišta na datoj putanji u korenski direktorijum, to jest Directory.getRoot().
      *
      * @param path Putanja skladišta.
      * @return Vraća DirectoryBuilder instancu koja sadrži podstablo čvorova ili null ukoliko je neuspešno.
      */
     DirectoryBuilder initStorage(String path);
-
-    /**
-     * Autorizuje korisnika iz konfiguracije korisnika i vraća novi bilder ukoliko korisnik postoji.
-     *
-     * @param username Korisničko ime.
-     * @param password Lozinka.
-     * @return Bilder za korisnika ili null ukoliko je neuspešno.
-     */
-    UserBuilder initUser(String username, String password);
-
-    /**
-     * Deautorizuje korisnika (trenutno koristi sistem).
-     *
-     * @param username Korisničko ime.
-     */
-    void deinitUser(String username);
 }

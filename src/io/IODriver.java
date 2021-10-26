@@ -73,6 +73,19 @@ public interface IODriver {
      * Inicijalizuje strukturu skladišta na datoj putanji u korenski {@link DirectoryBuilder}. Ako je skladište prazno
      * (ne sadrži ni jedan fajl/direktorijum), potrebno je vratiti "prazni" {@link DirectoryBuilder}. Povratna vrednost
      * ne sme biti null.
+     * <p>
+     * Potrebno je da IODriver zapamti ovu lokaciju; svaki sledći poziv <i>(osim poziv koji inicijalizuje novi
+     * direktorijum)</i> biće relativan u odnosu na njegovu putanju.
+     * <p>
+     * Drugim rečima:
+     * <ul>
+     *     <li>Neka se putanja nalazi na <pre>syspath = c:/storage/</pre></li>
+     *     <li>Konfiguracioni fajl je <pre>c:/storage/config.json</pre></li>
+     *     <li>Neka treba da pristupimo direktorijumu čija je relativna putanja <pre>relpath = /photos/summer-2021</pre>
+     *     </li>
+     *     <li>Tada će puna putanja biti <pre>abspath = c:/storage/photos/summer-2021</pre>, pri čemu je na IOAdapter-u
+     *     da zapamti deo syspath, odnosno poslednji korišteni path za inicijalizaciju direktorijuma.</li>
+     * </ul>
      *
      * @param path Putanja skladišta u okruženju OS-a.
      * @return {@link DirectoryBuilder} koji sadrži podstablo čvorova {@link repository.builder.INodeBuilder}.

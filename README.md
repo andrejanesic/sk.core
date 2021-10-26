@@ -12,6 +12,8 @@ Sva komunikacija sa programom vrši se putem Action komponente.
 
 Svaku komandu koju korisnik zada potrebno je pretvoriti u Action instancu, koja vraća odgovor u vidu generalizovanog Object tipa, koji je dalje moguće kastovati u specifičnu klasu, u zavisnosti sa konkretnom akcijom.
 
+Pre svega, potrebno je instancirati Config komponentu, odnosno konfiguraciju, koja učitava konfiguraciju za skladište na zadatoj putanji. Ukoliko ne postoji, kreira se nova konfiguracija.
+
 ## Implementacija komponente za upravljanje skladištem fajlova
 
 **Opis projekta:**
@@ -25,7 +27,7 @@ Sledi opis funkcionanosti komponente za upravljanje skladištem fajlova.
 
 ### Inicijalizacija skladišta i korisnici
 
-- [ ] inicijalizacija skladišta (može se implemenitrati kao kreiranje praznog foldera koji će biti korenski direktorijum skladišta),
+- [x] inicijalizacija skladišta (može se implemenitrati kao kreiranje praznog foldera koji će biti korenski direktorijum skladišta),
 - [ ] osmisliti da se komponentom podrži postojanje korisnika skladišta i napraviti konekciju na skladište sa odgovarajućim nalogom,
 - [x] svaki korisnik treba da ima korisničko ime i lozinku
 - [ ] svaki korisnik ima privilegije, to su privilegija za snimanje fajlova, za preuzimanje, brisanje fajlova i pregled fajlova u skladištu, privilegije mogu da važe za celo skladište ili samo za neke foldere, mora da postoji neka logična raspodela privilegija, na primer ne može korisnik da ima privilegiju za brisanje, a da nema za pregled, ovo je potrebno programski iskontrolisati prilikom zadavanja privilegija,

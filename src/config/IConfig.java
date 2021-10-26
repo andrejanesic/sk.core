@@ -48,4 +48,10 @@ public interface IConfig {
      * @return Konfiguracija u obliku validnog JSON String-a.
      */
     String toJson();
+
+    /**
+     * "Convenience" metod. Poziva {@link IConfigManager#saveConfig()} ukoliko je pozvano na trenutno učitanoj
+     * {@link IConfig} konfiguraciji. Ovaj metod treba da pozovu sve druge metode.
+     */
+    void save();
 }

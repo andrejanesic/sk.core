@@ -498,7 +498,8 @@ public class ConfigManagerTest {
         existing.setPassword(newPassword);
         assertDoesNotThrow(() -> c.updateUser(existing));
 
-        Collection<UserBuilder> before = c.getUsers();
+        Collection<UserBuilder> before = new HashSet<>();
+        before.addAll(c.getUsers());
         c.updateUser(nonExist);
         Collection<UserBuilder> after = c.getUsers();
         assertEquals(before, after);

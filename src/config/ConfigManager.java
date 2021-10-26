@@ -11,6 +11,11 @@ public class ConfigManager implements IConfigManager {
      */
     private IConfig config;
 
+    /**
+     * Čuva putanju od trenutne konfiguracije za dalje pisanje.
+     */
+    private String currentConfigPath;
+
     private ConfigManager() {
     }
 
@@ -33,6 +38,7 @@ public class ConfigManager implements IConfigManager {
             config = new Config();
             json = gson.toJson(config);
             Core.getInstance().IODriver().writeConfig(json, path);
+            currentConfigPath = path;
             return config;
         }
 
@@ -45,6 +51,7 @@ public class ConfigManager implements IConfigManager {
             json = gson.toJson(config);
             Core.getInstance().IODriver().writeConfig(json, path);
         }
+        currentConfigPath = path;
         return config;
     }
 
@@ -54,8 +61,10 @@ public class ConfigManager implements IConfigManager {
     }
 
     @Override
-    public String saveConfig() {
-        return null;
+    public void saveConfig() {
+        Gson gson = new Gson();
+        String json = gson.toJson(config);
+        Core.getInstance().IODriver().writeConfig(json, currentConfigPath);
     }
 
     /**

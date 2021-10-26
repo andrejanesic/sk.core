@@ -1,6 +1,7 @@
 package config;
 
 import com.google.gson.Gson;
+import core.Core;
 import user.builder.UserBuilder;
 
 import java.util.Collection;
@@ -19,7 +20,11 @@ public class Config implements IConfig {
 
     @Override
     public void addUser(UserBuilder userBuilder) {
+        if (userBuilder.getUsername() == null || userBuilder.getUsername().length() == 0 ||
+                userBuilder.getPassword() == null || userBuilder.getPassword().length() == 0)
+            return;
         users.add(userBuilder);
+        save();
     }
 
     @Override
@@ -32,15 +37,25 @@ public class Config implements IConfig {
         if (!users.contains(userBuilder)) return;
         users.remove(userBuilder);
         users.add(userBuilder);
+        save();
     }
 
     @Override
     public void deleteUser(UserBuilder userBuilder) {
         users.remove(userBuilder);
+        save();
     }
 
     @Override
     public String toJson() {
         return new Gson().toJson(this);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void save() {
+        if (Core.getInstance().ConfigManager().getConfig() != null
+                && Core.getInstance().ConfigManager().getConfig().equals(this))
+            Core.getInstance().ConfigManager().saveConfig();
     }
 }

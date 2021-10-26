@@ -50,5 +50,8 @@ public interface IConfigManager {
     @Nullable
     IConfig getConfig();
 
-    String saveConfig();
+    /**
+     * Piše konfiguraciju za skladište putem {@link io.IODriver#writeConfig(String, String)} metode.
+     */
+    void saveConfig();
 }

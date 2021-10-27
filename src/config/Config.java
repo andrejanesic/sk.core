@@ -82,8 +82,8 @@ public class Config implements IConfig {
 
     @Override
     public String toJson() {
-        for (INodeLimitation l : limitations)
-            l.resolveHost();
+        for (INodeLimitation e : limitations)
+            e.setPath(e.getHost().getPath());
         return new Gson().toJson(this);
     }
 

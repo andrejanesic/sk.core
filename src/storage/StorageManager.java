@@ -1,6 +1,10 @@
 package storage;
 
+import config.IConfig;
+import core.Core;
+import exceptions.IComponentNotInitializedException;
 import exceptions.INodeLimitationException;
+import exceptions.INodeRootNotInitializedException;
 import exceptions.IStorageManagerINodeBuilderTreeInvalidException;
 import io.IOManager;
 import org.jetbrains.annotations.Nullable;
@@ -10,6 +14,7 @@ import repository.builder.DirectoryBuilder;
 import repository.builder.FileBuilder;
 import repository.builder.INodeBuilder;
 import repository.builder.INodeBuilderType;
+import repository.limitations.INodeLimitation;
 
 /**
  * Implementacija komponente za menadžment skladišta.
@@ -48,12 +53,24 @@ public class StorageManager implements IStorageManager {
 
     @Override
     public synchronized Directory initStorage(String path) throws IStorageManagerINodeBuilderTreeInvalidException {
+        if (Core.getInstance().ConfigManager().getConfig() == null)
+            throw new IComponentNotInitializedException(IConfig.class);
+
         if (root != null)
             return root;
 
         DirectoryBuilder rootBuilder = IOManager.getIOAdapter().initStorage(path);
         root = traverseDirectoryBuilder(null, rootBuilder);
         systemRoot = path;
+
+        //noinspection ConstantConditions
+        for (INodeLimitation e : Core.getInstance().ConfigManager().getConfig().getLimitations()) {
+            try {
+                e.setHost(root.resolvePath(e.getPath()));
+            } catch (INodeRootNotInitializedException ignored) {
+                // neće se desiti jer smo gore inicijalizovali skladište
+            }
+        }
         return root;
     }
 

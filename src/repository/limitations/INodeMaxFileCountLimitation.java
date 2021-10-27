@@ -1,7 +1,6 @@
 package repository.limitations;
 
 import exceptions.INodeLimitationException;
-import org.jetbrains.annotations.NotNull;
 import repository.Directory;
 import repository.File;
 import repository.INode;
@@ -22,12 +21,12 @@ public class INodeMaxFileCountLimitation extends INodeLimitation {
     /**
      * Podrazumevani konstruktor.
      *
-     * @param host         {@link INode} nad kojim je ograničenje implementirano.
-     * @param maxFileCount Maksimalni broj fajlova.
+     * @param host {@link INode} nad kojim je ograničenje implementirano.
+     * @param args Maksimalni broj fajlova.
      */
-    public INodeMaxFileCountLimitation(INode host, long maxFileCount) {
-        super(host);
-        this.maxFileCount = maxFileCount;
+    public INodeMaxFileCountLimitation(INode host, Object... args) {
+        super(host, INodeLimitationType.BLACKLIST_EXT, args);
+        this.maxFileCount = (long) args[0];
     }
 
     @Override
@@ -65,11 +64,5 @@ public class INodeMaxFileCountLimitation extends INodeLimitation {
         if (selfCount + targetCount > maxFileCount)
             throw new INodeLimitationException();
         return true;
-    }
-
-    @NotNull
-    @Override
-    public INodeLimitationType getType() {
-        return INodeLimitationType.MAX_FILE_COUNT;
     }
 }

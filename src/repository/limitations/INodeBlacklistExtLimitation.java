@@ -1,7 +1,6 @@
 package repository.limitations;
 
 import exceptions.INodeLimitationException;
-import org.jetbrains.annotations.NotNull;
 import repository.*;
 
 /**
@@ -17,12 +16,12 @@ public class INodeBlacklistExtLimitation extends INodeLimitation {
     /**
      * Podrazumevani konstruktor.
      *
-     * @param host      {@link INode} nad kojim je ograničenje implementirano.
-     * @param extension {@link String} zabranjena ekstenzija.
+     * @param host {@link INode} nad kojim je ograničenje implementirano.
+     * @param args {@link String} zabranjena ekstenzija.
      */
-    public INodeBlacklistExtLimitation(INode host, @NotNull String extension) {
-        super(host);
-        this.extension = extension;
+    public INodeBlacklistExtLimitation(INode host, Object... args) {
+        super(host, INodeLimitationType.BLACKLIST_EXT, args);
+        this.extension = (String) args[0];
     }
 
     @Override
@@ -61,11 +60,5 @@ public class INodeBlacklistExtLimitation extends INodeLimitation {
         if (extension.equals(ext))
             throw new INodeLimitationException();
         return true;
-    }
-
-    @NotNull
-    @Override
-    public INodeLimitationType getType() {
-        return INodeLimitationType.BLACKLIST_EXT;
     }
 }

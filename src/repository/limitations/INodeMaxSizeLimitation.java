@@ -22,12 +22,12 @@ public class INodeMaxSizeLimitation extends INodeLimitation {
     /**
      * Podrazumevani konstruktor.
      *
-     * @param host    {@link INode} nad kojim je ograničenje implementirano.
-     * @param maxSize Maksimalna veličina poddirektorijuma, u [B].
+     * @param host {@link INode} nad kojim je ograničenje implementirano.
+     * @param args Maksimalna veličina poddirektorijuma, u [B].
      */
-    public INodeMaxSizeLimitation(INode host, long maxSize) {
-        super(host);
-        this.maxSize = maxSize;
+    public INodeMaxSizeLimitation(INode host, Object... args) {
+        super(host, INodeLimitationType.BLACKLIST_EXT, args);
+        this.maxSize = (long) args[0];
     }
 
     @Override

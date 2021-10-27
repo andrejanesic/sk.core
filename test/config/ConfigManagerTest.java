@@ -7,7 +7,11 @@ import io.IODriver;
 import io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import repository.Directory;
+import repository.INode;
 import repository.builder.DirectoryBuilder;
+import repository.limitations.INodeLimitation;
+import repository.limitations.INodeLimitationType;
 import user.builder.PrivilegeBuilder;
 import user.builder.PrivilegeTypeBuilder;
 import user.builder.UserBuilder;
@@ -20,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("ALL")
 public class ConfigManagerTest {
 
-    private static final String BASE_CONFIG = "{\"users\":[]}";
+    private static final String BASE_CONFIG = "{\"users\":[],\"limitations\":[]}";
 
     @Test
     void testLoadEmptyConfig() {
@@ -190,7 +194,7 @@ public class ConfigManagerTest {
         }.getType();
         List<UserBuilder> userBuilders = new ArrayList<>();
         List<PrivilegeBuilder> privilegeBuilders = new ArrayList<>();
-        int n = (int) Math.floor(Math.random() * 20);
+        int n = (int) Math.floor(Math.random() * 20) + 1;
 
         while (n-- > 0) {
             privilegeBuilders.clear();
@@ -209,8 +213,6 @@ public class ConfigManagerTest {
                     UUID.randomUUID().toString(),
                     privilegeBuilders));
         }
-
-        assertFalse(userBuilders.isEmpty());
 
         IOManager.setIODriver(new IODriver() {
             @Override
@@ -265,7 +267,106 @@ public class ConfigManagerTest {
         assertDoesNotThrow(() -> Core.getInstance().ConfigManager().initConfig(""));
         assertNotNull(Core.getInstance().ConfigManager().getConfig());
         assertEquals(new HashSet<>(userBuilders), Core.getInstance().ConfigManager().getConfig().getUsers());
-        assertEquals(gson.toJson(Core.getInstance().ConfigManager().getConfig(), Config.class),
+        assertEquals("{\"users\":" + gson.toJson(
+                Core.getInstance().ConfigManager().getConfig().getUsers(), listType) + "}",
+                Core.getInstance().IODriver().readConfig(""));
+    }
+
+    @Test
+    void testReadLimitations() {
+        Type listType = new TypeToken<List<INodeLimitation>>() {
+        }.getType();
+        Collection<INodeLimitation> limitations = new HashSet<>();
+        INode d = new Directory(false, null, Directory.ROOT_DIRECTORY);
+        int n = (int) Math.floor(Math.random() * 20) + 1;
+
+        while (n-- > 0) {
+            int j = (int) Math.floor(Math.random() * INodeLimitationType.values().length);
+            switch (INodeLimitationType.values()[j]) {
+                case MAX_FILE_COUNT:
+                    limitations.add(new INodeLimitation(
+                            d,
+                            INodeLimitationType.MAX_FILE_COUNT,
+                            // changing from double to any other type will cause the test to break because it's being
+                            // read from IODriver as (double)!
+                            (double) Math.floor(Math.random() * 1_000_000_000L)
+                    ));
+                    break;
+                case BLACKLIST_EXT:
+                    limitations.add(new INodeLimitation(
+                            d,
+                            INodeLimitationType.BLACKLIST_EXT,
+                            UUID.randomUUID().toString()
+                    ));
+                    break;
+                case MAX_SIZE:
+                    limitations.add(new INodeLimitation(
+                            d,
+                            INodeLimitationType.MAX_SIZE,
+                            (double) Math.floor(Math.random() * 1_000_000_000L)
+                    ));
+                default:
+                    break;
+            }
+        }
+
+        IOManager.setIODriver(new IODriver() {
+            @Override
+            public void makeDirectory(String path) {
+
+            }
+
+            @Override
+            public void makeFile(String path) {
+
+            }
+
+            @Override
+            public void deleteDirectory(String path) {
+
+            }
+
+            @Override
+            public void deleteFile(String path) {
+
+            }
+
+            @Override
+            public void moveDirectory(String sourcePath, String destPath) {
+
+            }
+
+            @Override
+            public void moveFile(String sourcePath, String destPath) {
+
+            }
+
+            @Override
+            public String readConfig(String path) {
+                Gson gson = new Gson();
+                return "{\"limitations\":" + gson.toJson(limitations, listType) + "}";
+            }
+
+            @Override
+            public void writeConfig(String json, String path) {
+
+            }
+
+            @NotNull
+            @Override
+            public DirectoryBuilder initStorage(String path) {
+                return null;
+            }
+        });
+
+        Gson gson = new Gson();
+        assertDoesNotThrow(() -> Core.getInstance().ConfigManager().initConfig(""));
+        assertNotNull(Core.getInstance().ConfigManager().getConfig());
+        // have to manually invoke path resolution here for test sake
+        Core.getInstance().ConfigManager().getConfig().getLimitations().forEach(e -> e.setHost(d));
+        assertEquals(limitations, Core.getInstance().ConfigManager().getConfig().getLimitations());
+        assertEquals("{\"limitations\":" + gson.toJson(
+                Core.getInstance().ConfigManager().getConfig().getLimitations(), listType) + "}",
                 Core.getInstance().IODriver().readConfig(""));
     }
 

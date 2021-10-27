@@ -6,6 +6,7 @@ import config.IConfig;
 import core.Core;
 import exceptions.IComponentNotInitializedException;
 import org.jetbrains.annotations.Nullable;
+import repository.Directory;
 import user.builder.PrivilegeBuilder;
 import user.builder.UserBuilder;
 
@@ -33,6 +34,11 @@ public class User implements IUser {
      * Privilegije korisnika.
      */
     private Collection<IPrivilege> privileges;
+
+    /**
+     * Trenutni radni direktorijum. Ovde se korisnik nalazi.
+     */
+    private Directory cwd;
 
     /**
      * Kreira novog anonimnog, neulogovanog korisnika.
@@ -211,6 +217,16 @@ public class User implements IUser {
     }
 
     @Override
+    public Directory getCwd() {
+        return cwd;
+    }
+
+    @Override
+    public void setCwd(Directory d) {
+        cwd = d;
+    }
+
+    @Override
     public void update() {
         if (ConfigManager.getInstance().getConfig() == null)
             throw new IComponentNotInitializedException(IConfig.class);
@@ -252,5 +268,15 @@ public class User implements IUser {
     @Override
     public int hashCode() {
         return Objects.hash(getUsername());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", privileges=" + privileges +
+                ", cwd=" + cwd +
+                '}';
     }
 }

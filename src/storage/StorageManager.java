@@ -63,6 +63,10 @@ public class StorageManager implements IStorageManager {
         root = traverseDirectoryBuilder(null, rootBuilder);
         systemRoot = path;
 
+        if (Core.getInstance().UserManager().getUser() != null)
+            //noinspection ConstantConditions
+            Core.getInstance().UserManager().getUser().setCwd(root);
+
         //noinspection ConstantConditions
         for (INodeLimitation e : Core.getInstance().ConfigManager().getConfig().getLimitations()) {
             try {

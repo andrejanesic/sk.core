@@ -77,7 +77,6 @@ public class UserManagerTest {
             @Override
             public String readConfig(String path) {
                 Gson gson = new Gson();
-                System.out.println(gson.toJson(userBuilders, listType));
                 return "{\"users\":" + gson.toJson(userBuilders, listType) + "}";
             }
 

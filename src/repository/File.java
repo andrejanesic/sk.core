@@ -55,7 +55,7 @@ public class File extends INode {
     }
 
     /**
-     * Kreira novi File na osnovu FileBuilder bildera. UPOZORENJE: ovaj metod <b>NE DODAJE</b> fajl u sistem preko
+     * Kreira novi File na osnovu FileBuilder bildera. UPOZORENJE: ovaj metod <em>NE DODAJE</em> fajl u sistem preko
      * {@link io.IODriver}!
      *
      * @param write       Da li upisati čvor preko {@link io.IODriver}.

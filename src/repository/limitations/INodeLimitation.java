@@ -53,6 +53,18 @@ public class INodeLimitation {
     }
 
     /**
+     * Podrazumevani konstruktor, <em>SAMO ZA TESTIRANJE!</em>
+     *
+     * @param path Putanja do {@link INode} nad kojim je ograničenje implementirano.
+     * @param args Argumenti za ograničenje.
+     */
+    public INodeLimitation(String path, @NotNull INodeLimitationType type, Object... args) {
+        this.path = path;
+        this.type = type;
+        this.args = args;
+    }
+
+    /**
      * Umesto proveravanja putem switch-a, svaka implementacija ima ovu metodu, i reagovaće samo na svoj specifičan tip
      * ograničenja.
      *

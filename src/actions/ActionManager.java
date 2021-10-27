@@ -88,7 +88,7 @@ public class ActionManager {
     public static class Factory {
 
         /**
-         * Kreira novu akciju {@link IAction}. Akcija se <b>NE DODAJE</b> u red automatski, to program mora uraditi
+         * Kreira novu akciju {@link IAction}. Akcija se <em>NE DODAJE</em> u red automatski, to program mora uraditi
          * pozivom {@link ActionManager#addAction(IAction)}.
          *
          * @return Nova instanca {@link IAction}.

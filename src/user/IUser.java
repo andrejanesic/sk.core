@@ -1,5 +1,7 @@
 package user;
 
+import org.jetbrains.annotations.Nullable;
+import repository.Directory;
 import user.builder.UserBuilder;
 
 import java.util.Collection;
@@ -95,6 +97,22 @@ public interface IUser {
      * @return True ako ima, false ako nema.
      */
     boolean hasPrivilege(PrivilegeType type);
+
+    /**
+     * Vraća trenutni {@link Directory} u kome se korisnik nalazi. Može biti null, ukoliko još nije inicijalizovano
+     * skladište.
+     *
+     * @return Trenutni {@link Directory} u kome se korisnik nalazi.
+     */
+    @Nullable
+    Directory getCwd();
+
+    /**
+     * Postavlja direktorijum {@link Directory} u kome se korisnik nalazi.
+     *
+     * @param d Novi radni direktorijum.
+     */
+    void setCwd(Directory d);
 
     /**
      * Ažurira korisnika u konfiguraciji. Mora biti pozvano nakon svakog metoda koji ažurira podatke korisnika.

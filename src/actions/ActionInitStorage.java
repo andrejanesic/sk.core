@@ -4,6 +4,7 @@ import core.Core;
 import exceptions.IActionInsufficientPrivilegeException;
 import exceptions.IStorageManagerINodeBuilderTreeInvalidException;
 
+import static user.PrivilegeType.ALL;
 import static user.PrivilegeType.STORAGE_INIT;
 
 /**
@@ -32,7 +33,8 @@ public class ActionInitStorage implements IAction {
             throw new IActionInsufficientPrivilegeException();
 
         //noinspection ConstantConditions
-        if (!Core.getInstance().UserManager().getUser().hasPrivilege(STORAGE_INIT))
+        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(STORAGE_INIT) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         if (Core.getInstance().StorageManager().getRoot() == null) {

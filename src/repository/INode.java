@@ -223,7 +223,7 @@ public abstract class INode {
      * koja onemogućava pokušanu radnju.
      *
      * @param t Tip operacije {@link INodeOperation} koju treba izvršiti.
-     * @return True ukoliko limitacije <b>dozvoljavaju izvršenje</b> operacije, false u protivnom.
+     * @return True ukoliko limitacije <em>dozvoljavaju izvršenje</em> operacije, false u protivnom.
      * @throws INodeLimitationException Ukoliko je određena limitacija dosegnuta.
      */
     public boolean checkLimitations(INodeOperation t) throws INodeLimitationException {
@@ -236,7 +236,7 @@ public abstract class INode {
      *
      * @param t    Tip operacije {@link INodeOperation} koju treba izvršiti.
      * @param args Objekti zbog kojih se provera limitacija.
-     * @return True ukoliko limitacije <b>dozvoljavaju izvršenje</b> operacije, false u protivnom.
+     * @return True ukoliko limitacije <em>dozvoljavaju izvršenje</em> operacije, false u protivnom.
      * @throws INodeLimitationException Ukoliko je određena limitacija dosegnuta.
      */
     public boolean checkLimitations(INodeOperation t, Object... args) throws INodeLimitationException {

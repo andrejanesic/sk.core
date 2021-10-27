@@ -69,6 +69,8 @@ public class UserManager implements IUserManager {
 
         // netačna lozinka ili korisnik ne postoji, izloguj se
         user = new User();
+        if (Core.getInstance().StorageManager().getRoot() != null)
+            user.setCwd(Core.getInstance().StorageManager().getRoot());
         return user;
     }
 

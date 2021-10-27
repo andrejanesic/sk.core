@@ -83,7 +83,11 @@ public class ActionRevokePrivilegeTest {
             assertDoesNotThrow(a::undo);
         assertNotNull(Core.getInstance().UserManager().getUser(u));
         //noinspection ConstantConditions
-        assertFalse(Core.getInstance().UserManager().getUser(u).hasPrivilege(PrivilegeType.valueOf(privilege)));
+        if (PrivilegeType.valueOf(privilege) == PrivilegeType.USER_LOGIN ||
+                PrivilegeType.valueOf(privilege) == PrivilegeType.USER_LOGOUT)
+            assertTrue(Core.getInstance().UserManager().getUser(u).hasPrivilege(PrivilegeType.valueOf(privilege)));
+        else
+            assertFalse(Core.getInstance().UserManager().getUser(u).hasPrivilege(PrivilegeType.valueOf(privilege)));
     }
 
     @Test

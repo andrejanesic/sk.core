@@ -69,6 +69,8 @@ public class StorageManagerTest {
             }
         });
 
+        Core.getInstance().ConfigManager().initConfig("");
+
         assertDoesNotThrow(() -> Core.getInstance().StorageManager().initStorage(null));
         assertNotNull(Core.getInstance().StorageManager().getRoot());
         rootDummy.traverse(dummyNode -> assertDoesNotThrow(() -> {

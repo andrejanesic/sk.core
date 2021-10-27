@@ -138,6 +138,17 @@ public class User implements IUser {
                 p.getType().equals(PrivilegeType.INODE_DOWNLOAD) ||
                 p.getType().equals(PrivilegeType.USER_DELETE) ||
                 p.getType().equals(PrivilegeType.INODE_MOVE)) {
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_UPLOAD));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DOWNLOAD));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_MOVE));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
+        }
+
+        if (p.getType().equals(PrivilegeType.LIMIT_ADD) ||
+                p.getType().equals(PrivilegeType.LIMIT_DELETE)) {
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ADD));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_DELETE));
             privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
         }
         privileges.add(p);
@@ -167,6 +178,12 @@ public class User implements IUser {
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DOWNLOAD));
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_MOVE));
+        }
+
+        // obriši zavisne privilegije
+        if (p.getType().equals(PrivilegeType.LIMIT_READ)) {
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ADD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_DELETE));
         }
 
         privileges.remove(p);

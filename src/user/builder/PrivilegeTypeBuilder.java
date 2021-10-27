@@ -18,6 +18,11 @@ public enum PrivilegeTypeBuilder {
     INODE_MOVE,
     INODE_READ,
 
+    // LIMITATION MANAGEMENT
+    LIMIT_ADD,
+    LIMIT_READ,
+    LIMIT_DELETE,
+
     // USER MANAGEMENT
     USER_ALL,
     USER_ADD,

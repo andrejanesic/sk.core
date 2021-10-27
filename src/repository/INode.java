@@ -1,5 +1,8 @@
 package repository;
 
+import config.IConfig;
+import core.Core;
+import exceptions.IComponentNotInitializedException;
 import exceptions.INodeFatalException;
 import exceptions.INodeLimitationException;
 import exceptions.INodeRootNotInitializedException;
@@ -8,6 +11,7 @@ import repository.limitations.INodeLimitationType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * INode predstavlja jedan čvor u skladištu, koji može biti fajl ili direktorijum.
@@ -157,6 +161,10 @@ public abstract class INode {
      */
     public void addLimitation(INodeLimitation limitation) {
         limitations.add(limitation);
+        if (Core.getInstance().ConfigManager().getConfig() == null)
+            throw new IComponentNotInitializedException(IConfig.class);
+        //noinspection ConstantConditions
+        Core.getInstance().ConfigManager().getConfig().addLimitation(limitation);
     }
 
     /**
@@ -188,6 +196,10 @@ public abstract class INode {
      */
     public void deleteLimitation(INodeLimitation limitation) {
         limitations.remove(limitation);
+        if (Core.getInstance().ConfigManager().getConfig() == null)
+            throw new IComponentNotInitializedException(IConfig.class);
+        //noinspection ConstantConditions
+        Core.getInstance().ConfigManager().getConfig().deleteLimitation(limitation);
     }
 
     /**
@@ -196,7 +208,14 @@ public abstract class INode {
      * @param type {@link INodeLimitationType} za obrisati.
      */
     public void deleteLimitation(INodeLimitationType type) {
-        limitations.removeIf(nodeLimitation -> nodeLimitation.getType().equals(type));
+        Iterator<INodeLimitation> it = limitations.iterator();
+        //noinspection WhileLoopReplaceableByForEach
+        while (it.hasNext()) {
+            INodeLimitation t = it.next();
+            if (t.getType().equals(type)) {
+                deleteLimitation(t);
+            }
+        }
     }
 
     /**

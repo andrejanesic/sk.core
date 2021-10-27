@@ -1,6 +1,7 @@
 package config;
 
 import org.jetbrains.annotations.Nullable;
+import repository.limitations.INodeLimitation;
 import user.builder.UserBuilder;
 
 import java.util.Collection;
@@ -51,6 +52,27 @@ public interface IConfig {
      * @param userBuilder {@link UserBuilder} koga treba obrisati.
      */
     void deleteUser(UserBuilder userBuilder);
+
+    /**
+     * Dodaje novo {@link INodeLimitation} ograničenje.
+     *
+     * @param nodeLimitation Novo ograničenje.
+     */
+    void addLimitation(INodeLimitation nodeLimitation);
+
+    /**
+     * Vraća sva {@link INodeLimitation} ograničenja.
+     *
+     * @return Sva {@link INodeLimitation} ograničenja.
+     */
+    Collection<INodeLimitation> getLimitations();
+
+    /**
+     * Dodaje novo {@link INodeLimitation} ograničenje.
+     *
+     * @param nodeLimitation Novo ograničenje.
+     */
+    void deleteLimitation(INodeLimitation nodeLimitation);
 
     /**
      * Vraća konfiguraciju u obliku validnog JSON String-a.

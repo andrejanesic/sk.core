@@ -2,6 +2,7 @@ package config;
 
 import com.google.gson.Gson;
 import core.Core;
+import repository.limitations.INodeLimitation;
 import user.builder.UserBuilder;
 
 import java.util.Collection;
@@ -17,6 +18,11 @@ public class Config implements IConfig {
      * Set bildera korisnika {@link UserBuilder}.
      */
     private Set<UserBuilder> users = new HashSet<>();
+
+    /**
+     * Set ograničenja {@link INodeLimitation}.
+     */
+    private Set<INodeLimitation> limitations = new HashSet<>();
 
     @Override
     public void addUser(UserBuilder userBuilder) {
@@ -57,7 +63,27 @@ public class Config implements IConfig {
     }
 
     @Override
+    public void addLimitation(INodeLimitation nodeLimitation) {
+        if (this.limitations.contains(nodeLimitation)) return;
+        this.limitations.add(nodeLimitation);
+        save();
+    }
+
+    @Override
+    public Collection<INodeLimitation> getLimitations() {
+        return this.limitations;
+    }
+
+    @Override
+    public void deleteLimitation(INodeLimitation nodeLimitation) {
+        this.limitations.remove(nodeLimitation);
+        save();
+    }
+
+    @Override
     public String toJson() {
+        for (INodeLimitation l : limitations)
+            l.resolveHost();
         return new Gson().toJson(this);
     }
 

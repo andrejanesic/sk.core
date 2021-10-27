@@ -62,9 +62,7 @@ public class ConfigManager implements IConfigManager {
 
     @Override
     public void saveConfig() {
-        Gson gson = new Gson();
-        String json = gson.toJson(config);
-        Core.getInstance().IODriver().writeConfig(json, currentConfigPath);
+        Core.getInstance().IODriver().writeConfig(config.toJson(), currentConfigPath);
     }
 
     /**

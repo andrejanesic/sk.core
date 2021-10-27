@@ -202,7 +202,7 @@ public class Directory extends INode {
 
         // ako je destinacija fajl, nema pomeranja
         if (!destNode.getType().equals(INodeType.DIRECTORY)) {
-            throw new INodeUnsupportedOperationException("Cannot move file into file.");
+            throw new INodeUnsupportedOperationException("Cannot move directory into file.");
         }
 
         // #OGRANIČENJE

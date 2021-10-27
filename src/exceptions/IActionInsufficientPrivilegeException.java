@@ -5,6 +5,10 @@ package exceptions;
  */
 public class IActionInsufficientPrivilegeException extends RuntimeException {
 
+    public IActionInsufficientPrivilegeException(String s) {
+        super(s);
+    }
+
     public IActionInsufficientPrivilegeException() {
         super("You lack the permission to execute this command.");
     }

@@ -10,9 +10,12 @@ import user.PrivilegeType;
  * Ovom komandom korisink {@link user.IUser} daje drugom korisniku određenu {@link user.Privilege} generalnog ili
  * preciznog (referncira objekat) tipa.
  * <p>
- * Ulogovani korisnik mora imati bar privilegiju {@link user.PrivilegeType.PRIVILEGE_GRANT} kako bi davao privilegije,
- * odnosno {@link user.PrivilegeType.PRIVILEGE_REVOKE} kako bi ih oduzimao. Obe su potrebne da bi komanda radila kako
+ * Ulogovani korisnik mora imati bar privilegiju {@link user.PrivilegeType} PRIVILEGE_GRANT kako bi davao privilegije,
+ * odnosno {@link user.PrivilegeType} PRIVILEGE_REVOKE kako bi ih oduzimao. Obe su potrebne da bi komanda radila kako
  * treba usled {@link #undo()} mogućnosti.
+ * <p>
+ * <em>VAŽNO:</em> ukoliko korisnik daje privilegiju vezanu za neki direktorijum, on MORA napisati punu putanju tog
+ * direktorijuma.
  */
 public class ActionGrantPrivilege implements IAction {
 
@@ -63,6 +66,7 @@ public class ActionGrantPrivilege implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_GRANT) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
@@ -111,6 +115,7 @@ public class ActionGrantPrivilege implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_REVOKE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 

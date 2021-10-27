@@ -1,5 +1,6 @@
 package repository;
 
+import core.Core;
 import exceptions.INodeFatalException;
 import exceptions.INodeLimitationException;
 import exceptions.INodeRootNotInitializedException;
@@ -7,6 +8,10 @@ import exceptions.INodeUnsupportedOperationException;
 import io.IOManager;
 import org.jetbrains.annotations.Nullable;
 import repository.builder.FileBuilder;
+import user.IPrivilege;
+import user.IUser;
+
+import java.util.Iterator;
 
 /**
  * Klasa fajlova.
@@ -75,8 +80,21 @@ public class File extends INode {
         // obriši sebe
         IOManager.getIODriver().deleteFile(getPath());
 
+        String oldPath = getPath();
+
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
+
+        // apdejtuj privilegije
+        for (IUser u : Core.getInstance().UserManager().getUsers()) {
+            //noinspection ForLoopReplaceableByForEach
+            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
+                IPrivilege p = it.next();
+                if (p.getReferencedObject() == null) continue;
+                if (!p.getReferencedObject().equals(oldPath)) continue;
+                u.revokePrivilege(p);
+            }
+        }
     }
 
     @Override
@@ -122,10 +140,22 @@ public class File extends INode {
 
         // pomeri
         IOManager.getIODriver().moveFile(oldPath, getPath());
+
+        // apdejtuj privilegije
+        for (IUser u : Core.getInstance().UserManager().getUsers()) {
+            //noinspection ForLoopReplaceableByForEach
+            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
+                IPrivilege p = it.next();
+                if (p.getReferencedObject() == null) continue;
+                if (!p.getReferencedObject().equals(oldPath)) continue;
+                u.revokePrivilege(p);
+                u.grantPrivilege(getPath(), p.getType());
+            }
+        }
     }
 
     @Override
-    public void upload(String path) throws INodeLimitationException {
+    public INode upload(String path) {
         throw new INodeUnsupportedOperationException("Cannot upload file into file.");
     }
 

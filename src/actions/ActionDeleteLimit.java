@@ -63,10 +63,12 @@ public class ActionDeleteLimit implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(path, PrivilegeType.LIMIT_DELETE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         try {
+            //noinspection ConstantConditions
             INode target = Core.getInstance().UserManager().getUser().getCwd().resolvePath(path);
             target.deleteLimitation(new INodeLimitation(target, type, arg));
         } catch (INodeRootNotInitializedException e) {
@@ -85,10 +87,12 @@ public class ActionDeleteLimit implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(path, PrivilegeType.LIMIT_ADD) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         try {
+            //noinspection ConstantConditions
             INode target = Core.getInstance().UserManager().getUser().getCwd().resolvePath(path);
             target.addLimitation(new INodeLimitation(target, type, arg));
         } catch (INodeRootNotInitializedException e) {

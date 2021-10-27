@@ -52,6 +52,7 @@ public class ActionINodeUpload implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(filePath, PrivilegeType.INODE_ADD) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
@@ -80,6 +81,7 @@ public class ActionINodeUpload implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(uploadedPath, PrivilegeType.INODE_DELETE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 

@@ -5,9 +5,12 @@ import exceptions.*;
 import io.IOManager;
 import repository.builder.DirectoryBuilder;
 import repository.builder.FileBuilder;
+import user.IPrivilege;
+import user.IUser;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Klasa direktorijuma. Čuva korenski direktorijum. Predstavlja podstablo čitavog skladišta.
@@ -168,8 +171,21 @@ public class Directory extends INode {
         // obriši sebe
         IOManager.getIODriver().deleteDirectory(getPath());
 
+        String oldPath = getPath();
+
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
+
+        // apdejtuj privilegije
+        for (IUser u : Core.getInstance().UserManager().getUsers()) {
+            //noinspection ForLoopReplaceableByForEach
+            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
+                IPrivilege p = it.next();
+                if (p.getReferencedObject() == null) continue;
+                if (!p.getReferencedObject().equals(oldPath)) continue;
+                u.revokePrivilege(p);
+            }
+        }
     }
 
     @Override
@@ -225,6 +241,18 @@ public class Directory extends INode {
 
         // pomeri
         IOManager.getIODriver().moveDirectory(oldPath, getPath());
+
+        // apdejtuj privilegije
+        for (IUser u : Core.getInstance().UserManager().getUsers()) {
+            //noinspection ForLoopReplaceableByForEach
+            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
+                IPrivilege p = it.next();
+                if (p.getReferencedObject() == null) continue;
+                if (!p.getReferencedObject().equals(oldPath)) continue;
+                u.revokePrivilege(p);
+                u.grantPrivilege(getPath(), p.getType());
+            }
+        }
     }
 
     @Override

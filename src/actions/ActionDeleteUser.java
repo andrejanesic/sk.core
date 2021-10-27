@@ -42,6 +42,7 @@ public class ActionDeleteUser implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_DELETE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
         Core.getInstance().UserManager().deleteUser(username);

@@ -43,14 +43,19 @@ public class ActionINodeMove implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target, PrivilegeType.INODE_DELETE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
+        //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(newParent, PrivilegeType.INODE_ADD) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         try {
+            //noinspection ConstantConditions
             INode targetNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(target);
+            //noinspection ConstantConditions
             INode destNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(newParent);
             targetNode.move(destNode);
         } catch (INodeRootNotInitializedException e1) {
@@ -75,14 +80,19 @@ public class ActionINodeMove implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target, PrivilegeType.INODE_DELETE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
+        //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(newParent, PrivilegeType.INODE_ADD) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         try {
+            //noinspection ConstantConditions
             INode targetNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(target);
+            //noinspection ConstantConditions
             INode destNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(newParent);
             targetNode.move(destNode);
         } catch (INodeRootNotInitializedException e1) {

@@ -4,9 +4,12 @@ package user;
 import config.ConfigManager;
 import config.IConfig;
 import core.Core;
+import exceptions.DirectoryInvalidPathException;
 import exceptions.IComponentNotInitializedException;
+import exceptions.INodeRootNotInitializedException;
 import org.jetbrains.annotations.Nullable;
 import repository.Directory;
+import repository.INode;
 import user.builder.PrivilegeBuilder;
 import user.builder.UserBuilder;
 
@@ -205,7 +208,44 @@ public class User implements IUser {
 
     @Override
     public boolean hasPrivilege(IPrivilege p) {
-        return privileges.contains(p);
+        if (privileges.contains(p)) return true;
+
+        // proveriti da li neki viši objekat (direktorijum) daje privilegiju
+        Object o = p.getReferencedObject();
+        if (o == null) return false;
+        if (Core.getInstance().StorageManager().getRoot() == null) return false;
+        if (o.equals(Core.getInstance().StorageManager().getRoot())) return false;
+        if (!(o instanceof String)) return false;
+
+        String path = (String) o;
+        INode node;
+        try {
+            //noinspection ConstantConditions
+            node = Core.getInstance().StorageManager().getRoot().resolvePath(path);
+
+            // proveri da li naddirektorijum daje privilegiju
+            boolean privFound = false;
+            for (IPrivilege priv : privileges) {
+                try {
+                    if (!priv.getType().equals(p.getType())) continue;
+                    if (priv.getReferencedObject() == null) continue;
+                    if (!(priv.getReferencedObject() instanceof String)) continue;
+                    //noinspection ConstantConditions
+                    if (!(Core.getInstance().StorageManager().getRoot().resolvePath(
+                            (String) priv.getReferencedObject()) instanceof Directory)) continue;
+                    // potvrđen grandchild, potvrđeno ima privilegije, dozvoli
+                    //noinspection ConstantConditions
+                    if (node.isGrandchild(Core.getInstance().StorageManager().getRoot().resolvePath(
+                            (String) priv.getReferencedObject()))) {
+                        return true;
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        } catch (INodeRootNotInitializedException | DirectoryInvalidPathException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

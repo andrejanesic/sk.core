@@ -10,8 +10,8 @@ import user.PrivilegeType;
  * Ovom komandom korisink {@link IUser} oduzima od drugog korisnika određenu {@link user.Privilege} generalnog ili
  * preciznog (referncira objekat) tipa.
  * <p>
- * Ulogovani korisnik mora imati bar privilegiju {@link PrivilegeType.PRIVILEGE_GRANT} kako bi oduzeo privilegije,
- * odnosno {@link PrivilegeType.PRIVILEGE_REVOKE} kako bi ih dao. Obe su potrebne da bi komanda radila kako treba usled
+ * Ulogovani korisnik mora imati bar privilegiju {@link PrivilegeType} PRIVILEGE_REVOKE kako bi oduzeo privilegije,
+ * odnosno {@link PrivilegeType} PRIVILEGE_GRANT kako bi ih dao. Obe su potrebne da bi komanda radila kako treba usled
  * {@link #undo()} mogućnosti.
  */
 public class ActionRevokePrivilege implements IAction {
@@ -63,6 +63,7 @@ public class ActionRevokePrivilege implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_REVOKE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
@@ -115,6 +116,7 @@ public class ActionRevokePrivilege implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_GRANT) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.PRIVILEGE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 

@@ -36,10 +36,12 @@ public class ActionINodeDelete implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target, PrivilegeType.INODE_DELETE) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         try {
+            //noinspection ConstantConditions
             INode targetNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(target);
             targetNode.delete();
         } catch (INodeRootNotInitializedException e1) {

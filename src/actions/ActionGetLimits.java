@@ -41,10 +41,12 @@ public class ActionGetLimits implements IAction {
 
         //noinspection ConstantConditions
         if (!(Core.getInstance().UserManager().getUser().hasPrivilege(path, PrivilegeType.LIMIT_READ) ||
+                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
                 Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 
         try {
+            //noinspection ConstantConditions
             INode target = Core.getInstance().UserManager().getUser().getCwd().resolvePath(path);
             return target.getLimitations();
         } catch (INodeRootNotInitializedException e) {

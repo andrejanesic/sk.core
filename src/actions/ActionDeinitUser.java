@@ -21,6 +21,7 @@ public class ActionDeinitUser implements IAction {
         //noinspection ConstantConditions
         if (Core.getInstance().UserManager().getUser() == null ||
                 !(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_LOGOUT) ||
+                        Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_ALL) ||
                         Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
 

@@ -46,6 +46,7 @@ public class ActionAddUser implements IAction {
         //noinspection ConstantConditions
         if (Core.getInstance().UserManager().getUser() == null ||
                 !(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_ADD) ||
+                        Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_ALL) ||
                         Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
         Collection<IPrivilege> privileges = new ArrayList<>();
@@ -57,7 +58,8 @@ public class ActionAddUser implements IAction {
     public Object undo() {
         //noinspection ConstantConditions
         if (Core.getInstance().UserManager().getUser() == null ||
-                !(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_ADD) ||
+                !(Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_DELETE) ||
+                        Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.USER_ALL) ||
                         Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
             throw new IActionInsufficientPrivilegeException();
         Core.getInstance().UserManager().deleteUser(username);

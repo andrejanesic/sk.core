@@ -1,5 +1,6 @@
 package storage;
 
+import exceptions.INodeLimitationException;
 import exceptions.IStorageManagerINodeBuilderTreeInvalidException;
 import io.IOManager;
 import org.jetbrains.annotations.Nullable;
@@ -80,15 +81,24 @@ public class StorageManager implements IStorageManager {
                         "FileBuilder must have a parent, it can never be null.");
             }
 
-            parent.linkNode(new File(parent, (FileBuilder) iNodeBuilder));
+            try {
+                parent.linkNode(new File(false, parent, (FileBuilder) iNodeBuilder));
+            } catch (INodeLimitationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
-        Directory dir = new Directory(parent, (DirectoryBuilder) iNodeBuilder);
+        Directory dir = new Directory(false, parent, (DirectoryBuilder) iNodeBuilder);
         if (parent == null)
             parent = dir;
-        else
-            parent.linkNode(dir);
+        else {
+            try {
+                parent.linkNode(dir);
+            } catch (INodeLimitationException e) {
+                e.printStackTrace();
+            }
+        }
         for (INodeBuilder nb : ((DirectoryBuilder) iNodeBuilder).getChildren()) {
             traverseDirectoryBuilder(dir, nb);
         }

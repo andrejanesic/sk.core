@@ -30,7 +30,7 @@ Sledi opis funkcionanosti komponente za upravljanje skladištem fajlova.
 - [x] inicijalizacija skladišta (može se implemenitrati kao kreiranje praznog foldera koji će biti korenski direktorijum skladišta),
 - [x] osmisliti da se komponentom podrži postojanje korisnika skladišta i napraviti konekciju na skladište sa odgovarajućim nalogom,
 - [x] svaki korisnik treba da ima korisničko ime i lozinku
-- [ ] svaki korisnik ima privilegije, to su privilegija za snimanje fajlova, za preuzimanje, brisanje fajlova i pregled fajlova u skladištu, privilegije mogu da važe za celo skladište ili samo za neke foldere, mora da postoji neka logična raspodela privilegija, na primer ne može korisnik da ima privilegiju za brisanje, a da nema za pregled, ovo je potrebno programski iskontrolisati prilikom zadavanja privilegija,
+- [x] svaki korisnik ima privilegije, to su privilegija za snimanje fajlova, za preuzimanje, brisanje fajlova i pregled fajlova u skladištu, privilegije mogu da važe za celo skladište ili samo za neke foldere, mora da postoji neka logična raspodela privilegija, na primer ne može korisnik da ima privilegiju za brisanje, a da nema za pregled, ovo je potrebno programski iskontrolisati prilikom zadavanja privilegija,
 - [x] jedan korisnik kreira skladište i on ima sve privilegije i jedini on može da kreira ostale korisnike i da im dodeljuje privilegije,
 - [x] u implementaciji svake operacije nad skladištem vrši se kontrola privilegija,
 - [x] korisnik može da se diskonektuje sa skladišta,
@@ -50,12 +50,12 @@ Sledi opis funkcionanosti komponente za upravljanje skladištem fajlova.
 
 ### Konfiguracija skladišta
 
-- [ ] omogućiti da se zada veličina skladišta (u bajtovima) koja ne sme biti prekoračena,
+- [x] omogućiti da se zada veličina skladišta (u bajtovima) koja ne sme biti prekoračena,
 - [ ] podržati mogućnost da se zadaju ekstenzije fajlova koji se ne mogu skladištiti (na primer može da se definiše da skladište ne prihvata exe fajlove) i vraćanje greške ako neko pokuša da uploaduje fajl sa ekstenzijom koja se ne
   prihvata,
-- [ ] obezbediti da može se zada broj fajlova koji se mogu smestiti u određeni direktorijum,
-- [ ] konfiguraciju skladišta može da radi samo korisnik koji je kreirao skladište,
-- [ ] konfiguracioni fajl se takođe smešta u korenski direktorijum skladišta,
+- [x] obezbediti da može se zada broj fajlova koji se mogu smestiti u određeni direktorijum,
+- [x] konfiguraciju skladišta može da radi samo korisnik koji je kreirao skladište,
+- [x] konfiguracioni fajl se takođe smešta u korenski direktorijum skladišta,
 - [ ] prilikom izvršavanja operacija nad skladištem proveriti da li su zadovoljeni kriterijumi iz konfiguracije, na primer u operaciji koja snima fajl u skladište proveriti da li će njegovim dodavanjem biti prekoračena veličina i u koliko hoće, ne treba dozvoliti skladištenje.
 
 Za komponentu specifikacije treba napisati API dokumentaciju kojom je precezno opisano korišćenje komponente.

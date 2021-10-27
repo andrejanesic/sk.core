@@ -4,8 +4,19 @@ package user.builder;
  * Tipovi bildera korisničkih privilegija.
  */
 public enum PrivilegeTypeBuilder {
+    // MASTER
     ALL,
-    INIT_STORAGE,
+
+    // STORAGE MANAGEMENT
+    STORAGE_INIT,
+    STORAGE_CONFIGURE,
+
+    // REPOSITORY MANAGEMENT
+    INODE_UPLOAD,
+    INODE_DOWNLOAD,
+    INODE_DELETE,
+    INODE_MOVE,
+    INODE_READ,
 
     // USER MANAGEMENT
     USER_ALL,

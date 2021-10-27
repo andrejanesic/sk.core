@@ -28,45 +28,36 @@ public class Directory extends INode {
     /**
      * Konstruktor na osnovu postojećeg direktorijuma.
      *
+     * @param write  Da li upisati čvor preko {@link io.IODriver}.
      * @param parent Roditeljski direktorijum.
      * @param name   Naziv direktorijuma.
      */
-    public Directory(Directory parent, String name) {
+    public Directory(boolean write, Directory parent, String name) {
         super(parent, name, INodeType.DIRECTORY);
 
         children = new HashSet<>();
         if (!name.equals(ROOT_DIRECTORY)) {
             if (parent == null)
-                throw new INodeFatalException("Non-root node have null parent.");
+                throw new INodeFatalException("Non-root node cannot have null parent.");
             if (name.contains("/"))
                 throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
         } else {
             if (parent != null)
                 throw new INodeFatalException("Root node cannot have a parent.");
         }
-        if (parent != null)
+        if (parent != null && write)
             IOManager.getIOAdapter().makeDirectory(getPath());
     }
 
     /**
      * Konstruktor na osnovu bilder klase.
      *
+     * @param write            Da li upisati čvor preko {@link io.IODriver}.
      * @param parent           Roditeljski direktorijum.
      * @param directoryBuilder Bilder.
      */
-    public Directory(Directory parent, DirectoryBuilder directoryBuilder) {
-        super(parent, directoryBuilder.getName(), INodeType.DIRECTORY);
-
-        children = new HashSet<>();
-        if (!directoryBuilder.getName().equals(ROOT_DIRECTORY)) {
-            if (parent == null)
-                throw new INodeFatalException("Non-root node cannot have null parent.");
-            if (directoryBuilder.getName().contains("/"))
-                throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
-        } else {
-            if (parent != null)
-                throw new INodeFatalException("Root node cannot have a parent.");
-        }
+    public Directory(boolean write, Directory parent, DirectoryBuilder directoryBuilder) {
+        this(write, parent, directoryBuilder.getName());
     }
 
     /**
@@ -91,7 +82,12 @@ public class Directory extends INode {
     private INode makeNode(String name, INodeType type) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeTypeException {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeLimitationException {
+
+        // proveri da li je legalna operacija
+        checkLimitations(INodeOperation.ADD_CHILD_TO_SELF, name, type);
+
         // #OGRANIČENJE
         // proveri da li je naziv čvora ispravan, tj. ne završava se sa "/"
         if (name == null ||
@@ -115,9 +111,9 @@ public class Directory extends INode {
         // inicijalizuj čvor
         INode i;
         if (type.equals(INodeType.DIRECTORY)) {
-            i = new Directory(this, name);
+            i = new Directory(true, this, name);
         } else {
-            i = new File(this, name);
+            i = new File(true, this, name);
         }
 
         children.add(i);
@@ -136,7 +132,8 @@ public class Directory extends INode {
     public Directory makeDirectory(String name) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeTypeException {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeLimitationException {
         return (Directory) makeNode(name, INodeType.DIRECTORY);
     }
 
@@ -152,15 +149,20 @@ public class Directory extends INode {
     public File makeFile(String name) throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeTypeException {
+            DirectoryMakeNodeInvalidNodeTypeException,
+            INodeLimitationException {
         return (File) makeNode(name, INodeType.FILE);
     }
 
     @Override
-    public void delete() {
+    public void delete() throws INodeLimitationException {
         // ako je korenski čvor, nema brisanja
         if (getParent() == null)
             throw new INodeUnsupportedOperationException("Cannot delete root directory.");
+
+        // proveri da li je legalna operacija
+        checkLimitations(INodeOperation.DELETE_SELF);
+        getParent().checkLimitations(INodeOperation.DELETE_CHILD);
 
         // obriši sebe
         IOManager.getIOAdapter().deleteDirectory(getPath());
@@ -170,7 +172,7 @@ public class Directory extends INode {
     }
 
     @Override
-    public void delete(String path) throws INodeRootNotInitializedException {
+    public void delete(String path) throws INodeRootNotInitializedException, INodeLimitationException {
         INode target = resolvePath(path);
 
         // ako nije pozvan na meti za brisanje, prebaci na tu instancu
@@ -183,12 +185,17 @@ public class Directory extends INode {
     }
 
     @Override
-    public void move(String path) throws INodeRootNotInitializedException {
+    public void move(String path) throws INodeRootNotInitializedException, INodeLimitationException {
         INode destNode = resolvePath(path);
 
         // ako je korenski čvor, nema pomeranja
         if (getParent() == null)
             throw new INodeUnsupportedOperationException("Cannot move root directory.");
+
+        // proveri da li je legalna operacija
+        checkLimitations(INodeOperation.MOVE, destNode);
+        getParent().checkLimitations(INodeOperation.DELETE_CHILD, this);
+        destNode.checkLimitations(INodeOperation.ADD_CHILD_TO_SELF, this);
 
         // ako se pomera u isti čvor, samo vrati
         if (destNode == this) return;
@@ -224,8 +231,9 @@ public class Directory extends INode {
      *
      * @param iNode Novi čvor.
      */
-    public void linkNode(INode iNode) {
+    public void linkNode(INode iNode) throws INodeLimitationException {
         if (children.contains(iNode)) return;
+        checkLimitations(INodeOperation.ADD_CHILD_TO_SELF, iNode);
         children.add(iNode);
         iNode.setParent(this);
     }
@@ -235,8 +243,9 @@ public class Directory extends INode {
      *
      * @param iNode Čvor za deregistraciju.
      */
-    public void unlinkNode(INode iNode) {
+    public void unlinkNode(INode iNode) throws INodeLimitationException {
         if (!children.contains(iNode)) return;
+        checkLimitations(INodeOperation.DELETE_CHILD, iNode);
         children.remove(iNode);
     }
 
@@ -294,6 +303,7 @@ public class Directory extends INode {
 
             boolean found = false;
             name = path.substring(i, j);
+            //noinspection ConstantConditions
             for (INode child : ((Directory) next).children) {
                 if (child.getName().equals(name)) {
                     next = child;
@@ -307,5 +317,39 @@ public class Directory extends INode {
         }
 
         return next;
+    }
+
+    /**
+     * Vraća broj {@link File} u direktorijumu.
+     *
+     * @return Broj {@link File} u direktorijumu.
+     */
+    public int getFileCount() {
+        int count = 0;
+        for (INode c : children) {
+            if (c.getType().equals(INodeType.FILE)) {
+                count++;
+            } else {
+                count += ((Directory) c).getFileCount();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Vraća veličinu direktorijuma u [B].
+     *
+     * @return Veličina direktorijuma u [B].
+     */
+    public long getSize() {
+        int size = 0;
+        for (INode c : children) {
+            if (c.getType().equals(INodeType.FILE)) {
+                size += ((File) c).getSize();
+            } else {
+                size += ((Directory) c).getSize();
+            }
+        }
+        return size;
     }
 }

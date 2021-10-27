@@ -22,15 +22,21 @@ public class FileBuilder implements INodeBuilder {
     private INodeBuilderType type;
 
     /**
+     * Veličina čvora.
+     */
+    private long size;
+
+    /**
      * Podrazumevani konstruktor. Postavlja roditelja. Potrebno je dodati instancu u roditelja preko addChild() metode.
      *
      * @param parent Roditeljski DirectoryBuilder.
      * @param name   Naziv fajla.
      */
-    public FileBuilder(DirectoryBuilder parent, String name) {
+    public FileBuilder(DirectoryBuilder parent, String name, long size) {
         this.parent = parent;
         this.name = name;
         this.type = INodeBuilderType.FILE;
+        this.size = size;
     }
 
     public String getName() {
@@ -49,8 +55,20 @@ public class FileBuilder implements INodeBuilder {
         this.parent = parent;
     }
 
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
     @Override
     public INodeBuilderType getType() {
         return type;
+    }
+
+    public void setType(INodeBuilderType type) {
+        this.type = type;
     }
 }

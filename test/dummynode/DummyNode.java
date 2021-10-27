@@ -1,9 +1,6 @@
 package dummynode;
 
-import exceptions.DirectoryMakeNodeInvalidNodeTypeException;
-import exceptions.DirectoryMakeNodeNameInvalidException;
-import exceptions.DirectoryMakeNodeNameNotUniqueException;
-import exceptions.INodeRootNotInitializedException;
+import exceptions.*;
 import repository.Directory;
 import repository.builder.DirectoryBuilder;
 import repository.builder.FileBuilder;
@@ -92,9 +89,18 @@ public class DummyNode {
             DirectoryMakeNodeInvalidNodeTypeException {
         for (DummyNode c : dummyRef.children) {
             if (c.type.equals(DummyNodeType.FILE)) {
-                ref.makeFile(c.id());
+                try {
+                    ref.makeFile(c.id());
+                } catch (INodeLimitationException e) {
+                    e.printStackTrace();
+                }
             } else {
-                Directory t = ref.makeDirectory(c.id());
+                Directory t = null;
+                try {
+                    t = ref.makeDirectory(c.id());
+                } catch (INodeLimitationException e) {
+                    e.printStackTrace();
+                }
                 dummyNodeTreeToNodeTree(t, c);
             }
         }
@@ -111,7 +117,7 @@ public class DummyNode {
     public static DirectoryBuilder dummyNodeTreeToBuilderNodeTree(DirectoryBuilder ref, DummyNode dummyRef) {
         for (DummyNode c : dummyRef.children) {
             if (c.type.equals(DummyNodeType.FILE)) {
-                ref.addChild(new FileBuilder(ref, c.id()));
+                ref.addChild(new FileBuilder(ref, c.id(), 0));
             } else {
                 DirectoryBuilder t = new DirectoryBuilder(ref, c.id());
                 ref.addChild(t);

@@ -60,7 +60,7 @@ class DirectoryTest extends RepositoryTestPrepare {
     void testNodePaths() throws
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
-            DirectoryMakeNodeInvalidNodeTypeException {
+            DirectoryMakeNodeInvalidNodeTypeException, INodeLimitationException {
         Directory d0_0 = Core.getInstance().StorageManager().getRoot().makeDirectory("d0_0");
         Directory d0_1 = Core.getInstance().StorageManager().getRoot().makeDirectory("d0_1");
         Directory d0_0_0 = d0_0.makeDirectory("d0_0_0");
@@ -230,7 +230,7 @@ class DirectoryTest extends RepositoryTestPrepare {
             DirectoryMakeNodeNameNotUniqueException,
             DirectoryMakeNodeInvalidNodeTypeException,
             DirectoryInvalidPathException,
-            INodeRootNotInitializedException {
+            INodeRootNotInitializedException, INodeLimitationException {
         String d0Name = "2021-10-23-20-46-0";
         String d1Name = "2021-10-23-20-46-1";
         String d2Name = "2021-10-23-20-46-2";

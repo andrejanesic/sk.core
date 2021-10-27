@@ -8,6 +8,8 @@ import io.IOManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileTest extends RepositoryTestPrepare {
@@ -88,5 +90,24 @@ class FileTest extends RepositoryTestPrepare {
         assertDoesNotThrow(() -> root.delete(finalTargetDummy.path()));
         targetDummy.traverse((dummyNode) -> assertThrows(DirectoryInvalidPathException.class,
                 () -> root.resolvePath(dummyNode.path())));
+    }
+
+    @Test
+    void testGetExtension() {
+        int i = (int) Math.floor(Math.random() * 10) + 1;
+        for (int j = 0; j < i; j++) {
+            StringBuilder sb = new StringBuilder();
+            String ext = UUID.randomUUID().toString();
+            for (int n = (int) Math.floor(Math.random() * 3) + 1; n-- > 0; ) {
+                ext = UUID.randomUUID().toString();
+                sb.append('.').append(ext);
+            }
+
+            assertEquals(
+                    new File(false,
+                            new Directory(false, null, Directory.ROOT_DIRECTORY),
+                            sb.toString()).getExtension(),
+                    ext);
+        }
     }
 }

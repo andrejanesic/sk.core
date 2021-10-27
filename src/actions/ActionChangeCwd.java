@@ -45,6 +45,7 @@ public class ActionChangeCwd implements IAction {
 
     @Override
     public Object run() {
+        if (lastRun) return null;
         if (Core.getInstance().ConfigManager().getConfig() == null)
             throw new IComponentNotInitializedException(IConfig.class);
 

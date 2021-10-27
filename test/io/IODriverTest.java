@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import repository.Directory;
 import repository.INode;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 import repository.limitations.INodeLimitation;
 import repository.limitations.INodeLimitationType;
 import user.builder.PrivilegeBuilder;
@@ -128,6 +129,21 @@ public class IODriverTest implements IODriver {
 
     @Override
     public void moveFile(String sourcePath, String destPath) {
+    }
+
+    @Override
+    public void downloadDirectory(String sourcePath, String downloadPath) {
+
+    }
+
+    @Override
+    public void downloadFile(String sourcePath, String downloadPath) {
+
+    }
+
+    @Override
+    public FileBuilder uploadFile(String destRelPath, String filePath) {
+        return null;
     }
 
     @Override

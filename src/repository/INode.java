@@ -155,6 +155,20 @@ public abstract class INode {
     public abstract void move(String path) throws INodeRootNotInitializedException, INodeLimitationException;
 
     /**
+     * Dodavanje, odnosno odpremanje fajla/direktorijuma iz eksternog sistema na skladište.
+     *
+     * @param path Putanja na OS-u gde se nalazi čvor za otpremanje.
+     */
+    public abstract INode upload(String path) throws INodeLimitationException;
+
+    /**
+     * Preuzimanje fajlova.
+     *
+     * @param path Putanja na OS-u gde treba sačuvati čvor.
+     */
+    public abstract void download(String path) throws INodeLimitationException;
+
+    /**
      * Dodaje novi {@link INodeLimitation}.
      *
      * @param limitation {@link INodeLimitation} za dodati.

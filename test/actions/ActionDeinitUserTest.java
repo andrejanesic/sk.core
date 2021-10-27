@@ -7,6 +7,7 @@ import io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 import user.IPrivilege;
 import user.Privilege;
 import user.PrivilegeType;
@@ -57,6 +58,21 @@ public class ActionDeinitUserTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public String readConfig(String path) {
                 return null;
             }
@@ -97,6 +113,21 @@ public class ActionDeinitUserTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -167,6 +198,21 @@ public class ActionDeinitUserTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override

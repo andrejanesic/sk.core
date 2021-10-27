@@ -7,6 +7,7 @@ import io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 import user.PrivilegeType;
 
 import java.util.UUID;
@@ -48,6 +49,21 @@ public class ActionGrantPrivilegeTest {
             @Override
             public void moveFile(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -97,6 +113,21 @@ public class ActionGrantPrivilegeTest {
             @Override
             public void makeFile(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -162,6 +193,21 @@ public class ActionGrantPrivilegeTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override

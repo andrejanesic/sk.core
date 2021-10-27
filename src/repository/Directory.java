@@ -4,6 +4,7 @@ import core.Core;
 import exceptions.*;
 import io.IOManager;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class Directory extends INode {
                 throw new INodeFatalException("Root node cannot have a parent.");
         }
         if (parent != null && write)
-            IOManager.getIOAdapter().makeDirectory(getPath());
+            IOManager.getIODriver().makeDirectory(getPath());
     }
 
     /**
@@ -165,7 +166,7 @@ public class Directory extends INode {
         getParent().checkLimitations(INodeOperation.DELETE_CHILD);
 
         // obriši sebe
-        IOManager.getIOAdapter().deleteDirectory(getPath());
+        IOManager.getIODriver().deleteDirectory(getPath());
 
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
@@ -223,7 +224,28 @@ public class Directory extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getIOAdapter().moveDirectory(oldPath, getPath());
+        IOManager.getIODriver().moveDirectory(oldPath, getPath());
+    }
+
+    @Override
+    public INode upload(String path) throws INodeLimitationException {
+        // proveri da li je legalna operacija
+        checkLimitations(INodeOperation.ADD_CHILD_TO_SELF);
+
+        // preuzmi
+        FileBuilder fb = IOManager.getIODriver().uploadFile(getPath(), path);
+        File f = new File(false, this, fb);
+        this.linkNode(f);
+        return f;
+    }
+
+    @Override
+    public void download(String path) throws INodeLimitationException {
+        // proveri da li je legalna operacija
+        checkLimitations(INodeOperation.DOWNLOAD);
+
+        // preuzmi
+        IOManager.getIODriver().downloadDirectory(getPath(), path);
     }
 
     /**

@@ -65,7 +65,7 @@ public class Core {
      *                                    komponenta priključi.
      */
     public IODriver IODriver() throws IOManagerNoDriverException {
-        return IOManager.getIOAdapter();
+        return IOManager.getIODriver();
     }
 
     /**

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 import user.PrivilegeType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,6 +49,21 @@ public class ActionInitStorageTest {
             @Override
             public void moveFile(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override

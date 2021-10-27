@@ -40,7 +40,7 @@ public class File extends INode {
             throw new INodeFatalException("Node cannot contain illegal character '/' in name.");
 
         if (write)
-            IOManager.getIOAdapter().makeFile(getPath());
+            IOManager.getIODriver().makeFile(getPath());
     }
 
     /**
@@ -73,7 +73,7 @@ public class File extends INode {
         getParent().checkLimitations(INodeOperation.DELETE_CHILD);
 
         // obriši sebe
-        IOManager.getIOAdapter().deleteFile(getPath());
+        IOManager.getIODriver().deleteFile(getPath());
 
         // obriši iz roditelja
         ((Directory) getParent()).unlinkNode(this);
@@ -121,7 +121,21 @@ public class File extends INode {
         this.setParent(dest);
 
         // pomeri
-        IOManager.getIOAdapter().moveFile(oldPath, getPath());
+        IOManager.getIODriver().moveFile(oldPath, getPath());
+    }
+
+    @Override
+    public void upload(String path) throws INodeLimitationException {
+        throw new INodeUnsupportedOperationException("Cannot upload file into file.");
+    }
+
+    @Override
+    public void download(String path) throws INodeLimitationException {
+        // proveri da li je legalna operacija
+        checkLimitations(INodeOperation.DOWNLOAD);
+
+        // preuzmi
+        IOManager.getIODriver().downloadFile(getPath(), path);
     }
 
     /**

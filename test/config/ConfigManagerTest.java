@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import repository.Directory;
 import repository.INode;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 import repository.limitations.INodeLimitation;
 import repository.limitations.INodeLimitationType;
 import user.builder.PrivilegeBuilder;
@@ -32,6 +33,21 @@ public class ConfigManagerTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -89,6 +105,21 @@ public class ConfigManagerTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public void makeFile(String path) {
 
             }
@@ -140,6 +171,21 @@ public class ConfigManagerTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -233,6 +279,21 @@ public class ConfigManagerTest {
             @Override
             public void deleteFile(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -352,6 +413,21 @@ public class ConfigManagerTest {
 
             }
 
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
             @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
@@ -376,6 +452,21 @@ public class ConfigManagerTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -455,6 +546,21 @@ public class ConfigManagerTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -552,6 +658,21 @@ public class ConfigManagerTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public void makeFile(String path) {
 
             }
@@ -621,6 +742,21 @@ public class ConfigManagerTest {
             @Override
             public void makeDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override

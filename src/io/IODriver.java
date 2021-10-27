@@ -2,6 +2,7 @@ package io;
 
 import org.jetbrains.annotations.NotNull;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 
 /**
  * Vrši interakciju sa okruženjem. Ovaj interfejs se koristi za implementaciju aplikacije na konkretnoj platformi.
@@ -51,6 +52,30 @@ public interface IODriver {
      * @param destPath   Nova putanja.
      */
     void moveFile(String sourcePath, String destPath);
+
+    /**
+     * Preuzima direktorijum sa izvorne na destinacionu putanju.
+     *
+     * @param sourcePath   Izvorna putanja.
+     * @param downloadPath Destinaciona putanja.
+     */
+    void downloadDirectory(String sourcePath, String downloadPath);
+
+    /**
+     * Preuzima fajl sa izvorne na destinacionu putanju.
+     *
+     * @param destRelPath Putanja gde treba otpremiti fajl.
+     * @param filePath    Putanja fajla.
+     */
+    FileBuilder uploadFile(String destRelPath, String filePath);
+
+    /**
+     * Preuzima fajl sa izvorne na destinacionu putanju.
+     *
+     * @param sourcePath   Izvorna putanja.
+     * @param downloadPath Destinaciona putanja.
+     */
+    void downloadFile(String sourcePath, String downloadPath);
 
     /**
      * Čita konfiguracioni fajl. Vraća null ukoliko ne postoji.

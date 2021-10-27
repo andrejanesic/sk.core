@@ -10,6 +10,7 @@ import io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 import user.builder.PrivilegeBuilder;
 import user.builder.PrivilegeTypeBuilder;
 import user.builder.UserBuilder;
@@ -85,6 +86,21 @@ public class UserManagerTest {
 
             }
 
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
             @NotNull
             @Override
             public DirectoryBuilder initStorage(String path) {
@@ -154,6 +170,21 @@ public class UserManagerTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public String readConfig(String path) {
                 Gson gson = new Gson();
                 return "{\"users\":" + gson.toJson(userBuilders, listType) + "}";
@@ -212,6 +243,21 @@ public class UserManagerTest {
             @Override
             public void moveDirectory(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -283,6 +329,21 @@ public class UserManagerTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public void moveDirectory(String sourcePath, String destPath) {
 
             }
@@ -349,6 +410,21 @@ public class UserManagerTest {
             @Override
             public void deleteDirectory(String path) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -433,6 +509,21 @@ public class UserManagerTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public void moveDirectory(String sourcePath, String destPath) {
 
             }
@@ -511,6 +602,21 @@ public class UserManagerTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public void moveFile(String sourcePath, String destPath) {
 
             }
@@ -581,6 +687,21 @@ public class UserManagerTest {
             @Override
             public void moveDirectory(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -655,6 +776,21 @@ public class UserManagerTest {
             @Override
             public void moveDirectory(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override

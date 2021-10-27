@@ -19,7 +19,7 @@ public class IOManager {
      * @throws IOManagerNoDriverException Ukoliko nije registrovan ni jedan {@link IODriver} a neko pokuša da pristupi
      *                                    instanci.
      */
-    public static IODriver getIOAdapter() throws IOManagerNoDriverException {
+    public static IODriver getIODriver() throws IOManagerNoDriverException {
         if (instance == null)
             throw new IOManagerNoDriverException();
         return instance;

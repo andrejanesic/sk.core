@@ -7,6 +7,7 @@ import io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import repository.builder.DirectoryBuilder;
+import repository.builder.FileBuilder;
 
 import java.util.UUID;
 
@@ -45,6 +46,21 @@ public class ActionInitConfigTest {
             @Override
             public void moveFile(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override
@@ -103,6 +119,21 @@ public class ActionInitConfigTest {
             }
 
             @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
+            }
+
+            @Override
             public String readConfig(String path) {
                 return null;
             }
@@ -156,6 +187,21 @@ public class ActionInitConfigTest {
             @Override
             public void moveFile(String sourcePath, String destPath) {
 
+            }
+
+            @Override
+            public void downloadDirectory(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public void downloadFile(String sourcePath, String downloadPath) {
+
+            }
+
+            @Override
+            public FileBuilder uploadFile(String destRelPath, String filePath) {
+                return null;
             }
 
             @Override

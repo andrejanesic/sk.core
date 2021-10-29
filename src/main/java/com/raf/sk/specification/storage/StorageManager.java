@@ -75,6 +75,10 @@ public class StorageManager implements IStorageManager {
                 // neće se desiti jer smo gore inicijalizovali skladište
             }
         }
+
+        if (Core.getInstance().UserManager().getUser() != null)
+            //noinspection ConstantConditions
+            Core.getInstance().UserManager().getUser().setCwd(root);
         return root;
     }
 

@@ -45,23 +45,26 @@ public class ActionINodeAdd implements IAction {
         if (Core.getInstance().StorageManager().getRoot() == null)
             throw new IComponentNotInitializedException(StorageManager.class);
 
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(
-                Core.getInstance().UserManager().getUser().getCwd().getPath(), PrivilegeType.INODE_ADD) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-
         try {
             //noinspection ConstantConditions
             Directory targetNode = Core.getInstance().UserManager().getUser().getCwd();
+
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(
+                    Core.getInstance().UserManager().getUser().getCwd().getPath(), PrivilegeType.INODE_ADD) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
+
             if (type == null)
                 throw new IActionBadParameterException("The type you specified is not valid. Must be FILE or DIR.");
             if (type.equals("FILE")) {
+                //noinspection ConstantConditions
                 targetNode.makeFile(name);
                 return true;
             }
             if (type.equals("DIR")) {
+                //noinspection ConstantConditions
                 targetNode.makeDirectory(name);
                 return true;
             }
@@ -69,11 +72,9 @@ public class ActionINodeAdd implements IAction {
         } catch (INodeLimitationException e2) {
             throw new IActionInsufficientPrivilegeException(
                     "The target or destination are limited by limitations that disallow this operation.");
-        } catch (DirectoryMakeNodeNameInvalidException e) {
-            e.printStackTrace();
-        } catch (DirectoryMakeNodeInvalidNodeTypeException e) {
-            e.printStackTrace();
-        } catch (DirectoryMakeNodeNameNotUniqueException e) {
+        } catch (DirectoryMakeNodeNameInvalidException |
+                DirectoryMakeNodeInvalidNodeTypeException |
+                DirectoryMakeNodeNameNotUniqueException e) {
             e.printStackTrace();
         }
         return true;

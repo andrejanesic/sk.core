@@ -4,6 +4,7 @@ import com.raf.sk.specification.exceptions.INodeLimitationException;
 import com.raf.sk.specification.repository.INode;
 import com.raf.sk.specification.repository.INodeOperation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -111,6 +112,7 @@ public class INodeLimitation {
         this.type = type;
     }
 
+    @Nullable
     public String getPath() {
         return path;
     }
@@ -119,6 +121,7 @@ public class INodeLimitation {
         this.path = path;
     }
 
+    @Nullable
     public INode getHost() {
         return host;
     }

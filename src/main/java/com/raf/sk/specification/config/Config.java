@@ -2,6 +2,7 @@ package com.raf.sk.specification.config;
 
 import com.google.gson.Gson;
 import com.raf.sk.specification.core.Core;
+import com.raf.sk.specification.repository.Directory;
 import com.raf.sk.specification.repository.limitations.INodeLimitation;
 import com.raf.sk.specification.user.builder.UserBuilder;
 
@@ -82,8 +83,12 @@ public class Config implements IConfig {
 
     @Override
     public String toJson() {
-        for (INodeLimitation e : limitations)
-            e.setPath(e.getHost().getPath());
+        for (INodeLimitation e : limitations) {
+            if (e.getHost() == null)
+                e.setPath(Directory.ROOT_DIRECTORY);
+            else
+                e.setPath(e.getHost().getPath());
+        }
         return new Gson().toJson(this);
     }
 

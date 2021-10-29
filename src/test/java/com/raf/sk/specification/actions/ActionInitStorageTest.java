@@ -98,7 +98,6 @@ public class ActionInitStorageTest {
     void testActionInitStorageRun() {
         //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.STORAGE_INIT);
-        assertNull(Core.getInstance().StorageManager().getRoot());
         Assertions.assertDoesNotThrow(() -> action.run());
         assertNotNull(Core.getInstance().StorageManager().getRoot());
     }

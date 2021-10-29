@@ -10,6 +10,7 @@ import com.raf.sk.specification.user.PrivilegeType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ActionINodeDeleteTest {
@@ -25,8 +26,11 @@ public class ActionINodeDeleteTest {
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         Core.getInstance().ConfigManager().initConfig(null);
         Directory root = Core.getInstance().StorageManager().initStorage("test");
+        //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
+
+        rootDummy.traverse((dummyNode) -> assertDoesNotThrow(() -> root.resolvePath(dummyNode.path())));
 
         int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
         DummyNode targetDummy = DummyNode.poolDirs.get(indexDir);

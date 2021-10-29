@@ -41,22 +41,26 @@ public class ActionINodeMove implements IAction {
         if (Core.getInstance().StorageManager().getRoot() == null)
             throw new IComponentNotInitializedException(StorageManager.class);
 
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target, PrivilegeType.INODE_DELETE) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(newParent, PrivilegeType.INODE_ADD) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-
         try {
             //noinspection ConstantConditions
             INode targetNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(target);
+            String targetPath = targetNode.getPath();
+
             //noinspection ConstantConditions
             INode destNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(newParent);
+            String destPath = destNode.getPath();
+
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(targetPath, PrivilegeType.INODE_DELETE) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(destPath, PrivilegeType.INODE_ADD) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
+
             targetNode.move(destNode);
         } catch (INodeRootNotInitializedException e1) {
             throw new IActionBadParameterException("The path you specified is not valid.");

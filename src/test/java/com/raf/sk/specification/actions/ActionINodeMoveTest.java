@@ -24,6 +24,7 @@ public class ActionINodeMoveTest {
         IOManager.setIODriver(new IODriverTest());
         Core.getInstance().ConfigManager().initConfig(null);
         Core.getInstance().StorageManager().initStorage("test");
+        //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
         DummyNode rootDummy, targetDummy, destDummy;
         do {
@@ -43,6 +44,9 @@ public class ActionINodeMoveTest {
         Directory root = Core.getInstance().StorageManager().getRoot();
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);
 
+        //noinspection ConstantConditions
+        rootDummy.traverse((dummyNode) -> assertDoesNotThrow(() -> root.resolvePath(dummyNode.path())));
+
         DummyNode finalTargetDummy = targetDummy;
         DummyNode finalDestDummy = destDummy;
         Assertions.assertDoesNotThrow(() -> new ActionINodeMove(finalTargetDummy.path(), finalDestDummy.path()).run());
@@ -57,6 +61,7 @@ public class ActionINodeMoveTest {
         DummyNode finalRootDummy = rootDummy;
         assertDoesNotThrow(() -> finalRootDummy.traverse(dummyNode -> {
             try {
+                //noinspection ConstantConditions
                 Core.getInstance().StorageManager().getRoot().resolvePath(dummyNode.path());
             } catch (INodeRootNotInitializedException e) {
                 e.printStackTrace();
@@ -66,7 +71,6 @@ public class ActionINodeMoveTest {
 
     @Test
     void testActionINodeMoveUndoDirIntoDir() throws
-            INodeRootNotInitializedException,
             IStorageManagerINodeBuilderTreeInvalidException,
             DirectoryMakeNodeNameInvalidException,
             DirectoryMakeNodeNameNotUniqueException,
@@ -74,6 +78,7 @@ public class ActionINodeMoveTest {
         IOManager.setIODriver(new IODriverTest());
         Core.getInstance().ConfigManager().initConfig(null);
         Core.getInstance().StorageManager().initStorage("test");
+        //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
         DummyNode rootDummy, targetDummy, destDummy;
         do {
@@ -101,6 +106,7 @@ public class ActionINodeMoveTest {
         DummyNode finalRootDummy = rootDummy;
         assertDoesNotThrow(() -> finalRootDummy.traverse(dummyNode -> {
             try {
+                //noinspection ConstantConditions
                 Core.getInstance().StorageManager().getRoot().resolvePath(dummyNode.path());
             } catch (INodeRootNotInitializedException e) {
                 e.printStackTrace();

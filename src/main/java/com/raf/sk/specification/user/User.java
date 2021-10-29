@@ -48,6 +48,7 @@ public class User implements IUser {
      */
     User() {
         initAnonymousPrivileges();
+        cwd = Core.getInstance().StorageManager().getRoot();
     }
 
     /**
@@ -66,6 +67,7 @@ public class User implements IUser {
 
         initAnonymousPrivileges();
         initAuthenticatedPrivileges();
+        cwd = Core.getInstance().StorageManager().getRoot();
     }
 
     /**
@@ -94,6 +96,7 @@ public class User implements IUser {
 
         initAnonymousPrivileges();
         initAuthenticatedPrivileges();
+        cwd = Core.getInstance().StorageManager().getRoot();
     }
 
     /**

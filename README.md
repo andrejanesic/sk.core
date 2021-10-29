@@ -4,7 +4,9 @@ Računarski fakultet
 
 Autor: dr Bojana Dimić Surla, redovni profesor
 
-# Specifikacija prvog projekta iz predmeta Softverske komponente - školska 2021/2022. godina
+# SK.Core
+
+**Specifikacija prvog projekta iz predmeta Softverske komponente - školska 2021/2022. godina.**
 
 ## Tok rada
 

@@ -66,6 +66,7 @@ public interface IODriver {
      *
      * @param destRelPath Putanja gde treba otpremiti fajl.
      * @param filePath    Putanja fajla.
+     * @return Bilder do fajla {@link FileBuilder}.
      */
     FileBuilder uploadFile(String destRelPath, String filePath);
 

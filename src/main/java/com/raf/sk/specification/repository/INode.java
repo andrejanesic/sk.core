@@ -45,6 +45,7 @@ public abstract class INode {
      *
      * @param parent Roditeljski čvor.
      * @param name   Naziv čvora.
+     * @param type   Tip čvora {@link INodeType}.
      */
     public INode(INode parent, String name, INodeType type) {
         this.parent = parent;
@@ -158,6 +159,8 @@ public abstract class INode {
      * Dodavanje, odnosno odpremanje fajla/direktorijuma iz eksternog sistema na skladište.
      *
      * @param path Putanja na OS-u gde se nalazi čvor za otpremanje.
+     * @return Vraća novootpremljeni čvor.
+     * @throws INodeLimitationException Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public abstract INode upload(String path) throws INodeLimitationException;
 
@@ -165,6 +168,7 @@ public abstract class INode {
      * Preuzimanje fajlova.
      *
      * @param path Putanja na OS-u gde treba sačuvati čvor.
+     * @throws INodeLimitationException Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public abstract void download(String path) throws INodeLimitationException;
 

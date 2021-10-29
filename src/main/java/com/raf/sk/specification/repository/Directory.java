@@ -82,6 +82,7 @@ public class Directory extends INode {
      * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv čvora.
      * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji čvor sa datim nazivom istog tipa.
      * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
+     * @throws INodeLimitationException                  Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     private INode makeNode(String name, INodeType type) throws
             DirectoryMakeNodeNameInvalidException,
@@ -132,6 +133,7 @@ public class Directory extends INode {
      * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv direktorijuma.
      * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji direktorijum sa datim nazivom.
      * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
+     * @throws INodeLimitationException                  Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public Directory makeDirectory(String name) throws
             DirectoryMakeNodeNameInvalidException,
@@ -149,6 +151,7 @@ public class Directory extends INode {
      * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv fajla.
      * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji fajl sa datim nazivom.
      * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
+     * @throws INodeLimitationException Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public File makeFile(String name) throws
             DirectoryMakeNodeNameInvalidException,
@@ -280,6 +283,7 @@ public class Directory extends INode {
      * Registruje novi čvor.
      *
      * @param iNode Novi čvor.
+     * @throws INodeLimitationException Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public void linkNode(INode iNode) throws INodeLimitationException {
         if (children.contains(iNode)) return;
@@ -292,6 +296,7 @@ public class Directory extends INode {
      * Deregistruje čvor, ukoliko postoji u direktorijumu.
      *
      * @param iNode Čvor za deregistraciju.
+     * @throws INodeLimitationException Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public void unlinkNode(INode iNode) throws INodeLimitationException {
         if (!children.contains(iNode)) return;

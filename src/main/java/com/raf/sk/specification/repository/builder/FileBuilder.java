@@ -31,6 +31,7 @@ public class FileBuilder implements INodeBuilder {
      *
      * @param parent Roditeljski DirectoryBuilder.
      * @param name   Naziv fajla.
+     * @param size   Veličina fajla.
      */
     public FileBuilder(DirectoryBuilder parent, String name, long size) {
         this.parent = parent;

@@ -46,6 +46,7 @@ public class INodeLimitation {
      *
      * @param host {@link INode} nad kojim je ograničenje implementirano.
      * @param args Argumenti za ograničenje.
+     * @param type Tip ograničenja.
      */
     public INodeLimitation(INode host, @NotNull INodeLimitationType type, Object... args) {
         this.host = host;
@@ -58,6 +59,7 @@ public class INodeLimitation {
      *
      * @param path Putanja do {@link INode} nad kojim je ograničenje implementirano.
      * @param args Argumenti za ograničenje.
+     * @param type Tip ograničenja.
      */
     public INodeLimitation(String path, @NotNull INodeLimitationType type, Object... args) {
         this.path = path;

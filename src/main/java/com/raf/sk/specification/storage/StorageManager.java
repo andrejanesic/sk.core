@@ -94,6 +94,8 @@ public class StorageManager implements IStorageManager {
      * @param parent       Roditeljski {@link Directory}.
      * @param iNodeBuilder Trenutno obrađivan {@link INodeBuilder}.
      * @return Korenski {@link Directory} za celo skladište..
+     * @throws IStorageManagerINodeBuilderTreeInvalidException Ukoliko je došlo do greške prilikom parsiranja ulaza iz
+     *                                                         datog {@link com.raf.sk.specification.io.IODriver}.
      */
     private Directory traverseDirectoryBuilder(
             @Nullable Directory parent,

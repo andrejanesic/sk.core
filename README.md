@@ -41,22 +41,22 @@ Sledi opis funkcionanosti komponente za upravljanje skladištem fajlova.
 ### Operacije nad skladištem
 
 - [ ] kreiranje direktorijuma i praznih fajlova na određenoj putanji u skladištu (osmisliti razne načine zadavanja paterna kreiranja direktorijuma, kao u bash-u na primer mkdir s{1..20} kreira 20 direktorijuma pod imenom s1 do s20),
-- [ ] smeštanje fajlova (jednog ili više) na određenu putanju u skladištu, putanja koja se prosleđuje treba da bude nezavisna od operativnog sistema, obraditi neke specifične situacije, na primer ako direktorijumi zadati putanjom ne postoje u skladištu,
+- [x] smeštanje fajlova (jednog ili više) na određenu putanju u skladištu, putanja koja se prosleđuje treba da bude nezavisna od operativnog sistema, obraditi neke specifične situacije, na primer ako direktorijumi zadati putanjom ne postoje u skladištu,
 - [x] brisanje fajlova i direktorijuma iz skladišta,
 - [ ] pregled sadržaja skladišta - podržati razne pretrage skladišta, na primer vrati sve nazive fajlove u direktorijumu, vrati nazive svih direktorijuma u nekom direktorijumu, vrati fajlove po imenu u direktorijumu i svim poddirektorijumima, vrati fajlove sa određenom ekstenzijom, vrati nazive fajlova sortirano po nazivu, datumu kreiranje ili modifikacije, vrati nazive fajlova koji su kreirani/modifikovani u nekom periodu, u nekom direktorijumu i sl.,
 - [x] premeštanje fajlova iz jednog direktorijuma u drugi,
-- [ ] preuzimanje fajlova iz skladišta - zadaje se putanja koja može biti putanja do direktorijuma ili do fajla i odgovarajući element se preuzima iz skladišta,
-- [ ] ukoliko se neke od ovih operacija ne mogu implementiratu nad Google Drive-om obezbediti odgovarajuću obradu ove situacije, na primer da operacija izbaci izuzetak tipa UnsupportedOperation
+- [x] preuzimanje fajlova iz skladišta - zadaje se putanja koja može biti putanja do direktorijuma ili do fajla i odgovarajući element se preuzima iz skladišta,
+- [x] ukoliko se neke od ovih operacija ne mogu implementiratu nad Google Drive-om obezbediti odgovarajuću obradu ove situacije, na primer da operacija izbaci izuzetak tipa UnsupportedOperation
 
 ### Konfiguracija skladišta
 
 - [x] omogućiti da se zada veličina skladišta (u bajtovima) koja ne sme biti prekoračena,
-- [ ] podržati mogućnost da se zadaju ekstenzije fajlova koji se ne mogu skladištiti (na primer može da se definiše da skladište ne prihvata exe fajlove) i vraćanje greške ako neko pokuša da uploaduje fajl sa ekstenzijom koja se ne
+- [x] podržati mogućnost da se zadaju ekstenzije fajlova koji se ne mogu skladištiti (na primer može da se definiše da skladište ne prihvata exe fajlove) i vraćanje greške ako neko pokuša da uploaduje fajl sa ekstenzijom koja se ne
   prihvata,
 - [x] obezbediti da može se zada broj fajlova koji se mogu smestiti u određeni direktorijum,
 - [x] konfiguraciju skladišta može da radi samo korisnik koji je kreirao skladište,
 - [x] konfiguracioni fajl se takođe smešta u korenski direktorijum skladišta,
-- [ ] prilikom izvršavanja operacija nad skladištem proveriti da li su zadovoljeni kriterijumi iz konfiguracije, na primer u operaciji koja snima fajl u skladište proveriti da li će njegovim dodavanjem biti prekoračena veličina i u koliko hoće, ne treba dozvoliti skladištenje.
+- [x] prilikom izvršavanja operacija nad skladištem proveriti da li su zadovoljeni kriterijumi iz konfiguracije, na primer u operaciji koja snima fajl u skladište proveriti da li će njegovim dodavanjem biti prekoračena veličina i u koliko hoće, ne treba dozvoliti skladištenje.
 
 Za komponentu specifikacije treba napisati API dokumentaciju kojom je precezno opisano korišćenje komponente.
 
@@ -80,9 +80,9 @@ Preporučeni jezik za implementaciju je Java, a alati za build Apache Maven ili 
 
 (raspodela poena po zahtevima - inicijalzacija skladišta i korisnici - 30%, operacije nad skladištem 50%, konfiguracija - 20%, procenti se odnose na specifikaciju i dve implementacije, na primer ako ne uradite konfiguraciju, a sve ostalo kompletno, možete dobiti maks 16 poena)
 
-3. Kvalitetna dokumentacija za specifikacionu komponentu - 1p
-4. Implementacija programa za komandnu liniju - 4p
-5. Automatizacija pakovanja biblioteka i programa za komandnu liniju, generisanje dokumentacije korišćenjem build alata - 5p
+5. Kvalitetna dokumentacija za specifikacionu komponentu - 1p
+6. Implementacija programa za komandnu liniju - 4p
+7. Automatizacija pakovanja biblioteka i programa za komandnu liniju, generisanje dokumentacije korišćenjem build alata - 5p
 
 ### Napomene:
 

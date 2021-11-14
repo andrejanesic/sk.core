@@ -1,5 +1,7 @@
 package com.raf.sk.core.core;
 
+import com.raf.sk.core.actions.ActionManager;
+import com.raf.sk.core.actions.IActionManager;
 import com.raf.sk.core.config.ConfigManager;
 import com.raf.sk.core.config.IConfigManager;
 import com.raf.sk.core.storage.IStorageManager;
@@ -28,6 +30,15 @@ public class Core {
      */
     public static Core getInstance() {
         return Holder.INSTANCE;
+    }
+
+    /**
+     * Vraća instancu komponente IActionManager.
+     *
+     * @return Instanca komponente.
+     */
+    public IActionManager ActionManager() {
+        return ActionManager.getInstance();
     }
 
     /**

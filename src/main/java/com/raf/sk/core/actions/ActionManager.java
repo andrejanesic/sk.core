@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Menadžer za korisničke radnje.
  */
-public class ActionManager {
+public class ActionManager implements IActionManager {
 
     /**
      * Red radnji.
@@ -29,31 +29,21 @@ public class ActionManager {
      *
      * @return ActionManager instanca.
      */
-    public static ActionManager getInstance() {
+    public static IActionManager getInstance() {
         return Holder.INSTANCE;
     }
 
-    /**
-     * Vraća radnje u redu u vidu List-a.
-     *
-     * @return Radnje u redu.
-     */
+    @Override
     public List<IAction> getQueue() {
         return queue;
     }
 
-    /**
-     * Dodaje radnju u red.
-     *
-     * @param a Nova radnja.
-     */
+    @Override
     public void addAction(IAction a) {
         queue.add(a);
     }
 
-    /**
-     * Izvršava sledeću radnju u redu.
-     */
+    @Override
     public void run() {
         try {
             queue.get(position).run();
@@ -62,9 +52,7 @@ public class ActionManager {
         }
     }
 
-    /**
-     * Poništava (undo) poslednju odrađenu radnju.
-     */
+    @Override
     public void undo() {
         position -= 1;
         try {
@@ -79,7 +67,7 @@ public class ActionManager {
      * Holder za thread-safe singleton instancu.
      */
     private static class Holder {
-        private static final ActionManager INSTANCE = new ActionManager();
+        private static final IActionManager INSTANCE = new ActionManager();
     }
 
     /**

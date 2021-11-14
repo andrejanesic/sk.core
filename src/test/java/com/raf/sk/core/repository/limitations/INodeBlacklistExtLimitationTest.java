@@ -6,7 +6,7 @@ import com.raf.sk.core.exceptions.*;
 import com.raf.sk.core.repository.Directory;
 import com.raf.sk.core.repository.File;
 import com.raf.sk.core.repository.RepositoryPrepareTest;
-import com.raf.sk.core.repository.builder.FileBuilder;
+import com.raf.sk.specification.builders.FileBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

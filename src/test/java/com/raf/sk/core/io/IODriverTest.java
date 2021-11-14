@@ -5,13 +5,15 @@ import com.google.gson.reflect.TypeToken;
 import com.raf.sk.core.dummynode.DummyNode;
 import com.raf.sk.core.repository.Directory;
 import com.raf.sk.core.repository.INode;
-import com.raf.sk.core.repository.builder.DirectoryBuilder;
-import com.raf.sk.core.repository.builder.FileBuilder;
 import com.raf.sk.core.repository.limitations.INodeLimitation;
 import com.raf.sk.core.repository.limitations.INodeLimitationType;
 import com.raf.sk.core.user.builder.PrivilegeBuilder;
 import com.raf.sk.core.user.builder.PrivilegeTypeBuilder;
 import com.raf.sk.core.user.builder.UserBuilder;
+import com.raf.sk.specification.builders.DirectoryBuilder;
+import com.raf.sk.specification.builders.FileBuilder;
+import com.raf.sk.specification.io.IODriver;
+import com.raf.sk.specification.io.IOManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

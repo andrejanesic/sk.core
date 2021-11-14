@@ -4,9 +4,9 @@ import com.raf.sk.core.core.Core;
 import com.raf.sk.core.dummynode.DummyNode;
 import com.raf.sk.core.exceptions.*;
 import com.raf.sk.core.io.IODriverTest;
-import com.raf.sk.core.io.IOManager;
 import com.raf.sk.core.repository.Directory;
 import com.raf.sk.core.user.PrivilegeType;
+import com.raf.sk.specification.io.IOManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

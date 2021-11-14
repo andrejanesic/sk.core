@@ -2,13 +2,13 @@ package com.raf.sk.core.core;
 
 import com.raf.sk.core.config.ConfigManager;
 import com.raf.sk.core.config.IConfigManager;
-import com.raf.sk.core.exceptions.IOManagerNoDriverException;
-import com.raf.sk.core.io.IODriver;
-import com.raf.sk.core.io.IOManager;
 import com.raf.sk.core.storage.IStorageManager;
 import com.raf.sk.core.storage.StorageManager;
 import com.raf.sk.core.user.IUserManager;
 import com.raf.sk.core.user.UserManager;
+import com.raf.sk.specification.exceptions.IOManagerNoDriverException;
+import com.raf.sk.specification.io.IODriver;
+import com.raf.sk.specification.io.IOManager;
 
 /**
  * Učitava skladište i njegove fajlove, konfiguraciju i korisnike.

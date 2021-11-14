@@ -6,14 +6,14 @@ import com.raf.sk.core.exceptions.IComponentNotInitializedException;
 import com.raf.sk.core.exceptions.INodeLimitationException;
 import com.raf.sk.core.exceptions.INodeRootNotInitializedException;
 import com.raf.sk.core.exceptions.IStorageManagerINodeBuilderTreeInvalidException;
-import com.raf.sk.core.io.IOManager;
 import com.raf.sk.core.repository.Directory;
 import com.raf.sk.core.repository.File;
-import com.raf.sk.core.repository.builder.DirectoryBuilder;
-import com.raf.sk.core.repository.builder.FileBuilder;
-import com.raf.sk.core.repository.builder.INodeBuilder;
-import com.raf.sk.core.repository.builder.INodeBuilderType;
 import com.raf.sk.core.repository.limitations.INodeLimitation;
+import com.raf.sk.specification.builders.DirectoryBuilder;
+import com.raf.sk.specification.builders.FileBuilder;
+import com.raf.sk.specification.builders.INodeBuilder;
+import com.raf.sk.specification.builders.INodeBuilderType;
+import com.raf.sk.specification.io.IOManager;
 import org.jetbrains.annotations.Nullable;
 
 /**

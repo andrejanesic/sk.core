@@ -5,10 +5,10 @@ import com.raf.sk.core.exceptions.INodeFatalException;
 import com.raf.sk.core.exceptions.INodeLimitationException;
 import com.raf.sk.core.exceptions.INodeRootNotInitializedException;
 import com.raf.sk.core.exceptions.INodeUnsupportedOperationException;
-import com.raf.sk.core.io.IOManager;
-import com.raf.sk.core.repository.builder.FileBuilder;
 import com.raf.sk.core.user.IPrivilege;
 import com.raf.sk.core.user.IUser;
+import com.raf.sk.specification.builders.FileBuilder;
+import com.raf.sk.specification.io.IOManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;

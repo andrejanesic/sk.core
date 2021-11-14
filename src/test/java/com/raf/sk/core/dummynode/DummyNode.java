@@ -2,8 +2,8 @@ package com.raf.sk.core.dummynode;
 
 import com.raf.sk.core.exceptions.*;
 import com.raf.sk.core.repository.Directory;
-import com.raf.sk.core.repository.builder.DirectoryBuilder;
-import com.raf.sk.core.repository.builder.FileBuilder;
+import com.raf.sk.specification.builders.DirectoryBuilder;
+import com.raf.sk.specification.builders.FileBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,13 +5,13 @@ import com.google.gson.reflect.TypeToken;
 import com.raf.sk.core.core.Core;
 import com.raf.sk.core.exceptions.IUserCannotDeleteCurrentUserException;
 import com.raf.sk.core.exceptions.IUserDuplicateUsernameException;
-import com.raf.sk.core.io.IODriver;
-import com.raf.sk.core.io.IOManager;
-import com.raf.sk.core.repository.builder.DirectoryBuilder;
-import com.raf.sk.core.repository.builder.FileBuilder;
 import com.raf.sk.core.user.builder.PrivilegeBuilder;
 import com.raf.sk.core.user.builder.PrivilegeTypeBuilder;
 import com.raf.sk.core.user.builder.UserBuilder;
+import com.raf.sk.specification.builders.DirectoryBuilder;
+import com.raf.sk.specification.builders.FileBuilder;
+import com.raf.sk.specification.io.IODriver;
+import com.raf.sk.specification.io.IOManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 

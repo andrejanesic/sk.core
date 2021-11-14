@@ -19,9 +19,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.failsafe>3.0.0-M5</maven.failsafe>
+        <projectinfo.version>3.1.2</projectinfo.version>
+        <site.version>3.9.1</site.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.raf.sk.specification</groupId>
+            <artifactId>specification</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -92,6 +100,20 @@
                     <nohelp>true</nohelp>
                     <source>8</source>
                 </configuration>
+            </plugin>
+
+            <!-- Site plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${site.version}</version>
+            </plugin>
+
+            <!-- Podrška za package-info.java -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${projectinfo.version}</version>
             </plugin>
 
             <!-- Failsafe za JUnit -->

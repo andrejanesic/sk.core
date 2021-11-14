@@ -10,7 +10,7 @@ import com.raf.sk.core.exceptions.IActionUndoImpossibleException;
  * Sva komunikacija korisnika sa aplikacijom se odvija preko Akcija, odnosno preko {@link ActionManager.Factory} koja
  * pravi Akcije i {@link ActionManager} koji ih izvršava.
  */
-interface IAction {
+public interface IAction {
 
     /**
      * Izvršava radnju. Pomera red u ActionManager-u za +1.

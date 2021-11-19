@@ -89,7 +89,7 @@ public class ActionInitUser implements IAction {
             }
         }
 
-        if (!exists) {
+        if (!exists && Core.getInstance().UserManager().getUsers().size() != 0) {
             throw new IUserInitNotExistsException();
         }
         IUser u = Core.getInstance().UserManager().initUser(username, password);

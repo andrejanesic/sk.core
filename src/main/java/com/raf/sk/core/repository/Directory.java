@@ -360,7 +360,7 @@ public class Directory extends INode {
             name = path.substring(i, j);
             if (name.equals("..")) {
                 if (getParent() == null) {
-                    throw new DirectoryInvalidPathException("Cannot go higher than root directory.");
+                    throw new DirectoryInvalidPathException("/../");
                 }
                 if (next != null) {
                     if (path.substring(j + 1).length() == 0)

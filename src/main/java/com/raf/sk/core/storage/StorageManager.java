@@ -59,7 +59,7 @@ public class StorageManager implements IStorageManager {
         if (root != null)
             return root;
 
-        DirectoryBuilder rootBuilder = IOManager.getIODriver().initStorage(path);
+        DirectoryBuilder rootBuilder = IOManager.getIODriver().initStorage();
         root = traverseDirectoryBuilder(null, rootBuilder);
         systemRoot = path;
 

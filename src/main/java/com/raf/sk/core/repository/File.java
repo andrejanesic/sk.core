@@ -11,8 +11,6 @@ import com.raf.sk.specification.builders.FileBuilder;
 import com.raf.sk.specification.io.IOManager;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-
 /**
  * Klasa fajlova.
  */
@@ -87,12 +85,15 @@ public class File extends INode {
 
         // apdejtuj privilegije
         for (IUser u : Core.getInstance().UserManager().getUsers()) {
-            //noinspection ForLoopReplaceableByForEach
-            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
-                IPrivilege p = it.next();
+            int lim = u.getPrivileges().size();
+            for (int i = 0; i < lim; i++) {
+                if (i == u.getPrivileges().size()) break;
+                IPrivilege p = (IPrivilege) u.getPrivileges().toArray()[i];
                 if (p.getReferencedObject() == null) continue;
                 if (!p.getReferencedObject().equals(oldPath)) continue;
                 u.revokePrivilege(p);
+                u.grantPrivilege(getPath(), p.getType());
+                i--;
             }
         }
     }
@@ -143,13 +144,15 @@ public class File extends INode {
 
         // apdejtuj privilegije
         for (IUser u : Core.getInstance().UserManager().getUsers()) {
-            //noinspection ForLoopReplaceableByForEach
-            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
-                IPrivilege p = it.next();
+            int lim = u.getPrivileges().size();
+            for (int i = 0; i < lim; i++) {
+                if (i == u.getPrivileges().size()) break;
+                IPrivilege p = (IPrivilege) u.getPrivileges().toArray()[i];
                 if (p.getReferencedObject() == null) continue;
                 if (!p.getReferencedObject().equals(oldPath)) continue;
                 u.revokePrivilege(p);
                 u.grantPrivilege(getPath(), p.getType());
+                i--;
             }
         }
     }

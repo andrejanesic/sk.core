@@ -10,7 +10,6 @@ import com.raf.sk.specification.io.IOManager;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Klasa direktorijuma. Čuva korenski direktorijum. Predstavlja podstablo čitavog skladišta.
@@ -181,12 +180,15 @@ public class Directory extends INode {
 
         // apdejtuj privilegije
         for (IUser u : Core.getInstance().UserManager().getUsers()) {
-            //noinspection ForLoopReplaceableByForEach
-            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
-                IPrivilege p = it.next();
+            int lim = u.getPrivileges().size();
+            for (int i = 0; i < lim; i++) {
+                if (i == u.getPrivileges().size()) break;
+                IPrivilege p = (IPrivilege) u.getPrivileges().toArray()[i];
                 if (p.getReferencedObject() == null) continue;
                 if (!p.getReferencedObject().equals(oldPath)) continue;
                 u.revokePrivilege(p);
+                u.grantPrivilege(getPath(), p.getType());
+                i--;
             }
         }
     }
@@ -247,13 +249,15 @@ public class Directory extends INode {
 
         // apdejtuj privilegije
         for (IUser u : Core.getInstance().UserManager().getUsers()) {
-            //noinspection ForLoopReplaceableByForEach
-            for (Iterator<IPrivilege> it = u.getPrivileges().iterator(); it.hasNext(); ) {
-                IPrivilege p = it.next();
+            int lim = u.getPrivileges().size();
+            for (int i = 0; i < lim; i++) {
+                if (i == u.getPrivileges().size()) break;
+                IPrivilege p = (IPrivilege) u.getPrivileges().toArray()[i];
                 if (p.getReferencedObject() == null) continue;
                 if (!p.getReferencedObject().equals(oldPath)) continue;
                 u.revokePrivilege(p);
                 u.grantPrivilege(getPath(), p.getType());
+                i--;
             }
         }
     }

@@ -5,6 +5,7 @@ import com.raf.sk.core.config.IConfigManager;
 import com.raf.sk.core.core.Core;
 import com.raf.sk.core.exceptions.IActionInsufficientPrivilegeException;
 import com.raf.sk.core.exceptions.IComponentNotInitializedException;
+import com.raf.sk.core.exceptions.IUserInitNotExistsException;
 import com.raf.sk.core.user.IUser;
 import com.raf.sk.core.user.IUserManager;
 import com.raf.sk.core.user.Privilege;
@@ -78,7 +79,19 @@ public class ActionInitUser implements IAction {
         if (!Core.getInstance().UserManager().getUser().hasPrivilege(USER_LOGIN))
             throw new IActionInsufficientPrivilegeException();
 
+        // proveri da li korisnik postoji
         tried = true;
+        boolean exists = false;
+        for (IUser u : Core.getInstance().UserManager().getUsers()) {
+            if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            throw new IUserInitNotExistsException();
+        }
         IUser u = Core.getInstance().UserManager().initUser(username, password);
         return u.isAuthenticated();
     }

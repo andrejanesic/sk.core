@@ -12,7 +12,7 @@ import com.raf.sk.core.user.PrivilegeType;
  * Korisnička akcija dodavanja novog direktorijuma ili fajla.
  *
  * @see com.raf.sk.core.repository.INode
- * @see com.raf.sk.core.io.IODriver
+ * @see com.raf.sk.specification.io.IODriver
  */
 public class ActionINodeAdd implements IAction {
 

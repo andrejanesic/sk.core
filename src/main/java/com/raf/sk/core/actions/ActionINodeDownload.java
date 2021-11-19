@@ -11,7 +11,7 @@ import com.raf.sk.core.user.PrivilegeType;
  * Korisnička akcija preuzimanja direktorijuma ili fajla.
  *
  * @see INode
- * @see com.raf.sk.core.io.IODriver
+ * @see com.raf.sk.specification.io.IODriver
  */
 public class ActionINodeDownload implements IAction {
 

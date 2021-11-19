@@ -8,7 +8,7 @@ import com.raf.sk.core.exceptions.IActionUndoImpossibleException;
  * {@link com.raf.sk.core.config.ConfigManager}.
  *
  * @see com.raf.sk.core.config.ConfigManager
- * @see com.raf.sk.core.io.IODriver
+ * @see com.raf.sk.specification.io.IODriver
  * @see com.raf.sk.core.user.UserManager
  */
 public class ActionInitConfig implements IAction {

@@ -11,7 +11,7 @@ import com.raf.sk.core.user.PrivilegeType;
  * Korisnička akcija otpremanja fajla u direktorijum.
  *
  * @see com.raf.sk.core.repository.Directory
- * @see com.raf.sk.core.io.IODriver
+ * @see com.raf.sk.specification.io.IODriver
  */
 public class ActionINodeUpload implements IAction {
 

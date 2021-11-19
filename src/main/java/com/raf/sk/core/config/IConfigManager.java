@@ -38,7 +38,7 @@ public interface IConfigManager {
      *
      * @param path Putanja sa koje će se preuzeti ili inicijalizovati konfiguracioni fajl.
      * @return {@link IConfig} ukoliko je uspešno instancirano, null u protivnom.
-     * @see com.raf.sk.core.io.IODriver
+     * @see com.raf.sk.specification.io.IODriver
      */
     IConfig initConfig(String path);
 

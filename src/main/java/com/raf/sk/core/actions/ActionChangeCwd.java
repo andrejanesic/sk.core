@@ -57,7 +57,7 @@ public class ActionChangeCwd implements IAction {
             INode targetNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(path);
 
             //noinspection ConstantConditions
-            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(path, PrivilegeType.INODE_READ) ||
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(targetNode.getPath(), PrivilegeType.INODE_READ) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
                 throw new IActionInsufficientPrivilegeException();

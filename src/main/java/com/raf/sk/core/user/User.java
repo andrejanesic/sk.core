@@ -146,6 +146,13 @@ public class User implements IUser {
     @Override
     public void grantPrivilege(IPrivilege p) {
         // dodaj zavisne privilegije
+        if (p.getType().equals(PrivilegeType.INODE_ALL)) {
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_ALL));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_ADD));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DOWNLOAD));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
+        }
         if (p.getType().equals(PrivilegeType.INODE_ADD) ||
                 p.getType().equals(PrivilegeType.INODE_DOWNLOAD) ||
                 p.getType().equals(PrivilegeType.USER_DELETE)) {
@@ -200,8 +207,17 @@ public class User implements IUser {
             return;
 
         // obriši zavisne privilegije
+        if (p.getType().equals(PrivilegeType.INODE_ALL)) {
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_ALL));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_ADD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DOWNLOAD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
+        }
+
         if (p.getType().equals(PrivilegeType.INODE_READ)) {
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_ADD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DOWNLOAD));
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
         }

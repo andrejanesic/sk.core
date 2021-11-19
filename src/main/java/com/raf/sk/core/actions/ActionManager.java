@@ -44,23 +44,28 @@ public class ActionManager implements IActionManager {
     }
 
     @Override
-    public void run() {
+    public Object run() {
+        Object r = null;
         try {
-            queue.get(position).run();
+            r = queue.get(position).run();
         } finally {
             position += 1;
+            return r;
         }
     }
 
     @Override
-    public void undo() {
+    public Object undo() {
+        Object r;
         position -= 1;
         try {
-            queue.get(position).undo();
+            r = queue.get(position).undo();
         } catch (IActionUndoImpossibleException ignored) {
+            r = null;
         }
         // #TODO ovde undo treba da bude od prethodne akcije, a run od sledeće
         queue.remove(position);
+        return r;
     }
 
     /**

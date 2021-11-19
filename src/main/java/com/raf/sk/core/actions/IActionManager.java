@@ -26,11 +26,15 @@ public interface IActionManager {
 
     /**
      * Izvršava sledeću radnju u redu.
+     *
+     * @return Vraća rezultat akcije.
      */
-    void run();
+    Object run();
 
     /**
      * Poništava (undo) poslednju odrađenu radnju.
+     *
+     * @return Vraća rezultat akcije.
      */
-    void undo();
+    Object undo();
 }

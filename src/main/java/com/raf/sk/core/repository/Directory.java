@@ -151,7 +151,7 @@ public class Directory extends INode {
      * @throws DirectoryMakeNodeNameInvalidException     Greška ukoliko nije ispravan naziv fajla.
      * @throws DirectoryMakeNodeNameNotUniqueException   Greška ukoliko već postoji fajl sa datim nazivom.
      * @throws DirectoryMakeNodeInvalidNodeTypeException Greška ukoliko je dati tip čvora null.
-     * @throws INodeLimitationException Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
+     * @throws INodeLimitationException                  Ukoliko postoji ograničenje koje onemogućava operaciju na čvoru.
      */
     public File makeFile(String name) throws
             DirectoryMakeNodeNameInvalidException,
@@ -362,8 +362,8 @@ public class Directory extends INode {
                 if (getParent() == null) {
                     throw new DirectoryInvalidPathException("Cannot go higher than root directory.");
                 }
-                if (curr != null)
-                    return curr.resolvePath(path.substring(j + 1));
+                if (next != null)
+                    return ((Directory) next).resolvePath(path.substring(j + 1));
                 else
                     throw new DirectoryInvalidPathException("Current cannot be null.");
             }

@@ -78,7 +78,7 @@ public class ActionGrantPrivilegeTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });
@@ -162,7 +162,7 @@ public class ActionGrantPrivilegeTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });
@@ -247,7 +247,7 @@ public class ActionGrantPrivilegeTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });

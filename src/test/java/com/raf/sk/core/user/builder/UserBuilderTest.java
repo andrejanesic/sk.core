@@ -130,7 +130,7 @@ public class UserBuilderTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });

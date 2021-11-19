@@ -80,14 +80,14 @@ public class StorageManagerTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return rootBuilder;
             }
         });
 
         Core.getInstance().ConfigManager().initConfig("");
 
-        assertDoesNotThrow(() -> Core.getInstance().StorageManager().initStorage(null));
+        assertDoesNotThrow(() -> Core.getInstance().StorageManager().initStorage());
         assertNotNull(Core.getInstance().StorageManager().getRoot());
         rootDummy.traverse(dummyNode -> assertDoesNotThrow(() -> {
             //noinspection ConstantConditions

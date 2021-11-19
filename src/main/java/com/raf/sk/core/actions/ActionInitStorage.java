@@ -13,17 +13,9 @@ import static com.raf.sk.core.user.PrivilegeType.STORAGE_INIT;
 public class ActionInitStorage implements IAction {
 
     /**
-     * Putanja do skladišta u OS okruženju.
-     */
-    private String path;
-
-    /**
      * Podrazumevani konstruktor.
-     *
-     * @param path Putanja do skladišta u OS okruženju.
      */
-    public ActionInitStorage(String path) {
-        this.path = path;
+    public ActionInitStorage() {
     }
 
     @Override
@@ -39,7 +31,7 @@ public class ActionInitStorage implements IAction {
 
         if (Core.getInstance().StorageManager().getRoot() == null) {
             try {
-                Core.getInstance().StorageManager().initStorage(path);
+                Core.getInstance().StorageManager().initStorage();
             } catch (IStorageManagerINodeBuilderTreeInvalidException e) {
                 // #TODO dodaj komponentu za logging
                 e.printStackTrace();

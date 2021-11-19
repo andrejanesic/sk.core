@@ -84,7 +84,7 @@ public class ActionDeinitUserTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });
@@ -167,7 +167,7 @@ public class ActionDeinitUserTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });
@@ -252,7 +252,7 @@ public class ActionDeinitUserTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return null;
             }
         });

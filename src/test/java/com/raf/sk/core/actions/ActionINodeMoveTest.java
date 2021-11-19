@@ -23,7 +23,7 @@ public class ActionINodeMoveTest {
             DirectoryMakeNodeInvalidNodeTypeException {
         IOManager.setIODriver(new IODriverTest());
         Core.getInstance().ConfigManager().initConfig(null);
-        Core.getInstance().StorageManager().initStorage("test");
+        Core.getInstance().StorageManager().initStorage();
         //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
         DummyNode rootDummy, targetDummy, destDummy;
@@ -77,7 +77,7 @@ public class ActionINodeMoveTest {
             DirectoryMakeNodeInvalidNodeTypeException {
         IOManager.setIODriver(new IODriverTest());
         Core.getInstance().ConfigManager().initConfig(null);
-        Core.getInstance().StorageManager().initStorage("test");
+        Core.getInstance().StorageManager().initStorage();
         //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
         DummyNode rootDummy, targetDummy, destDummy;

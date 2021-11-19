@@ -80,13 +80,13 @@ public class ActionInitStorageTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return new DirectoryBuilder();
             }
         });
         Core.getInstance().ConfigManager().initConfig("");
         Core.getInstance().UserManager().initUser().grantPrivilege("test", PrivilegeType.STORAGE_INIT);
-        action = new ActionInitStorage("test");
+        action = new ActionInitStorage();
     }
 
     @AfterEach

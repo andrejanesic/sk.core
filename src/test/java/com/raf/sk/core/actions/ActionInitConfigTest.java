@@ -76,7 +76,7 @@ public class ActionInitConfigTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return new DirectoryBuilder(null, "/");
             }
         });
@@ -146,7 +146,7 @@ public class ActionInitConfigTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return new DirectoryBuilder(null, "/");
             }
         });
@@ -217,7 +217,7 @@ public class ActionInitConfigTest {
 
             @NotNull
             @Override
-            public DirectoryBuilder initStorage(String path) {
+            public DirectoryBuilder initStorage() {
                 return new DirectoryBuilder(null, "/");
             }
         });

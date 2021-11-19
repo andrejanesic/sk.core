@@ -26,14 +26,6 @@ public class StorageManager implements IStorageManager {
      */
     private Directory root;
 
-    /**
-     * Putanja do korenskog direktorijuma (onog u kome se nalazi inicijalizacijski/konfiguracioni fajl skladišta) u
-     * samom OS-u.
-     * <p>
-     * Na ovu putanju se dalje "lepe" putanje do čvorova u direktorijumu.
-     */
-    private String systemRoot;
-
     private StorageManager() {
     }
 
@@ -52,7 +44,7 @@ public class StorageManager implements IStorageManager {
     }
 
     @Override
-    public synchronized Directory initStorage(String path) throws IStorageManagerINodeBuilderTreeInvalidException {
+    public synchronized Directory initStorage() throws IStorageManagerINodeBuilderTreeInvalidException {
         if (Core.getInstance().ConfigManager().getConfig() == null)
             throw new IComponentNotInitializedException(IConfig.class);
 
@@ -61,7 +53,6 @@ public class StorageManager implements IStorageManager {
 
         DirectoryBuilder rootBuilder = IOManager.getIODriver().initStorage();
         root = traverseDirectoryBuilder(null, rootBuilder);
-        systemRoot = path;
 
         if (Core.getInstance().UserManager().getUser() != null)
             //noinspection ConstantConditions
@@ -95,7 +86,7 @@ public class StorageManager implements IStorageManager {
      * @param iNodeBuilder Trenutno obrađivan {@link INodeBuilder}.
      * @return Korenski {@link Directory} za celo skladište..
      * @throws IStorageManagerINodeBuilderTreeInvalidException Ukoliko je došlo do greške prilikom parsiranja ulaza iz
-     *                                                         datog {@link com.raf.sk.core.io.IODriver}.
+     *                                                         datog {@link com.raf.sk.specification.io.IODriver}.
      */
     private Directory traverseDirectoryBuilder(
             @Nullable Directory parent,

@@ -13,7 +13,7 @@ public class RepositoryPrepareTest {
     @BeforeAll
     static void setHandler() throws IStorageManagerINodeBuilderTreeInvalidException {
         IOManager.setIODriver(new IODriverTest());
-        Core.getInstance().StorageManager().initStorage("test");
+        Core.getInstance().StorageManager().initStorage();
     }
 
     @BeforeEach

@@ -25,7 +25,7 @@ public class ActionINodeDeleteTest {
         IOManager.setIODriver(new IODriverTest());
         DummyNode rootDummy = DummyNode.generateDummyNodes();
         Core.getInstance().ConfigManager().initConfig(null);
-        Directory root = Core.getInstance().StorageManager().initStorage("test");
+        Directory root = Core.getInstance().StorageManager().initStorage();
         //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
         DummyNode.dummyNodeTreeToNodeTree(root, rootDummy);

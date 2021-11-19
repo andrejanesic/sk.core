@@ -20,7 +20,7 @@ public class ActionAddLimitTest {
         new ActionInitUser(IODriverTest.MASTER_USERNAME, IODriverTest.MASTER_PASSWORD).run();
         //noinspection ConstantConditions
         Core.getInstance().UserManager().getUser().grantPrivilege(PrivilegeType.ALL);
-        new ActionInitStorage(null).run();
+        new ActionInitStorage().run();
         IAction a = new ActionAddLimit("/", "MAX_SIZE", 21214214L);
         assertDoesNotThrow(a::run);
     }

@@ -167,7 +167,7 @@ public class IODriverTest implements IODriver {
 
     @NotNull
     @Override
-    public DirectoryBuilder initStorage(String path) {
+    public DirectoryBuilder initStorage() {
         return root;
     }
 

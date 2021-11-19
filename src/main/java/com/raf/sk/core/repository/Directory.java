@@ -362,9 +362,11 @@ public class Directory extends INode {
                 if (getParent() == null) {
                     throw new DirectoryInvalidPathException("Cannot go higher than root directory.");
                 }
-                if (next != null)
-                    return ((Directory) next).resolvePath(path.substring(j + 1));
-                else
+                if (next != null) {
+                    if (path.substring(j + 1).length() == 0)
+                        return getParent();
+                    return ((Directory) getParent()).resolvePath(path.substring(j + 1));
+                } else
                     throw new DirectoryInvalidPathException("Current cannot be null.");
             }
             //noinspection ConstantConditions

@@ -60,7 +60,7 @@ public class ActionListDirectory implements IAction {
     }
 
     @Override
-    public Object undo() {
+    public Directory undo() {
         return run();
     }
 }

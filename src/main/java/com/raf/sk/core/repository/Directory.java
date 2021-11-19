@@ -316,7 +316,7 @@ public class Directory extends INode {
             throw new INodeRootNotInitializedException();
 
         if (path == null)
-            throw new DirectoryInvalidPathException("null");
+            throw new DirectoryInvalidPathException("Invalid path: null");
 
         // "očisti" path
         path = path.trim();
@@ -358,6 +358,15 @@ public class Directory extends INode {
 
             boolean found = false;
             name = path.substring(i, j);
+            if (name.equals("..")) {
+                if (getParent() == null) {
+                    throw new DirectoryInvalidPathException("Cannot go higher than root directory.");
+                }
+                if (curr != null)
+                    return curr.resolvePath(path.substring(j + 1));
+                else
+                    throw new DirectoryInvalidPathException("Current cannot be null.");
+            }
             //noinspection ConstantConditions
             for (INode child : ((Directory) next).children) {
                 if (child.getName().equals(name)) {

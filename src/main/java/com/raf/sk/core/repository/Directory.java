@@ -32,7 +32,7 @@ public class Directory extends INode {
     /**
      * Konstruktor na osnovu postojećeg direktorijuma.
      *
-     * @param write  Da li upisati čvor preko {@link com.raf.sk.core.io.IODriver}.
+     * @param write  Da li upisati čvor preko {@link com.raf.sk.specification.io.IODriver}.
      * @param parent Roditeljski direktorijum.
      * @param name   Naziv direktorijuma.
      */
@@ -56,7 +56,7 @@ public class Directory extends INode {
     /**
      * Konstruktor na osnovu bilder klase.
      *
-     * @param write            Da li upisati čvor preko {@link com.raf.sk.core.io.IODriver}.
+     * @param write            Da li upisati čvor preko {@link com.raf.sk.specification.io.IODriver}.
      * @param parent           Roditeljski direktorijum.
      * @param directoryBuilder Bilder.
      */

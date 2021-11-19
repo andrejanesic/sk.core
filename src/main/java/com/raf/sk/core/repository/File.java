@@ -28,9 +28,9 @@ public class File extends INode {
     private long size;
 
     /**
-     * Podrazumevani konstruktor. Dodaje fajl u sistem preko {@link com.raf.sk.core.io.IODriver}.
+     * Podrazumevani konstruktor. Dodaje fajl u sistem preko {@link com.raf.sk.specification.io.IODriver}.
      *
-     * @param write  Da li upisati čvor preko {@link com.raf.sk.core.io.IODriver}.
+     * @param write  Da li upisati čvor preko {@link com.raf.sk.specification.io.IODriver}.
      * @param parent Roditeljski direktorijum.
      * @param name   Naziv fajla.
      * @param size   Veličina fajla.
@@ -49,9 +49,9 @@ public class File extends INode {
     }
 
     /**
-     * Podrazumevani konstruktor. Dodaje fajl u sistem preko {@link com.raf.sk.core.io.IODriver}.
+     * Podrazumevani konstruktor. Dodaje fajl u sistem preko {@link com.raf.sk.specification.io.IODriver}.
      *
-     * @param write  Da li upisati čvor preko {@link com.raf.sk.core.io.IODriver}.
+     * @param write  Da li upisati čvor preko {@link com.raf.sk.specification.io.IODriver}.
      * @param parent Roditeljski direktorijum.
      * @param name   Naziv fajla.
      */
@@ -61,9 +61,9 @@ public class File extends INode {
 
     /**
      * Kreira novi File na osnovu FileBuilder bildera. UPOZORENJE: ovaj metod <em>NE DODAJE</em> fajl u sistem preko
-     * {@link com.raf.sk.core.io.IODriver}!
+     * {@link com.raf.sk.specification.io.IODriver}!
      *
-     * @param write       Da li upisati čvor preko {@link com.raf.sk.core.io.IODriver}.
+     * @param write       Da li upisati čvor preko {@link com.raf.sk.specification.io.IODriver}.
      * @param parent      Roditeljski direktorijum.
      * @param fileBuilder FileBuilder bilder.
      */

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
  * Komponenta za konfiguraciju. Koristi se za učitavanje i menadžment informacija o skladištu, menadžment korisnika,
  * privilegija, itd.
  * <p>
- * Konfiguracija se čuva u JSON formatu. {@link com.raf.sk.core.io.IODriver} se predaje samo String, i iz njega se samo čita String,
+ * Konfiguracija se čuva u JSON formatu. {@link com.raf.sk.specification.io.IODriver} se predaje samo String, i iz njega se samo čita String,
  * tako da implementaciona komponenta ne mora parsirati JSON već samo predaje "sirov" zapis komponenti.
  * <p>
  * Struktura JSON fajla je sledeća:
@@ -51,7 +51,7 @@ public interface IConfigManager {
     IConfig getConfig();
 
     /**
-     * Piše konfiguraciju za skladište putem {@link com.raf.sk.core.io.IODriver#writeConfig(String, String)} metode.
+     * Piše konfiguraciju za skladište putem {@link com.raf.sk.specification.io.IODriver#writeConfig(String, String)} metode.
      */
     void saveConfig();
 }

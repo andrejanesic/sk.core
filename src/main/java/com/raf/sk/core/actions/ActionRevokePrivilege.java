@@ -95,6 +95,10 @@ public class ActionRevokePrivilege implements IAction {
         if (privilegeType.equals(PrivilegeType.USER_LOGIN) || privilegeType.equals(PrivilegeType.USER_LOGOUT))
             throw new IActionBadParameterException("you cannot delete essential com.raf.sk.specification.user privileges.");
 
+        // #OGRANIČENJE korisnik ne može drugom korisniku izbrisati "ALL" privilegiju
+        if (privilegeType.equals(PrivilegeType.ALL))
+            throw new IActionBadParameterException("you cannot delete another user's master (ALL) privilege.");
+
         // proveriti da li referencirani korisnik postoji
         IUser u = Core.getInstance().UserManager().getUser(username);
         if (u == null)

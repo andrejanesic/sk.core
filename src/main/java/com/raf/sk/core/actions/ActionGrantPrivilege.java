@@ -144,8 +144,10 @@ public class ActionGrantPrivilege implements IAction {
             throw new IActionInsufficientPrivilegeException();
 
         // #OGRANIČENJE korisnik ne može brisati osnovne dozvole
-        if (privilegeType.equals(PrivilegeType.USER_LOGIN) || privilegeType.equals(PrivilegeType.USER_LOGOUT))
-            throw new IActionBadParameterException("you cannot delete essential com.raf.sk.specification.user privileges.");
+        if (privilegeType.equals(PrivilegeType.USER_LOGIN) ||
+                privilegeType.equals(PrivilegeType.USER_LOGOUT) ||
+                privilegeType.equals(PrivilegeType.STORAGE_INIT))
+            throw new IActionBadParameterException("you cannot delete essential user privileges.");
 
         // #OGRANIČENJE korisnik ne može drugom korisniku izbrisati "ALL" privilegiju
         if (privilegeType.equals(PrivilegeType.ALL))

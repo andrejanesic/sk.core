@@ -4,6 +4,7 @@ import com.raf.sk.core.config.IConfig;
 import com.raf.sk.core.core.Core;
 import com.raf.sk.core.exceptions.*;
 import com.raf.sk.core.repository.INode;
+import com.raf.sk.core.repository.INodeType;
 import com.raf.sk.core.storage.StorageManager;
 import com.raf.sk.core.user.PrivilegeType;
 
@@ -50,15 +51,19 @@ public class ActionINodeUpload implements IAction {
         if (Core.getInstance().StorageManager().getRoot() == null)
             throw new IComponentNotInitializedException(StorageManager.class);
 
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(filePath, PrivilegeType.INODE_ADD) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-
         try {
             //noinspection ConstantConditions
             INode destNode = Core.getInstance().UserManager().getUser().getCwd().resolvePath(destPath);
+
+            if (destNode.getType().equals(INodeType.FILE))
+                throw new IActionBadParameterException("Destination cannot be a file.");
+
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(destNode.getPath(), PrivilegeType.INODE_ADD) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
+
             INode f = destNode.upload(filePath);
             uploadedPath = f.getPath();
             return f;
@@ -79,15 +84,18 @@ public class ActionINodeUpload implements IAction {
         if (Core.getInstance().StorageManager().getRoot() == null)
             throw new IComponentNotInitializedException(StorageManager.class);
 
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(uploadedPath, PrivilegeType.INODE_DELETE) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-
         try {
             //noinspection ConstantConditions
-            Core.getInstance().StorageManager().getRoot().resolvePath(uploadedPath).delete();
+            INode uploadedNode = Core.getInstance().StorageManager().getRoot().resolvePath(uploadedPath);
+
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(uploadedNode, PrivilegeType.INODE_DELETE) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
+
+            //noinspection ConstantConditions
+            uploadedNode.delete();
             uploadedPath = null;
             return null;
         } catch (INodeRootNotInitializedException e1) {

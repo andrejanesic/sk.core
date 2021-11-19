@@ -44,15 +44,16 @@ public class ActionINodeDownload implements IAction {
         if (Core.getInstance().StorageManager().getRoot() == null)
             throw new IComponentNotInitializedException(StorageManager.class);
 
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(srcPath, PrivilegeType.INODE_DOWNLOAD) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-
         try {
             //noinspection ConstantConditions
             INode target = Core.getInstance().UserManager().getUser().getCwd().resolvePath(srcPath);
+
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.INODE_DOWNLOAD) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.INODE_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
+
             target.download(sysPath);
             return null;
         } catch (INodeRootNotInitializedException e1) {

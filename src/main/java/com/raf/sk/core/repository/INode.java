@@ -55,6 +55,23 @@ public abstract class INode {
 
         if (this == parent)
             throw new INodeFatalException("Fatal error: INode cannot be its own parent.");
+
+        initLimitations();
+    }
+
+    /**
+     * Inicijalizuje ograničenja nad čvorom iz {@link IConfig} fajla.
+     *
+     * @see INodeLimitation
+     */
+    private void initLimitations() {
+        if (Core.getInstance().ConfigManager().getConfig() != null) {
+            for (INodeLimitation l : Core.getInstance().ConfigManager().getConfig().getLimitations()) {
+                if (l.getPath() != null && l.getPath().equals(getPath())) {
+                    limitations.add(l);
+                }
+            }
+        }
     }
 
     /**

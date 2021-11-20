@@ -26,7 +26,13 @@ public class INodeMaxFileCountLimitation extends INodeLimitation {
      */
     public INodeMaxFileCountLimitation(INode host, Object... args) {
         super(host, INodeLimitationType.BLACKLIST_EXT, args);
-        this.maxFileCount = (long) args[0];
+        if (args[0].getClass().equals(Double.class)) {
+            maxFileCount = Math.round(Double.parseDouble(String.valueOf(args[0])));
+        } else if (args[0].getClass().equals(Float.class)) {
+            maxFileCount = Math.round(Float.parseFloat(String.valueOf(args[0])));
+        } else {
+            maxFileCount = (long) args[0];
+        }
     }
 
     @Override
@@ -47,6 +53,10 @@ public class INodeMaxFileCountLimitation extends INodeLimitation {
         // ako nema ograničenja
         if (maxFileCount == MAX_FILE_COUNT_NOLIMIT) {
             boolean allowedInParent = true;
+            // #TODO ne bi trebalo da getHost ikada bude null
+            if (getHost() == null) {
+                return true;
+            }
             if (getHost().getParent() != null)
                 allowedInParent = getHost().getParent().checkLimitations(t, args);
             return allowedInParent;
@@ -54,6 +64,10 @@ public class INodeMaxFileCountLimitation extends INodeLimitation {
 
         // ako ima ograničenja
         int targetCount;
+        // #TODO ne bi trebalo da getHost ikada bude null
+        if (getHost() == null) {
+            return true;
+        }
         int selfCount = ((Directory) getHost()).getFileCount();
         if (target instanceof Directory) {
             targetCount = ((Directory) target).getFileCount();

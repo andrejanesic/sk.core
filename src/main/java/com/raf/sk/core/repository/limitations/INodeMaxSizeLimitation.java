@@ -27,7 +27,13 @@ public class INodeMaxSizeLimitation extends INodeLimitation {
      */
     public INodeMaxSizeLimitation(INode host, Object... args) {
         super(host, INodeLimitationType.BLACKLIST_EXT, args);
-        this.maxSize = (long) args[0];
+        if (args[0].getClass().equals(Double.class)) {
+            maxSize = Math.round(Double.parseDouble(String.valueOf(args[0])));
+        } else if (args[0].getClass().equals(Float.class)) {
+            maxSize = Math.round(Float.parseFloat(String.valueOf(args[0])));
+        } else {
+            maxSize = (long) args[0];
+        }
     }
 
     @Override
@@ -48,6 +54,10 @@ public class INodeMaxSizeLimitation extends INodeLimitation {
         // ako nema ograničenja
         if (maxSize == MAX_SIZE_NOLIMIT) {
             boolean allowedInParent = true;
+            // #TODO ne bi trebalo da getHost ikada bude null
+            if (getHost() == null) {
+                return true;
+            }
             if (getHost().getParent() != null)
                 allowedInParent = getHost().getParent().checkLimitations(t, args);
             return allowedInParent;
@@ -55,6 +65,10 @@ public class INodeMaxSizeLimitation extends INodeLimitation {
 
         // ako ima ograničenja
         long targetSize;
+        // #TODO ne bi trebalo da getHost ikada bude null
+        if (getHost() == null) {
+            return true;
+        }
         long selfSize = ((Directory) getHost()).getSize();
         if (target instanceof Directory) {
             targetSize = ((Directory) target).getSize();

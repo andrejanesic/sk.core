@@ -132,6 +132,10 @@ public class INodeLimitation {
         this.host = host;
     }
 
+    public Object getArgs() {
+        return this.args;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

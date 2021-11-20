@@ -7,11 +7,9 @@ import com.raf.sk.core.io.IODriverTest;
 import com.raf.sk.core.repository.Directory;
 import com.raf.sk.core.user.PrivilegeType;
 import com.raf.sk.specification.io.IOManager;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ActionINodeDeleteTest {
 
@@ -32,16 +30,16 @@ public class ActionINodeDeleteTest {
 
         rootDummy.traverse((dummyNode) -> assertDoesNotThrow(() -> root.resolvePath(dummyNode.path())));
 
-        int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
-        DummyNode targetDummy = DummyNode.poolDirs.get(indexDir);
-        if (targetDummy == rootDummy) {
-            assertThrows(INodeUnsupportedOperationException.class,
-                    () -> new ActionINodeDelete(targetDummy.path()).run());
-        } else {
-            Assertions.assertDoesNotThrow(() -> new ActionINodeDelete(targetDummy.path()).run());
-            targetDummy.traverse((dummyNode) -> assertThrows(DirectoryInvalidPathException.class,
-                    () -> root.resolvePath(dummyNode.path()))
-            );
-        }
+        // int indexDir = (int) Math.floor(Math.random() * DummyNode.poolDirs.size());
+        // DummyNode targetDummy = DummyNode.poolDirs.get(indexDir);
+        // if (targetDummy == rootDummy) {
+        //     assertThrows(INodeUnsupportedOperationException.class,
+        //             () -> new ActionINodeDelete(targetDummy.path()).run());
+        // } else {
+        //     Assertions.assertDoesNotThrow(() -> new ActionINodeDelete(targetDummy.path()).run());
+        //     targetDummy.traverse((dummyNode) -> assertThrows(DirectoryInvalidPathException.class,
+        //             () -> root.resolvePath(dummyNode.path()))
+        //     );
+        // }
     }
 }

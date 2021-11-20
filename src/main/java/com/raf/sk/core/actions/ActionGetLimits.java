@@ -25,9 +25,8 @@ public class ActionGetLimits implements IAction {
      * Podrazumevani konstruktor.
      *
      * @param path Putanja do direktorijuma sa ograničenjima.
-     * @param type Tip ograničenja. Stringovna vrednost {@link com.raf.sk.core.repository.limitations.INodeLimitationType}.
      */
-    public ActionGetLimits(String path, String type) {
+    public ActionGetLimits(String path) {
         this.path = path;
     }
 

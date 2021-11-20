@@ -162,6 +162,13 @@ public class User implements IUser {
             privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
         }
 
+        if (p.getType().equals(PrivilegeType.LIMIT_ALL)) {
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ALL));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ADD));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_DELETE));
+            privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_READ));
+        }
+
         if (p.getType().equals(PrivilegeType.LIMIT_ADD) ||
                 p.getType().equals(PrivilegeType.LIMIT_DELETE)) {
             privileges.add(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ADD));
@@ -222,8 +229,13 @@ public class User implements IUser {
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.INODE_DELETE));
         }
 
-        if (p.getType().equals(PrivilegeType.LIMIT_READ)) {
+        if (p.getType().equals(PrivilegeType.LIMIT_ALL) ||
+                p.getType().equals(PrivilegeType.LIMIT_ADD) ||
+                p.getType().equals(PrivilegeType.LIMIT_DELETE) ||
+                p.getType().equals(PrivilegeType.LIMIT_READ)) {
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ALL));
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_ADD));
+            privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_READ));
             privileges.remove(new Privilege(p.getReferencedObject(), PrivilegeType.LIMIT_DELETE));
         }
 

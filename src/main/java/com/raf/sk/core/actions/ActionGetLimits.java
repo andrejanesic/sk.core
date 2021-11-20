@@ -44,6 +44,8 @@ public class ActionGetLimits implements IAction {
 
             //noinspection ConstantConditions
             if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_READ) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_READ) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
                 throw new IActionInsufficientPrivilegeException();

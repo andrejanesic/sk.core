@@ -67,6 +67,8 @@ public class ActionDeleteLimit implements IAction {
 
             //noinspection ConstantConditions
             if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_DELETE) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_DELETE) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
                 throw new IActionInsufficientPrivilegeException();
@@ -91,6 +93,8 @@ public class ActionDeleteLimit implements IAction {
 
             //noinspection ConstantConditions
             if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_ADD) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ADD) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
                     Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
                 throw new IActionInsufficientPrivilegeException();

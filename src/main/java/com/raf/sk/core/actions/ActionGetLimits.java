@@ -39,15 +39,15 @@ public class ActionGetLimits implements IAction {
         if (Core.getInstance().StorageManager().getRoot() == null)
             throw new IComponentNotInitializedException(StorageManager.class);
 
-        //noinspection ConstantConditions
-        if (!(Core.getInstance().UserManager().getUser().hasPrivilege(path, PrivilegeType.LIMIT_READ) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
-                Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
-            throw new IActionInsufficientPrivilegeException();
-
         try {
             //noinspection ConstantConditions
             INode target = Core.getInstance().UserManager().getUser().getCwd().resolvePath(path);
+
+            //noinspection ConstantConditions
+            if (!(Core.getInstance().UserManager().getUser().hasPrivilege(target.getPath(), PrivilegeType.LIMIT_READ) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.LIMIT_ALL) ||
+                    Core.getInstance().UserManager().getUser().hasPrivilege(PrivilegeType.ALL)))
+                throw new IActionInsufficientPrivilegeException();
             return target.getLimitations();
         } catch (INodeRootNotInitializedException e) {
             throw new IActionBadParameterException("The path you specified is not valid.");
